@@ -9,21 +9,8 @@
 .music_player {
   width: 100%;
   height: 100%;
-
-  /*  This is to be changed to become 100% of the carousel div*/
 }
 
-.image_box {
-  width: 100%;
-  object-fit: cover;
-  height: 100%; /* Height to change and become 100% of the carousel height*/
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #fff5e1;
-}
-
-/*  Image becomes an svg, image box background becomes cream*/
 svg {
   width: 80%;
   height: 100%;
@@ -44,15 +31,11 @@ audio::-webkit-media-controls-panel {
 /*  CSS FOR THE PDF VIEWER*/
 .pdf_viewer {
   width: 100%;
-
-  /*  This is to be changed to become 100% of the carousel div*/
 }
 
 /*  CSS FOR THE video player*/
 .video_player {
   width: 100%;
-
-  /*  This is to be changed to become 100% of the carousel div*/
 }
 
 video {
@@ -60,19 +43,16 @@ video {
   width: 100%; /* 100% OF THE PARENT DIV*/
 }
 
+/*  Screen that displays the media forms*/
 #screen {
   width: 100%;
   margin: 0;
   padding: 0;
 }
 
+/* hidden class required for the button functionality*/
 .hidden {
   display: none;
-}
-
-.button_color {
-  background-color: #0c1844;
-  border-color: #0c1844;
 }
 
 /* CSS for the grid*/
@@ -117,6 +97,24 @@ video {
   grid-area: 2/2/3/3;
 }
 
+.child_3 {
+  grid-column: 1 / 2; /* Start at the first column and end before the second column */
+  grid-row: 1 / 2;
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.icon-link {
+  color: black;
+  text-decoration: none;
+}
+
+.icon-link svg {
+  fill: black; /* Change the SVG icon color to black */
+}
+
 .options {
   width: 100%;
   height: 60%;
@@ -124,13 +122,7 @@ video {
   justify-content: space-evenly;
 }
 
-.btn svg {
-  vertical-align: middle; /* Aligns SVGs with text in the middle */
-  width: 1.5em; /* Adjust size as needed */
-  height: 1.5em; /* Adjust size as needed */
-  margin-right: 0.5em; /* Space between SVG and text */
-}
-
+/* Overriding the Bootstrap button */
 .btn {
   background-color: #0c1844;
   border-color: #0c1844;

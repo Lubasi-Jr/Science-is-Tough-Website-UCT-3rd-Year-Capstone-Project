@@ -127,6 +127,17 @@
         if (selectedBlock) {
           selectedBlock.classList.remove("hidden");
         }
+        pauseMedia();
+      }
+
+      function pauseMedia() {
+        // Select all audio and video elements in the document
+        const mediaElements = document.querySelectorAll("audio, video");
+
+        // Loop through each element and pause it
+        mediaElements.forEach((media) => {
+          media.pause();
+        });
       }
     </script>
   </body>
