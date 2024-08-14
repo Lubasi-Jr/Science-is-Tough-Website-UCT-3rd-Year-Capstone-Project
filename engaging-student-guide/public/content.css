@@ -31,6 +31,11 @@ audio::-webkit-media-controls-panel {
 /*  CSS FOR THE PDF VIEWER*/
 .pdf_viewer {
   width: 100%;
+  height: 60%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 /*  CSS FOR THE video player*/
@@ -48,6 +53,7 @@ video {
   width: 100%;
   margin: 0;
   padding: 0;
+  height: 60vh;
 }
 
 /* hidden class required for the button functionality*/
