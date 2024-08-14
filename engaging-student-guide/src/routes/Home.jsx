@@ -16,7 +16,7 @@ function Home() {
       "How to succeed in your first BSc tests",
       "content.html"
     ),
-    new Content(3, "ref.jpg", "Make the most of your vac", "content.html"),
+    new Content(3, "images/ref.jpg", "Make the most of your vac", "content.html"),
     new Content(
       4,
       "https://th.bing.com/th?id=OIF.ljB7NofIHqWXfUUV%2fMM5nQ&rs=1&pid=ImgDetMain",
