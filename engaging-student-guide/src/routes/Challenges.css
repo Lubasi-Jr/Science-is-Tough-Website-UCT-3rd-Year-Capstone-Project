@@ -1,3 +1,8 @@
+.challenge-header {
+  padding-left: 1em;
+}
+
+
 .l-group {
     display: flex;
     flex-direction: column;
