@@ -1,0 +1,177 @@
+/* CSS FOR THE ENTIRE BODY*/
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+/*  CSS FOR THE AUDIO PLAYER*/
+.music_player {
+  width: 100%;
+  height: 100%;
+}
+
+svg {
+  width: 80%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Styling for the audio, maintain the color scheme*/
+audio {
+  width: 100%;
+  background-color: #fff5e1;
+  outline: none;
+}
+
+audio::-webkit-media-controls-panel {
+  background-color: #fff5e1;
+}
+
+/*  CSS FOR THE PDF VIEWER*/
+.pdf_viewer {
+  width: 100%;
+}
+
+/*  CSS FOR THE video player*/
+.video_player {
+  width: 100%;
+}
+
+video {
+  height: 100%;
+  width: 100%; /* 100% OF THE PARENT DIV*/
+}
+
+/*  Screen that displays the media forms*/
+#screen {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* hidden class required for the button functionality*/
+.hidden {
+  display: none;
+}
+
+/* CSS for the grid*/
+.container {
+  height: 80%;
+  /* background should be the gradient*/
+  display: grid;
+  grid-template-columns: 1fr 3fr 1fr;
+  grid-template-rows: 1fr 4fr 1fr;
+  gap: 10px;
+}
+
+.content_title {
+  margin-top: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.resource_name {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.resource_name h1 {
+  display: inline-block; /* Allow the h1 to be centered within the div */
+  text-align: center; /* Ensure each line of text is centered */
+  margin: 0; /* Remove any default margin */
+  white-space: normal; /* Allow the text to wrap */
+  word-wrap: break-word; /* Break words that are too long to fit */
+  max-width: 100%;
+}
+
+.child_1 {
+  grid-column: 2 / 3; /* Start at the second column and end at the third column */
+  grid-row: 1 / 2; /* Start at the first row and end at the second row */
+  display: flex;
+  flex-direction: column;
+}
+.child_2 {
+  /* grid-area: 2/2/3/3; */
+  grid-column: 1 / -1;
+  grid-row: 2 / 3;
+}
+
+.child_3 {
+  grid-column: 1 / 2; /* Start at the first column and end before the second column */
+  grid-row: 1 / 2;
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.icon-link {
+  color: black;
+  text-decoration: none;
+}
+
+.icon-link svg {
+  fill: black; /* Change the SVG icon color to black */
+}
+
+.options {
+  width: 100%;
+  height: 60%;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+/* Overriding the Bootstrap button */
+.btn {
+  background-color: #0c1844;
+  border-color: #0c1844;
+  color: #ffffff;
+  transition: background-color 0.3s, box-shadow 0.3s, color 0.3s;
+}
+
+.btn:hover {
+  background-color: #192d73;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  border: 1px solid #ffffff;
+}
+
+/* 
+ CSS for the fonts and the Gradient background */
+
+.antic-slab-regular {
+  padding-top: 20px;
+  font-family: "Antic Slab", serif;
+  font-weight: 600;
+  font-style: normal;
+}
+
+/* 
+ <weight>: Use a value from 200 to 700 */
+
+.oswald-content {
+  font-family: "Oswald", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+}
+
+.gradient-background {
+  background: linear-gradient(243deg, #ff6969, #c80036, #fff5e1, #0c1844);
+  background-size: 240% 240%;
+  animation: gradient-animation 24s ease infinite;
+}
+
+@keyframes gradient-animation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
