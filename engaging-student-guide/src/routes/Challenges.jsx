@@ -1,26 +1,26 @@
 import { useState } from "react";
 import "./Challenges.css";
-
+import { Challenge } from "../models/challenge";
 function Challenges() {
   const openChallenges = [
-    {
-      id: 1,
-      name: "Challenge 1",
-      description: "This is the first challenge.",
-      startDate: "2024-08-01",
-      endDate: "2024-08-31",
-      award: "Cool award",
-      studentsStarting: 20,
-    },
-    {
-      id: 2,
-      name: "Challenge 2",
-      description: "This is the second challenge.",
-      startDate: "2024-09-01",
-      endDate: "2024-09-30",
-      award: "Another Cool award",
-      studentsStarting: 15,
-    },
+    new Challenge(
+      1,
+      "Challenge 1",
+      "This is the first challenge.",
+      "2024-08-01",
+      "2024-08-31",
+      "Cool award",
+      20
+    ),
+    new Challenge(
+      2,
+      "Challenge 2",
+      "This is the second challenge.",
+      "2024-09-01",
+      "2024-09-30",
+      "Another Cool award",
+      15
+    ),
   ];
 
   const [selectedChallenge, setSelectedChallenge] = useState(null);
@@ -54,7 +54,7 @@ function Challenges() {
                 onClick={() => openModal(challenge)}
               >
                 <div className="name">{challenge.name}</div>
-                <div className="date">Start Date: {challenge.startDate}</div>
+                <div className="date">Start Date: {challenge.date_created}</div>
               </div>
               <div className="right-section">
                 <button
@@ -79,7 +79,7 @@ function Challenges() {
                 onClick={() => openModal(challenge)}
               >
                 <div className="name">{challenge.name}</div>
-                <div className="date">Start Date: {challenge.startDate}</div>
+                <div className="date">Start Date: {challenge.date_created}</div>
               </div>
               <div className="right-section">
                 <div>Time left: 30min</div>

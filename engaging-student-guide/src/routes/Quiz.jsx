@@ -1,29 +1,24 @@
 import { useState } from "react";
 
 import "./Quiz.css";
+import { Question } from "../models/quizz";
 
 function Quiz() {
   const questions = [
-    {
-      question: "Question 1?",
-      options: [
-        { option: "Option 1", isCorrect: false },
-        { option: "Option 2", isCorrect: true },
-        { option: "Option 3", isCorrect: false },
-        { option: "Option 4", isCorrect: false },
-        { option: "Option 5", isCorrect: false },
-      ],
-    },
-    {
-      question: "Question 2?",
-      options: [
-        { option: "Q2 Option 1", isCorrect: true },
-        { option: "Q2 Option 2", isCorrect: false },
-        { option: "Q2 Option 3", isCorrect: false },
-        { option: "Q2 Option 4", isCorrect: false },
-        { option: "Q2 Option 5", isCorrect: false },
-      ],
-    },
+    new Question("Question 1?", [
+      { option: "Option 1", isCorrect: false },
+      { option: "Option 2", isCorrect: true },
+      { option: "Option 3", isCorrect: false },
+      { option: "Option 4", isCorrect: false },
+      { option: "Option 5", isCorrect: false },
+    ]),
+    new Question("Question 2?", [
+      { option: "Q2 Option 1", isCorrect: true },
+      { option: "Q2 Option 2", isCorrect: false },
+      { option: "Q2 Option 3", isCorrect: false },
+      { option: "Q2 Option 4", isCorrect: false },
+      { option: "Q2 Option 5", isCorrect: false },
+    ]),
   ];
 
   const [currentQuestion, setCurrentQuestion] = useState(0);
