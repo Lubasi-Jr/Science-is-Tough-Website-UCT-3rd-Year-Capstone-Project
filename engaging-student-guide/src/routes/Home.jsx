@@ -4,33 +4,44 @@ import { Content } from "../models/content";
 
 function Home() {
   const cards = [
-    new Content(1, "images/metacog.jpg", "Metacognition: Your key to success"),
+    new Content(
+      1,
+      "images/metacog.jpg",
+      "Metacognition: Your key to success",
+      "content.html"
+    ),
     new Content(
       2,
       "https://img.buzzfeed.com/buzzfeed-static/static/2020-09/28/15/asset/fc1f2fac717b/anigif_sub-buzz-29608-1601307260-18_preview.gif?output-quality=auto&output-format=auto&downsize=360:*",
       "How to succeed in your first BSc tests",
-      "#"
+      "content.html"
     ),
-    new Content(3, "ref.jpg", "Make the most of your vac", "#"),
+    new Content(3, "ref.jpg", "Make the most of your vac", "content.html"),
     new Content(
       4,
       "https://th.bing.com/th?id=OIF.ljB7NofIHqWXfUUV%2fMM5nQ&rs=1&pid=ImgDetMain",
       "The shape of your well-being",
-      "#"
+      "content.html"
     ),
     new Content(
       5,
       "images/clock.jpg",
-      "Next-level time management for succeeding at UCT"
+      "Next-level time management for succeeding at UCT",
+      "content.html"
     ),
     new Content(
       6,
       "https://www.shutterstock.com/image-vector/goldfish-jumping-out-one-fishbowl-600nw-1870441930.jpg",
       "Culture shock at UCT",
-      "#"
+      "content.html"
     ),
-    new Content(7, "images/brain.jpg", "So,how does your brain work?", "#"),
-    new Content(8, "images/finals.jpg", "Acing exam season", "#"),
+    new Content(
+      7,
+      "images/brain.jpg",
+      "So,how does your brain work?",
+      "content.html"
+    ),
+    new Content(8, "images/finals.jpg", "Acing exam season", "content.html"),
   ];
 
   const [favourite, setFavourite] = useState([]);
