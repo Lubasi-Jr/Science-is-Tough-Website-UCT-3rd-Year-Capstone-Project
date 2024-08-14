@@ -1,0 +1,28 @@
+.actual-card{
+    position:relative;
+}
+.actual-card img{ /*setting image specifications*/
+    width:100%;
+    display:block;
+    border:2px solid whitesmoke;
+    border-radius: 6px;
+    height: 250px;
+
+}
+.actual-card .front{
+    transform:rotateY(90deg);/*hide it by rotating 90 degrees around y axis*/
+    transition: all ease-in 0.2s;
+    position:absolute;
+}
+.flipping .front{
+    transform:rotateY(0deg);
+    transition-delay: 0.2s;/*adapted code to make transition look smoother*/
+}
+.actual-card .back{
+    transition: all ease-in 0.2s;
+    transition-delay: 0.2s;/*adapted code to make transition look smoother*/
+}
+.flipping .back{
+    transform:rotateY(90deg);/*rotate so card actually shows*/
+    
+}
