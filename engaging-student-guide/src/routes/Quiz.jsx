@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import "./Quiz.css";
+import "src/routes/Quiz.css";
 
 function Quiz() {
   const questions = [

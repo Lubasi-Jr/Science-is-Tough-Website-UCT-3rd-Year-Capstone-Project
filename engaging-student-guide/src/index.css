@@ -1,100 +1,110 @@
-@font-face{
+@font-face {
   font-family: "myFont";
-  src:url("/OverloadBurn.ttf") format("truetype");
+  src: url("/OverloadBurn.ttf") format("truetype");
 }
-.navbar-brand h1{
+.navbar-brand h1 {
   font-family: "myFont";
 }
 
-body{
-  background-image:url("/background_image.png");
-
+body {
 }
 
-.d-flex{
+.d-flex {
   background-color: rgb(208, 50, 81);
-  border-radius :7px;
-  
+  border-radius: 7px;
 }
-  
-.navbar .btn:Hover{
+
+.navbar .btn:hover {
   background-color: rgb(230, 8, 53);
   color: whitesmoke;
 }
 
-
-.navbar .btn{
+.navbar .btn {
   color: whitesmoke;
 }
-.welcome{
+.welcome {
   color: whitesmoke;
 }
 
-.card{
+.card {
   align-items: center;
-  margin:35px;
-  display:inline-block;
+  margin: 35px;
+  display: inline-block;
   border-radius: 10px;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   font-size: 13.5px;
-  position:relative;
+  position: relative;
 }
-.navbar{
+.navbar {
   margin-bottom: 30px;
 }
-.card-body{/*centers the text and image*/
+.card-body {
+  /*centers the text and image*/
   text-align: center;
-  
 }
 .card-container {
   display: flex;
-  flex-wrap: wrap; 
-  gap: 10px; 
+  flex-wrap: wrap;
+  gap: 10px;
   justify-content: center;
-  
 }
-.card .card-img-top{
-  padding-top: 13px; 
+.card .card-img-top {
+  padding-top: 13px;
 }
 
-.card .btn.btn-primary{
+.card .btn.btn-primary {
   background-color: #0e1b4b;
-  position:absolute;
-  bottom:20px;
-  margin-bottom:5px;
-  left:50%;
-  transform:translateX(-50%)
+  position: absolute;
+  bottom: 20px;
+  margin-bottom: 5px;
+  left: 50%;
+  transform: translateX(-50%);
 }
-.Home .navbar .navbar-expand-lg .bg-body-tertiary{
-  background-color: #FFF5E1;
+.Home .navbar .navbar-expand-lg .bg-body-tertiary {
+  background-color: #fff5e1;
 }
 .card:hover {
-  transform: scale(1.15); 
-  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.35); 
+  transform: scale(1.15);
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.35);
 }
-.card .star:Hover{
-  cursor:pointer;
+.card .star:hover {
+  cursor: pointer;
 }
 
-.card .star{
+.card .star {
   position: absolute;
   top: 10px;
   right: 10px;
-  cursor:pointer;
-
+  cursor: pointer;
 }
 
-.card .card-title{
-  padding:15px;
-
+.card .card-title {
+  padding: 15px;
 }
 .cards {
   display: flex;
-  flex-wrap: wrap; 
-  gap: 10px; 
+  flex-wrap: wrap;
+  gap: 10px;
   justify-content: center;
-  
 }
-.fave-container h1{
+.fave-container h1 {
   padding-bottom: 100px;
+}
+
+body {
+  background: linear-gradient(243deg, #ff6969, #c80036, #fff5e1, #0c1844);
+  background-size: 240% 240%;
+  animation: gradient-animation 24s ease infinite;
+}
+
+@keyframes gradient-animation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }

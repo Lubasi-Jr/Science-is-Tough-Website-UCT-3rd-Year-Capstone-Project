@@ -24,7 +24,7 @@
       rel="stylesheet"
     />
 
-    <link rel="stylesheet" href="./src/content.css" />
+    <link rel="stylesheet" href="./content.css" />
 
     <title>Content</title>
   </head>
@@ -90,7 +90,7 @@
         </div>
       </div>
       <div class="child_3">
-        <a class="icon-link" href="#">
+        <a class="icon-link" type="button" onclick="goBack()">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="16"
@@ -139,6 +139,10 @@
         mediaElements.forEach((media) => {
           media.pause();
         });
+      }
+
+      function goBack() {
+        window.history.back();
       }
     </script>
   </body>
