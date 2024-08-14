@@ -27,6 +27,10 @@ export const router = createBrowserRouter([
         path: "/quizzes",
         element: <Quiz />,
       },
+      {
+        path: "/distract",
+        element: <Quiz />,
+      },
     ],
   },
 ]);

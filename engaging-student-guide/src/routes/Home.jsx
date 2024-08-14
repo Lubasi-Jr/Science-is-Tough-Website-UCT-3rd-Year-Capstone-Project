@@ -1,46 +1,73 @@
-import React from 'react';
- 
+import { useState } from "react";
+import Card from "../components/Card";
+import { Content } from "../models/content";
 
-function Home({setView}){
+function Home() {
+  const cards = [
+    new Content(1, "images/metacog.jpg", "Metacognition: Your key to success"),
+    new Content(
+      2,
+      "https://img.buzzfeed.com/buzzfeed-static/static/2020-09/28/15/asset/fc1f2fac717b/anigif_sub-buzz-29608-1601307260-18_preview.gif?output-quality=auto&output-format=auto&downsize=360:*",
+      "How to succeed in your first BSc tests",
+      "#"
+    ),
+    new Content(3, "ref.jpg", "Make the most of your vac", "#"),
+    new Content(
+      4,
+      "https://th.bing.com/th?id=OIF.ljB7NofIHqWXfUUV%2fMM5nQ&rs=1&pid=ImgDetMain",
+      "The shape of your well-being",
+      "#"
+    ),
+    new Content(
+      5,
+      "images/clock.jpg",
+      "Next-level time management for succeeding at UCT"
+    ),
+    new Content(
+      6,
+      "https://www.shutterstock.com/image-vector/goldfish-jumping-out-one-fishbowl-600nw-1870441930.jpg",
+      "Culture shock at UCT",
+      "#"
+    ),
+    new Content(7, "images/brain.jpg", "So,how does your brain work?", "#"),
+    new Content(8, "images/finals.jpg", "Acing exam season", "#"),
+  ];
 
-  return(
- /*Adapted and customised from Bootstrap
-   Upon each nav item when clicked it will change the use state from the default home to that specific nav item
- */
- <nav className="navbar navbar-expand-lg bg-body-tertiary" style={{backgroundColor: "#FFF5E1"}}>
-  <div className="container-fluid">
-    <a className="navbar-brand" href="#"><h1>Science is Tough</h1></a>
-    <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span className="navbar-toggler-icon"></span>
-    </button>
-    <div className="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-        <li className="nav-item">
-        <a className="nav-link" href="#" onClick={()=>setView('home')}>Home</a> 
-        </li>
-        <li className="nav-item">
-        <a className="nav-link" href="#" onClick={()=>setView('favourites')}>Favourites</a>
-        </li>
-        <li className="nav-item">
-          <a className="nav-link" href="#" onClick={()=>setView('quizzes')}>Quizzes</a>
-        </li>
-        <li className="nav-item">
-          <a className="nav-link" href="#" onClick={()=>setView('distract')}> Distract Me</a>
-        </li>
-        <li className="nav-item">
-          <a className="nav-link" href="#" onClick={()=>setView('weekly')}> Weekly challenge</a>
-        </li>
-       
-      </ul>
-      <img className="rewards" src="https://th.bing.com/th/id/OIP.fn-lQEKilSWQEAi43Y1aRAHaFj?rs=1&pid=ImgDetMain" style={{height:"50px",width: "50px"}}></img>
-      <h5><b>100</b></h5>
-      <form className="d-flex" role="search">
-        <input className="form-control" type="search" placeholder="Search" aria-label="Search"/>
-        <button className="btn" type="submit">Search</button>
-      </form>
-    </div>
-  </div>
- </nav>
- );
+  const [favourite, setFavourite] = useState([]);
+
+  const Fave = (card) => {
+    let found = false;
+    let newFave = [];
+    for (let i = 0; i < favourite.length; i++) {
+      if (favourite[i].id == card.id) {
+        found = true;
+      } else {
+        newFave.push(favourite[i]);
+      }
+    }
+    if (found) {
+      setFavourite(newFave);
+    } else {
+      newFave.push(card);
+      setFavourite(newFave);
+    }
+  };
+  return (
+    <>
+      <div className="card-container">
+        {cards.map((card) => (
+          <Card
+            key={card.id}
+            id={card.id}
+            imageSrc={card.imageSrc}
+            title={card.title}
+            link={card.link}
+            favourite={favourite.some((fav) => fav.id === card.id)}
+            Fave={() => Fave(card)}
+          />
+        ))}
+      </div>
+    </>
+  );
 }
-export default Home
+export default Home;
