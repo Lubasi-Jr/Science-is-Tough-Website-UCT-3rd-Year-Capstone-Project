@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./Challenges.css";
 import { Challenge } from "../models/challenge";
 function Challenges() {
-  const openChallenges = [
+  const [openChallenges, setOpenChallenges] = useState([])
+  useEffect(() => setOpenChallenges([
     new Challenge(
       1,
       "Challenge 1",
@@ -21,15 +22,20 @@ function Challenges() {
       "Another Cool award",
       15
     ),
-  ];
+  ]), []);
 
   const [selectedChallenge, setSelectedChallenge] = useState(null);
   const [enrolledChallenges, setEnrolledChallnges] = useState([]);
 
   // adds the challeng to openChallenges the user is currently doing
   const startChallenge = (challenge) => {
-    // const found = selectedChallenge.find((c) => c.id === challenge.id);
+    // add challenge to enrolled challenges
     setEnrolledChallnges([...enrolledChallenges, challenge]);
+
+    // remove challenge from open
+    setOpenChallenges(openChallenges.filter((ch) => ch.id !== challenge.id));
+
+    // const found = selectedChallenge.find((c) => c.id === challenge.id);
   };
 
   const openModal = (challenge) => {
@@ -80,6 +86,7 @@ function Challenges() {
               >
                 <div className="name">{challenge.name}</div>
                 <div className="date">Start Date: {challenge.date_created}</div>
+                <div className="date">End Date: {challenge.date_end}</div>
               </div>
               <div className="right-section">
                 <div>Time left: 30min</div>
@@ -94,6 +101,7 @@ function Challenges() {
           <div
             style={{
               paddingBottom: "20px",
+              color: "#0e1b4b",
               backgroundColor: "rgba(0, 0, 0, .65)",
             }}
             className="modal show fade d-block"
@@ -103,9 +111,7 @@ function Challenges() {
             <div className="modal-dialog" role="document">
               <div className="modal-content">
                 <div className="modal-header">
-                  <h5 className="modal-title">
-                    {selectedChallenge.name} - About
-                  </h5>
+                  <h5 className="modal-title">{selectedChallenge.name}</h5>
                 </div>
                 <div className="modal-body">
                   <p>
@@ -113,7 +119,7 @@ function Challenges() {
                     {selectedChallenge.description}
                   </p>
                   <p>
-                    <strong>End Date:</strong> {selectedChallenge.endDate}
+                    <strong>End Date:</strong> {selectedChallenge.date_end}
                   </p>
                   <p>
                     <strong>Students Starting:</strong>{" "}
