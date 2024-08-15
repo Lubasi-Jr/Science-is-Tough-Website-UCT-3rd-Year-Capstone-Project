@@ -2,40 +2,41 @@ import { useState, useEffect } from "react";
 import "./Challenges.css";
 import { Challenge } from "../models/challenge";
 function Challenges() {
-  const [openChallenges, setOpenChallenges] = useState([])
-  useEffect(() => setOpenChallenges([
-    new Challenge(
-      1,
-      "Challenge 1",
-      "This is the first challenge.",
-      "2024-08-01",
-      "2024-08-31",
-      "Cool award",
-      20
-    ),
-    new Challenge(
-      2,
-      "Challenge 2",
-      "This is the second challenge.",
-      "2024-09-01",
-      "2024-09-30",
-      "Another Cool award",
-      15
-    ),
-  ]), []);
+  const [openChallenges, setOpenChallenges] = useState([]);
+  useEffect(
+    () =>
+      setOpenChallenges([
+        new Challenge(
+          1,
+          "Challenge 1",
+          "This is the first challenge.",
+          "2024-08-01",
+          "2024-08-31",
+          "Cool reward",
+          20
+        ),
+        new Challenge(
+          2,
+          "Challenge 2",
+          "This is the second challenge.",
+          "2024-09-01",
+          "2024-09-30",
+          "Another Cool reward",
+          15
+        ),
+      ]),
+    []
+  );
 
   const [selectedChallenge, setSelectedChallenge] = useState(null);
-  const [enrolledChallenges, setEnrolledChallnges] = useState([]);
+  const [enrolledChallenges, setEnrolledChallenges] = useState([]);
 
   // adds the challeng to openChallenges the user is currently doing
+
+  // Start a challenge
   const startChallenge = (challenge) => {
-    // add challenge to enrolled challenges
-    setEnrolledChallnges([...enrolledChallenges, challenge]);
-
-    // remove challenge from open
-    setOpenChallenges(openChallenges.filter((ch) => ch.id !== challenge.id));
-
-    // const found = selectedChallenge.find((c) => c.id === challenge.id);
+    setEnrolledChallenges([...enrolledChallenges, challenge]); // Add to enrolled challenges
+    setOpenChallenges(openChallenges.filter((ch) => ch.id !== challenge.id)); // Remove from open challenges
   };
 
   const openModal = (challenge) => {
@@ -49,33 +50,39 @@ function Challenges() {
   return (
     <>
       <div>
-        <div className="challenge-header">
+        <div className="oswald-text">
           <h3>Open Challenges</h3>
         </div>
-        <ul className="l-group">
-          {openChallenges.map((challenge) => (
-            <li key={challenge.id} className="l-group-item">
-              <div
-                className="left-section"
-                onClick={() => openModal(challenge)}
-              >
-                <div className="name">{challenge.name}</div>
-                <div className="date">Start Date: {challenge.date_created}</div>
-              </div>
-              <div className="right-section">
-                <button
-                  className="btn btn-primary"
-                  onClick={() => startChallenge(challenge.id)}
-                >
-                  Start
-                </button>
-              </div>
-            </li>
-          ))}
-        </ul>
 
-        <div className="challenge-header">
-          <h3>Enrolled Challenges</h3>
+        {openChallenges.length === 0 ? (
+          <h3 style={{color: "#0e1b4b"}}>Congratulations! 🎉 You’ve completed all the challenges! </h3>
+        ) : (
+          <ul className="l-group">
+            {openChallenges.map((challenge) => (
+              <li key={challenge.id} className="l-group-item">
+                <div
+                  className="left-section"
+                  onClick={() => openModal(challenge)}
+                >
+                  <div className="name">{challenge.name}</div>
+                  <div className="date">
+                    Start Date: {challenge.date_created}
+                  </div>
+                </div>
+                <div className="right-section">
+                  <button
+                    className="challenge-btn"
+                    onClick={() => startChallenge(challenge)}
+                  >
+                    Start Challenge
+                  </button>
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
+        <div className="oswald-text">
+          <h3>Challenges Started</h3>
         </div>
         <ul className="l-group">
           {enrolledChallenges.map((challenge) => (
@@ -86,10 +93,9 @@ function Challenges() {
               >
                 <div className="name">{challenge.name}</div>
                 <div className="date">Start Date: {challenge.date_created}</div>
-                <div className="date">End Date: {challenge.date_end}</div>
               </div>
               <div className="right-section">
-                <div>Time left: 30min</div>
+                <div>Time left: 15min</div>
               </div>
             </li>
           ))}
@@ -128,8 +134,8 @@ function Challenges() {
                 </div>
                 <div className="modal-footer">
                   <button
-                    type="button"
-                    className="btn btn-secondary"
+                    
+                    className="challenge-btn"
                     onClick={closeModal}
                   >
                     Close

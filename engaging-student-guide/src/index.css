@@ -114,11 +114,11 @@ body{
   
 }
 /*ensure the heading of the favourites page is white and in the middle of the page*/
-.fave-container h1{
+/* .fave-container h1{
   padding-bottom: 100px;
   color: whitesmoke;
   text-align:center;
-}
+} */
 /*create a custom font that will be used on all headings*/
 .oswald-text {
   font-family: "Oswald", sans-serif;
@@ -126,6 +126,7 @@ body{
   font-weight: 500;
   font-style: normal;
   padding:15px;
+  color: black;
 }
 /*ensure the text colour is white*/
 .distract h2{
@@ -135,4 +136,9 @@ body{
 
 .Home h6{
   margin-right: 100px;
+}
+
+.nav-item .nav-link {
+  text-align: center;
+  font-size: medium;
 }

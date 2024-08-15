@@ -13,23 +13,32 @@
   margin-bottom: 2em;
 }
 
+.quiz-container .question-content {
+  font-size: 30px;
+  font-weight: 600;
+  color: #0e1b4b;
+}
 .quiz-container .question-text {
   font-size: 20px;
-  font-weight: 600;
+  font-weight: 400;
+  color: #0e1b4b;
 }
 
 .quiz-container .option-section {
   margin-bottom: 2em;
+}
+.quiz-container .score-section {
+  color:#0e1b4b;
 }
 
 .option-section .option-item {
   margin: 10px 0;
   padding: 10px;
   font-size: 18px;
-  /* background-color: #f0f0f0; */
   border: 1px solid rgb(208, 50, 81);
   border-radius: 4px;
   cursor: pointer;
+  color: #0e1b4b;
   transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 .option-section .option-item:hover {
@@ -40,6 +49,17 @@
   background-color: rgb(208, 50, 81);
   color: white;
   border-color: #FFF5E1;
+}
+
+
+.quiz-next-btn {
+  background-color: #0e1b4b;
+  color: white;
+  font-size: 15px;
+  padding-left: 30px;
+  padding-right: 30px;
+  padding-top: 15px;
+  padding-bottom: 15px;
 }
 
 .radio {

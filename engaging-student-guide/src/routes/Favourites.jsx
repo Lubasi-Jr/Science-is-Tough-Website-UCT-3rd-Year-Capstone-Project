@@ -1,5 +1,4 @@
 import Card from "../components/Card";
-import { useState } from "react";
 import { Fav } from "../context/favouriteContext";
 
 export default function Favourites() {
@@ -25,7 +24,7 @@ export default function Favourites() {
   return (
     <>
       <div className="fave-container">
-        <h1>Your favourites</h1>
+        <h1 className="oswald-text">Your favourites</h1>
         <div className="cards">
           {favourite.length > 0 ? (
             favourite.map((f) => (

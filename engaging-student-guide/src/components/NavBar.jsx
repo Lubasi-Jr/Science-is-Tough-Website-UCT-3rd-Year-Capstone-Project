@@ -54,9 +54,9 @@ export default function NavBar() {
             <img
               className="rewards"
               src="https://th.bing.com/th/id/OIP.fn-lQEKilSWQEAi43Y1aRAHaFj?rs=1&pid=ImgDetMain"
-              style={{ height: "50px", width: "50px", marginLeft: "50px" }}
+              style={{ height: "50px", width: "50px", marginLeft: "5px" }}
             ></img>
-            <h5 style={{ marginRight: "100px" }}>
+            <h5 style={{ marginRight: "20px", marginLeft: "10px" }}>
               <b style={{color: "black"}}>100</b>
             </h5>
 

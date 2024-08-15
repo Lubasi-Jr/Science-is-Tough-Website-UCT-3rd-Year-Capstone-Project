@@ -1,37 +1,54 @@
 .l-group {
-    display: flex;
-    flex-direction: column;
-    padding: 0px;
-    margin: 0px;
-    padding-left: 1em;
-    padding-right: 1em;
+  display: flex;
+  flex-direction: column;
+  padding: 0px;
+  margin: 0px;
+  padding-left: 1em;
+  padding-right: 1em;
 }
 .l-group-item {
-    background-color: white;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    padding: 10px 15px;
-    margin-bottom: 10px;
-  }
-  
- .l-group-item .left-section {
-    display: flex;
-    flex-grow: 1;
-    align-items: center;
-  }
-  
-  .l-group-item .name {
-    margin-right: 15px;
-    color: black;
-  }
-  
-  .l-group-item .date {
-    color: gray;
-  }
-  
-  .l-group-item .right-section {
-    margin-left: auto;
-  }
-  
+  background-color: white;
+  display: flex;
+
+  margin: 10px 0;
+  padding: 10px;
+  font-size: 18px;
+  border: 1px solid rgb(208, 50, 81);
+  border-radius: 4px;
+  cursor: pointer;
+  color: #0e1b4b;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+.l-group-item:hover {
+  background-color: #fff5e1;
+}
+
+.l-group-item .left-section {
+  display: flex;
+  flex-grow: 1;
+  align-items: center;
+}
+
+.l-group-item .name {
+  margin-right: 15px;
+  color: black;
+}
+
+.l-group-item .date {
+  color: gray;
+}
+
+.l-group-item .right-section {
+  margin-left: auto;
+  color: black;
+}
+
+.challenge-btn {
+  background-color: #0e1b4b;
+  color: white;
+  font-size: 15px;
+  padding-left: 30px;
+  padding-right: 30px;
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
