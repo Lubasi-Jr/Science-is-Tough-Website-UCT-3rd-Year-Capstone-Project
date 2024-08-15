@@ -25,21 +25,41 @@ export default function NavBar() {
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
               <li className="nav-item">
-                <Link className="nav-link"  to="/">Home</Link>
+                <Link className="nav-link" to="/">
+                  Home
+                </Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link"  to="/favourites">Favourites</Link>
+                <Link className="nav-link" to="/favourites">
+                  Favourites
+                </Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link"  to="/quizzes">Quizzes</Link>
+                <Link className="nav-link" to="/quizzes">
+                  Quizzes
+                </Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link"  to="/distract">Distract Me</Link>
+                <Link className="nav-link" to="/distract">
+                  Distract Me
+                </Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link"  to="/weekly"> Weekly challenge</Link>
+                <Link className="nav-link" to="/weekly">
+                  {" "}
+                  Weekly challenge
+                </Link>
               </li>
             </ul>
+            <img
+              className="rewards"
+              src="https://th.bing.com/th/id/OIP.fn-lQEKilSWQEAi43Y1aRAHaFj?rs=1&pid=ImgDetMain"
+              style={{ height: "50px", width: "50px", marginLeft: "50px" }}
+            ></img>
+            <h5 style={{ marginRight: "100px" }}>
+              <b style={{color: "black"}}>100</b>
+            </h5>
+
             <form className="d-flex" role="search">
               <input
                 className="form-control"
