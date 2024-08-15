@@ -1,6 +1,6 @@
-import { useState } from "react";
 import Card from "../components/Card";
 import { Content } from "../models/content";
+import { Fav } from "../context/favouriteContext";
 
 function Home() {
   const cards = [
@@ -16,7 +16,12 @@ function Home() {
       "How to succeed in your first BSc tests",
       "content.html"
     ),
-    new Content(3, "images/ref.jpg", "Make the most of your vac", "content.html"),
+    new Content(
+      3,
+      "images/ref.jpg",
+      "Make the most of your vac",
+      "content.html"
+    ),
     new Content(
       4,
       "https://th.bing.com/th?id=OIF.ljB7NofIHqWXfUUV%2fMM5nQ&rs=1&pid=ImgDetMain",
@@ -44,7 +49,7 @@ function Home() {
     new Content(8, "images/finals.jpg", "Acing exam season", "content.html"),
   ];
 
-  const [favourite, setFavourite] = useState([]);
+  const { favourite, setFavourite } = Fav();
 
   const Fave = (card) => {
     let found = false;
