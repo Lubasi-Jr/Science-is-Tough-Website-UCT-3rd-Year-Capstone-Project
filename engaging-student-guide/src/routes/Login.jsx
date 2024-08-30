@@ -11,7 +11,7 @@ export default function SignUp() {
 
   const navigate = useNavigate();
 
-  const signUp = async (e) => {
+  const singIn = async (e) => {
     e.preventDefault();
 
     if (email && password.length > 0) {
@@ -42,7 +42,7 @@ export default function SignUp() {
           <div className="form-header">
             <h3>Login</h3>
           </div>
-          <form onSubmit={signUp} className="form">
+          <form onSubmit={singIn} className="form">
             <div className="form-group">
               <label htmlFor="email">Email</label>
               <input
