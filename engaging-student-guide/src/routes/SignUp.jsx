@@ -18,16 +18,6 @@ export default function SignUp() {
   const signUp = async (e) => {
     e.preventDefault();
 
-    const { error } = await supabase.auth.signUp({
-      email: email,
-      password: password,
-    });
-
-    if (error) {
-      setErrorMsg(error.message);
-      return;
-    }
-
     if (
       email &&
       name &&
@@ -35,11 +25,28 @@ export default function SignUp() {
       password === confirmPassword &&
       studentYear !== ""
     ) {
+
+        const { error } = await supabase.auth.signUp({
+            email: email,
+            password: password,
+            options: {
+                data: {
+                    name: name,
+                }
+            }
+          });
+      
+          if (error) {
+            setErrorMsg(error.message);
+            return;
+          }
+
+
       const userResponse = await supabase.auth.getUser();
 
       if (userResponse.data.user) {
         const student = {
-          userId: userResponse.data.user.id,
+          id: userResponse.data.user.id,
           name: name,
           email: email,
           year: studentYear,
@@ -48,11 +55,14 @@ export default function SignUp() {
           level: "Beginner",
         };
 
-        const { error } = await supabase.from("Student").insert(student);
+        const { error } = await supabase.from("student").insert(student);
         if (error === null) {
           navigate("/");
         } else {
           setErrorMsg("Error inserting student data.");
+          console.log("Error inserting data ",error.details);
+          return
+          
         }
       }
     } else {

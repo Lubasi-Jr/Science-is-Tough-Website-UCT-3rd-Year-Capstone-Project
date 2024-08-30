@@ -1,29 +1,29 @@
 export class Student {
   userId; // Unique identifier for the content.
   studentYear;
-  studentType;
+  isInternational;
   email;
   points;
   level;
 
   // Constructor to initialize the Content class with id, imageSrc, title, and link.
-  constructor(id, studentType, studentYear, email) {
+  constructor(id, isInternational, studentYear, email) {
     this.userId = id;
     this.studentYear = studentYear;
-    this.studentType = studentType;
+    this.isInternational = isInternational;
     this.email = email;
     this.points = 20;
     this.level = "Beginner";
   }
 
-  static fromJson(id, studentType,studentYear,  email) {
-    return new Student(id, studentType,studentYear, email);
+  static fromJson(id, isInternational,studentYear,  email) {
+    return new Student(id, isInternational,studentYear, email);
   }
 
   toJson() {
     return {
       id: this.userId,
-      studentType: this.studentType,
+      isInternational: this.isInternational,
       year: this.studentYear,
       email: this.email,
       points: this.points,
