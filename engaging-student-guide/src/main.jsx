@@ -5,11 +5,14 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { RouterProvider } from "react-router-dom";
 import { router } from "./router";
 import FavContextProvider from "./context/favouriteContext";
+import AuthProvider from "./hooks/useAuth";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <FavContextProvider>
-      <RouterProvider router={router} />
-    </FavContextProvider>
+    <AuthProvider>
+      <FavContextProvider>
+        <RouterProvider router={router} />
+      </FavContextProvider>
+    </AuthProvider>
   </StrictMode>
 );

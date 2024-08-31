@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
 
 export default function NavBar() {
+  const auth = useAuth()
   return (
     <>
       <nav
@@ -59,6 +61,12 @@ export default function NavBar() {
             <h5 style={{ marginRight: "20px", marginLeft: "10px" }}>
               <b style={{color: "black"}}>100</b>
             </h5>
+            <li className="nav-item">
+                <a className="nav-link" onClick={() => auth.signOut()}>
+                  {" "}
+                  Logout
+                </a>
+              </li>
 
             <form className="d-flex" role="search">
               <input
