@@ -2,7 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import App from "./App.jsx";
 import Challenges from "./routes/Challenges.jsx";
 import Favourites from "./routes/Favourites.jsx";
-import Home from "./routes/Home.jsx";
+import Dashboard from "./routes/Dashboard.jsx";
 import Quiz from "./routes/Quiz.jsx";
 import Memory from "./routes/Memory.jsx";
 
@@ -14,7 +14,7 @@ export const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <Home />,
+        element: <Dashboard />,
       },
       {
         path: "/weekly",
