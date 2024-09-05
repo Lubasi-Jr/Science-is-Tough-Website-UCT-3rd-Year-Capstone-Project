@@ -1,144 +1,318 @@
+:root {
+  /* Primary colors */
+  --primary-bg-color: #f4f5f7;
+  --secondary-bg-color: #ffffff;
+  --third-bg-color: #ffc1c1;
+  /* --primary-accent-color: #1e293b; */
+
+  /* --primary-bg-color: #fff5e1; Soft peach background */
+  --primary-accent-color: #ff6969; /* Light coral for highlights */
+  --secondary-accent-color: #c80036; /* Vibrant red for buttons */
+  --primary-text-color: #0c1844; /* Deep navy blue for text and panels */
+  --secondary-text-color: #152663; /* Deep navy blue for text and panels */
+
+  --icon-hover-color: #ffc1c1;
+  --hover-color: #ffc1c1; /* more geneeric */
+}
+
 /*create a custom font*/
-@font-face{
+@font-face {
   font-family: "myFont";
-  src:url("/OverloadBurn.ttf") format("truetype");
-}
-/*use custom font on the website name */
-.navbar-brand h1{
-  font-family: "myFont";
-}
-/*change the background to a gradient like background*/
-body{
-    background: linear-gradient(243deg,#ff6969,#c80036,#fff5e1,#0c1844);
-    background-size: 240% 240%;
-    animation: gradient-animation 24s ease infinite;
-  }
-  
-  @keyframes gradient-animation {
-    0% {
-      background-position: 0% 50%;
-    }
-    50% {
-      background-position: 100% 50%;
-    }
-    100% {
-      background-position: 0% 50%;
-    }
-  }
-  /*background-image:url("/background_image.png");*/
-
-
-
-.d-flex{
-  background-color: rgb(208, 50, 81);
-  border-radius :7px;
-  margin-left: 80px;
-  
-}
-/*change the search button text and backgroud when a user hovers on search button*/
-.navbar .btn:Hover{
-  background-color: rgb(230, 8, 53);
-  color: whitesmoke;
+  src: url("./OverloadBurn.ttf") format("truetype");
 }
 
+* {
 
-.navbar .btn{
-  color: whitesmoke;
-}
-.welcome{
-  color: whitesmoke;
-}
-/*ensures the card has a shadow and items are inline with another*/
-.card{
-  align-items: center;
-  margin:35px;
-  display:inline-block;
-  border-radius: 10px;
-  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-  font-size: 13.5px;
-  position:relative;
-}
-.navbar{
-  margin-bottom: 30px;
-}
-/*centers the text and image*/
-.card-body{
-  text-align: center;
-  
-}
-.card-container {
-  display: flex;
-  flex-wrap: wrap; 
-  gap: 10px; 
-  justify-content: center;
-  
-}
-.card .card-img-top{
-  padding-top: 13px; 
-}
-/*ensure the read more button is in the smae spot on all cards*/
-.card .btn.btn-primary{
-  background-color: #0e1b4b;
-  position:absolute;
-  bottom:20px;
-  margin-bottom:5px;
-  left:50%;
-  transform:translateX(-50%)
-}
-.Home .navbar .navbar-expand-lg .bg-body-tertiary{
-  background-color: #FFF5E1;
-}
-/*when a user hovers the card size will increase and the shadow will stay around the card*/
-.card:hover {
-  transform: scale(1.15); 
-  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.35); 
-}
-/*chnage the cursor when a user hovers over a star*/
-.card .star:Hover{
-  cursor:pointer;
-}
-/*position the star icon which is used to favourite*/
-.card .star{
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  cursor:pointer;
-
-}
-
-.cards {
-  display: flex;
-  flex-wrap: wrap; 
-  gap: 10px; 
-  justify-content: center;
-  
-}
-/*ensure the heading of the favourites page is white and in the middle of the page*/
-/* .fave-container h1{
-  padding-bottom: 100px;
-  color: whitesmoke;
-  text-align:center;
-} */
-/*create a custom font that will be used on all headings*/
-.oswald-text {
+  margin: 0;
+  padding: 0;
   font-family: "Oswald", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: 500;
-  font-style: normal;
-  padding:15px;
-  color: black;
-}
-/*ensure the text colour is white*/
-.distract h2{
-  color:whitesmoke;
-  text-align:center;
 }
 
-.Home h6{
-  margin-right: 100px;
+html, body {
+  min-height: 100vh;
 }
 
-.nav-item .nav-link {
-  text-align: center;
+
+.dashboard-container {
+  background-color: var(--primary-bg-color);
+  color: var(--secondary-text-color);
+  padding-top: 2em;
+  padding-bottom: 4em;
   font-size: medium;
+}
+
+/* Bottom section (Divided into left and right) */
+.bottom-container {
+  display: grid;
+  grid-template-columns: 2fr 1fr; /* Adjust the ratio as needed */
+  height: 100%; /* Fill the remaining space */
+  margin-left: 2em;
+  margin-right: 2em;
+  gap: 2em;
+}
+
+/* Left and right panels */
+.left-panel {
+  display: flex;
+  flex-direction: column;
+  row-gap: 2em;
+}
+
+/*  ============================= Recent Activity ====================================   */
+.recent-activity {
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  padding-top: 1em;
+  padding-bottom: 1em;
+  gap: 1em;
+  background-color: var(--secondary-bg-color);
+  text-align: start;
+  padding-left: 2em;
+  padding-right: 2em;
+}
+
+.recent-activity a {
+  color: var(--secondary-accent-color);
+}
+
+/* ========================== Favourite Container ========================================*/
+.fav-container {
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  padding-top: 20px;
+  gap: 1em;
+  text-align: start;
+  background-color: var(--secondary-bg-color);
+  padding-left: 2em;
+  padding-right: 2em;
+}
+
+.fav-cards {
+  display: flex;
+  flex-direction: column;
+}
+
+.dashboard-card {
+  display: flex;
+  flex-direction: column;
+  border-radius: 20px;
+  overflow: hidden;
+  width: 30%;
+  height: 200px;
+  background-color: #fff; /* Background color */
+  transition: transform 0.2s ease, box-shadow 0.2s ease; /* Smooth transitions */
+}
+
+.dashboard-card:hover {
+  transform: scale(1.05); /* Slightly scale up on hover */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Enhance shadow on hover */
+  cursor: pointer;
+}
+
+.card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.card-content {
+  padding: 1em; /* Padding inside card */
+}
+
+.card-title {
+  font-size: 1.25em; /* Font size for title */
+  margin-bottom: 0.5em; /* Space below title */
+}
+
+.card-rating {
+  font-size: 1.2em; /* Font size for rating */
+  color: #ffd700; /* Gold color for stars */
+}
+
+.star {
+  margin-right: 0.2em; /* Space between stars */
+}
+
+/* ================== Recent Uploaded Component ======================================= */
+.recent-container {
+  background-color: var(--secondary-bg-color);
+  display: flex;
+  border-radius: 20px;
+  flex-direction: column;
+  padding-top: 20px;
+  gap: 1em;
+  padding-left: 2em;
+  padding-right: 2em;
+  text-align: start;
+}
+
+.recent-items {
+  display: flex;
+  flex-direction: column;
+  row-gap: 1em;
+}
+
+.recent-item {
+  display: flex;
+  column-gap: 1em;
+  justify-content: space-between;
+  transition: background-color 0.4s, transform 0.3s;
+  border-bottom: 1px solid var(--icon-hover-color);
+}
+
+.recent-item .recent-start {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+.recent-item .recent-end {
+  display: flex;
+  column-gap: 1em;
+  align-items: center;
+}
+
+.recent-item .recent-end-item {
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--primary-accent-color);
+  padding: 5px;
+  border-radius: 10px;
+}
+
+.recent-item .recent-end-item:hover {
+  background-color: var(--icon-hover-color);
+  cursor: pointer;
+}
+
+.recent-item img {
+  width: 50px;
+  height: 50px;
+  overflow: hidden;
+  border-radius: 50%;
+  border: 3px solid;
+  border-color: var(--secondary-accent-color);
+}
+
+/* Right Panel */
+.right-panel {
+  display: flex;
+  flex-direction: column;
+  row-gap: 2em;
+}
+
+/* ======================= Challenges Component ============================ */
+.challenges-container {
+  background-color: var(--secondary-bg-color);
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  border-radius: 20px;
+  row-gap: 1em;
+}
+.challenges-container .challenge-item {
+  display: flex;
+  column-gap: 1em;
+  align-items: center;
+  padding: 0.6em;
+  border-radius: 20px;
+  transition: background-color 0.4s, transform 0.3s;
+}
+
+.challenges-container .challenge-item:hover {
+  cursor: pointer;
+  background-color: var(--hover-color);
+  /* transform: scale(1.03);  */
+  /* border: 1px solid var(--secondary-accent-color) */
+}
+
+.challenges-container .challenge-item .challenge-item-info {
+  display: flex;
+  flex-direction: column;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  align-items: start;
+}
+
+.challenges-container .challenge-item .challenge-item-info p {
+  margin: 0;
+}
+
+.challenges-container .challenge-item .challenge-item-icon {
+  width: 50px;
+  height: 50px;
+  overflow: hidden;
+  border-radius: 50%;
+  border: 3px solid;
+  border-color: var(--secondary-accent-color);
+}
+
+.challenges-container .challenge-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* =================== Progress Tracker ===========================  */
+.student-stats-container {
+  background-color: var(--third-bg-color);
+  padding: 20px;
+  border-radius: 15px;
+  text-align: center;
+}
+
+.stats-title {
+  color: var(--primary-text-color);
+  font-size: 1.5em;
+  margin-bottom: 20px;
+}
+
+.stats-content {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 15px;
+}
+
+.stat-item {
+  background-color: var(--secondary-bg-color);
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+}
+
+.stat-value {
+  color: var(--primary-accent-color);
+  font-size: 2em;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.stat-label {
+  color: var(--secondary-text-color);
+  font-size: 1em;
+}
+
+/* Make the layout responsive */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .navbar-center {
+    justify-content: center;
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  .navbar-right {
+    margin-top: 10px;
+    align-self: flex-end;
+  }
 }

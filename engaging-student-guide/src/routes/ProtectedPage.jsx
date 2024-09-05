@@ -3,11 +3,11 @@ import { useAuth } from '../hooks/useAuth';
 import App from '../App';
 
 const ProtectedPage = () => {
-  const { user } = useAuth();
+  // const { user } = useAuth();
 
-  if (!user) {
-    return <Navigate to='/login' replace />;
-  }
+  // if (!user) {
+  //   return <Navigate to='/login' replace />;
+  // }
 
   return <App />;
 };

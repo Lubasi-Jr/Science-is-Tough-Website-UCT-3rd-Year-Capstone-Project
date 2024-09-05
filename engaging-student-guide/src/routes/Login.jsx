@@ -81,7 +81,7 @@ export default function SignUp() {
         </div>
         <div className="image-container">
           <img
-            src="https://example.com/students-image.jpg"
+            src="../../public/auth.jpg"
             alt="Students"
             className="students-image"
           />
