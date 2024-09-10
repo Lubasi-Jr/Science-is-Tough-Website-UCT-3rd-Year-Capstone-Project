@@ -9,23 +9,8 @@
 }
 /*change the background to a gradient like background*/
 body{
-    background: linear-gradient(243deg,#ff6969,#c80036,#fff5e1,#0c1844);
-    background-size: 240% 240%;
-    animation: gradient-animation 24s ease infinite;
-  }
-  
-  @keyframes gradient-animation {
-    0% {
-      background-position: 0% 50%;
-    }
-    50% {
-      background-position: 100% 50%;
-    }
-    100% {
-      background-position: 0% 50%;
-    }
-  }
-  /*background-image:url("/background_image.png");*/
+background-color:whitesmoke;
+ } /*background-image:url("/background_image.png");*/
 
 
 
