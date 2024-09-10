@@ -22,12 +22,26 @@ export default function DashRecentlyUploaded() {
   }, []);
 
   async function getAllContent() {
-    const { data , error} = await supabase.from("content").select();
+    const { data, error } = await supabase.from("content").select();
     setAllContent(data);
     if (error) {
       console.log("There was a error", error);
       // setAllContent([])
-    } 
+    }
+  }
+
+  async function setFavourite(id, fav) {
+    console.log("This is the favourite to be set: ", !fav, fav);
+    const { error } = await supabase
+      .from("content")
+      .update({ favourite: !fav }) // or false to unset the favourite
+      .eq("id", id);
+
+    if (error) {
+      console.error("Error updating favourite:", error);
+    } else {
+      console.log("Favourite updated successfully:");
+    }
   }
 
   // const recent = [
@@ -68,20 +82,19 @@ export default function DashRecentlyUploaded() {
       <h4>Recently uploaded content</h4>
       <div className="recent-items">
         {allContent.length > 0 ? (
-          allContent.map((f) => (
-            <div
-              onClick={() => handleContentClick(f.id)}
-              key={f.id}
-              className="recent-item"
-            >
-              <div className="recent-start">
+          allContent.map((content) => (
+            <div key={content.id} className="recent-item">
+              <div
+                onClick={() => handleContentClick(content.id)}
+                className="recent-start"
+              >
                 <img
-                  src={f.imageSrc}
+                  src={content.imageSrc}
                   alt="Card Image"
                   className="recent-image"
                 />
                 <div className="card-content">
-                  <p className="card-title">{f.title}</p>
+                  <p className="card-title">{content.title}</p>
                 </div>
               </div>
               <div className="recent-end">
@@ -104,7 +117,28 @@ export default function DashRecentlyUploaded() {
                   />
                 </div>
                 <div className="fav-icon">
-                  <FaHeart className="recent-fav-item " />
+                  {content.favourite ? (
+                    <FaHeart
+                      style={{ color: "rgb(255, 62, 62)" }}
+                      onClick={() =>
+                        setFavourite(
+                          content.id,
+                          content.favourite === null ? false : true
+                        )
+                      }
+                      className="recent-fav-item "
+                    />
+                  ) : (
+                    <FaHeart
+                      onClick={() =>
+                        setFavourite(
+                          content.id,
+                          content.favourite === null ? false : true
+                        )
+                      }
+                      className="recent-fav-item "
+                    />
+                  )}
                 </div>
               </div>
             </div>
