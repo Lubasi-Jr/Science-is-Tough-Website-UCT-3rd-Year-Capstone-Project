@@ -22,16 +22,12 @@ export default function DashRecentlyUploaded() {
   }, []);
 
   async function getAllContent() {
-    const { data , error} = await supabase.from("pdf_resources").select();
+    const { data , error} = await supabase.from("content").select();
     setAllContent(data);
     if (error) {
       console.log("There was a error", error);
       // setAllContent([])
     } 
-
-
-    console.log("This was the content: ", allContent);
-    
   }
 
   // const recent = [
