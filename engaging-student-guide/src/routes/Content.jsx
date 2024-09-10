@@ -1,11 +1,12 @@
-import { useState } from "react";
+import { useState } from "react"
 import "./Content.css";
 import { MdAudiotrack } from "react-icons/md";
 import { FaVideo } from "react-icons/fa";
 import { GrDocumentPdf } from "react-icons/gr";
 
-export default function Content() {
-  const [view, setView] = useState("pdf");
+export default function Content({contentType}) {
+
+  const [view,setView] = useState(contentType)
 
   return (
     <>

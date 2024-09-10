@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate , Link} from "react-router-dom";
 import "./SignUp.css";
 import { supabase } from "../lib/supabaseClient";
 
@@ -73,6 +73,7 @@ export default function SignUp() {
               <button type="submit" className="submit-btn">
                 Login
               </button>
+              <span className="signup">Already have an account? </span><Link className="signup" to={"/signup"}>Signup</Link>
             </div>
             {errorMsg !== "" && (
               <p style={{ color: "red", paddingTop: "10px" }}>{errorMsg}</p>

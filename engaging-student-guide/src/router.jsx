@@ -38,7 +38,7 @@ export const router = createBrowserRouter([
         element: <Memory />,
       },
       {
-        path: "/content",
+        path: "/content/:id",
         element: <Content />,
       },
     ],

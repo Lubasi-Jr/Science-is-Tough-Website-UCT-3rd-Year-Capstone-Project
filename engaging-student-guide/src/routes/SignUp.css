@@ -53,14 +53,14 @@
   
   .input-field:focus,
   .select-field:focus {
-    border-color: #007bff;
+    border-color: var(--secondary-accent-color);
     outline: none;
   }
   
   .submit-btn {
     width: 100%;
     padding: 12px;
-    background-color: #007bff;
+    background-color: var(--secondary-accent-color);
     color: white;
     border: none;
     border-radius: 4px;
@@ -70,7 +70,14 @@
   }
   
   .submit-btn:hover {
-    background-color: #0056b3;
+    background-color: var(--hover-color );
+  }
+
+
+  .signup {
+    color: var(--primary-text-color);
+    /* text-decoration: none; */
+    font-size: smaller;
   }
   
   .image-container {
