@@ -10,8 +10,8 @@ export default function DashRecentlyUploaded() {
   const [view, setView] = useState("pdf");
   const navigate = useNavigate();
 
-  const handleContentClick = (id) => {
-    navigate(`/content/${id}`, { contentType: view });
+  const handleContentClick = (content) => {
+    navigate(`/content/${content.id}`, {state: { content: content, contentType: "pdf"} });
   };
 
   const [allContent, setAllContent] = useState([]);
@@ -85,7 +85,7 @@ export default function DashRecentlyUploaded() {
           allContent.map((content) => (
             <div key={content.id} className="recent-item">
               <div
-                onClick={() => handleContentClick(content.id)}
+                onClick={() => handleContentClick(content)}
                 className="recent-start"
               >
                 <img

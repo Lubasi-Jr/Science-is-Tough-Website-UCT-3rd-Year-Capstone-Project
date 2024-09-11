@@ -5,10 +5,18 @@ import { FaVideo } from "react-icons/fa";
 import { GrDocumentPdf } from "react-icons/gr";
 import { supabase } from "../lib/supabaseClient";
 import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 
-export default function Content({ content, contentType }) {
+export default function Content() {
+  const location = useLocation();
+  const { content, contentType } = location.state || {}; // Handle cases where state might be undefined
+
   const [view, setView] = useState(contentType);
   const [audioUrl, setAudioUrl] = useState("");
+  const [pdfUrl, setPDFUrl] = useState(null);
+
+  console.log(content, contentType);
+  console.log("Location: ", location);
 
   useEffect(() => {
     fetchContent(content, contentType);
@@ -17,16 +25,7 @@ export default function Content({ content, contentType }) {
   async function fetchContent(content, contentType) {
     // fetch pdf or audio url
     if (contentType === "pdf") {
-      const { data, error } = await supabase
-        .from("content")
-        .select("audio_url")
-        .eq("id", content.id);
-
-      if (error) {
-        console.error("Error fetching audio URL:", error);
-      } else if (data && data.length > 0) {
-        setAudioUrl(data[0].audio_url);
-      }
+      setPDFUrl(content.pdf_url);
     } else {
       const { data, error } = await supabase
         .from("content")
@@ -34,9 +33,9 @@ export default function Content({ content, contentType }) {
         .eq("id", content.id);
 
       if (error) {
-        console.error("Error fetching audio URL:", error);
-      } else if (data && data.length > 0) {
-        setAudioUrl(data[0].audio_url); // Set the URL into state
+        console.error("Error fetching audio URL: ", error);
+      } else {
+        setAudioUrl(data[0].audio_url);
       }
     }
   }
@@ -88,7 +87,7 @@ export default function Content({ content, contentType }) {
 
           {view === "audio" && (
             <audio className="audio-player" controls>
-              <source src={audioUrl} type="audio/mpeg" />
+              <source src={audioUrl} type="audio/wav" />
               Browser does not support the audio element
             </audio>
           )}
