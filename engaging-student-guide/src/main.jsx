@@ -10,9 +10,9 @@ import AuthProvider from "./hooks/useAuth";
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <AuthProvider>
-      <FavContextProvider>
-        <RouterProvider router={router} />
-      </FavContextProvider>
+        <FavContextProvider>
+          <RouterProvider router={router} />
+        </FavContextProvider>
     </AuthProvider>
   </StrictMode>
 );

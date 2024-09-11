@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-// import { Content } from "../models/content";
 import { MdAudiotrack } from "react-icons/md";
 import { FaVideo } from "react-icons/fa";
 import { GrDocumentPdf } from "react-icons/gr";
@@ -18,20 +17,56 @@ export default function DashRecentlyUploaded() {
   const [allContent, setAllContent] = useState([]);
 
   useEffect(() => {
-    getAllContent();
+    const handleUpdate = (payload) => {
+      const updatedItem = payload.new;
+      setAllContent((prevItems) => {
+        // Get index of item to update
+        const existingIndex = prevItems.findIndex(
+          (item) => item.id === updatedItem.id
+        );
+        // Update if valida index
+        if (existingIndex > -1) {
+          const updatedItems = [...prevItems];
+          updatedItems[existingIndex] = updatedItem;
+          return updatedItems;
+        }
+      });
+    };
+
+    // Subscribe to realtime updates on any field
+    const subscription = supabase
+      .channel("public:content")
+      .on(
+        "postgres_changes",
+        { event: "UPDATE", schema: "public", table: "content" },
+        handleUpdate
+      )
+      .subscribe();
+
+    // Fetch all data on initial load
+    const fetchData = async () => {
+      const { data, error } = await supabase.from("content").select();
+
+      if (error) {
+        console.error("Error fetching data:", error);
+      } else {
+        setAllContent(data);
+      }
+    };
+
+    fetchData();
+
+    //! TODO: Check for network errors
+    // { message: "TypeError: NetworkError when attempting to fetch resource.", 
+    // details: "", hint: "", code: ""
+
+    // Clean up subscription on unmount
+    return () => {
+      supabase.removeChannel(subscription);
+    };
   }, []);
 
-  async function getAllContent() {
-    const { data, error } = await supabase.from("content").select();
-    setAllContent(data);
-    if (error) {
-      console.log("There was a error", error);
-      // setAllContent([])
-    }
-  }
-
-  async function setFavourite(id, fav) {
-    console.log("This is the favourite to be set: ", !fav, fav);
+  async function handleFavouriteUpdate(id, fav) {
     const { error } = await supabase
       .from("content")
       .update({ favourite: !fav }) // or false to unset the favourite
@@ -39,44 +74,9 @@ export default function DashRecentlyUploaded() {
 
     if (error) {
       console.error("Error updating favourite:", error);
-    } else {
-      console.log("Favourite updated successfully:");
     }
   }
 
-  // const recent = [
-  //   new Content(
-  //     2,
-  //     "https://img.buzzfeed.com/buzzfeed-static/static/2020-09/28/15/asset/fc1f2fac717b/anigif_sub-buzz-29608-1601307260-18_preview.gif?output-quality=auto&output-format=auto&downsize=360:*",
-  //     "How to succeed in your first BSc tests",
-  //     "content.html"
-  //   ),
-  //   new Content(
-  //     3,
-  //     "images/ref.jpg",
-  //     "Make the most of your vac",
-  //     "content.html"
-  //   ),
-  //   new Content(
-  //     4,
-  //     "https://th.bing.com/th?id=OIF.ljB7NofIHqWXfUUV%2fMM5nQ&rs=1&pid=ImgDetMain",
-  //     "The shape of your well-being",
-  //     "content.html"
-  //   ),
-  //   new Content(
-  //     5,
-  //     "images/clock.jpg",
-  //     "Next-level time management for succeeding at UCT",
-  //     "content.html"
-  //   ),
-  //   new Content(
-  //     6,
-  //     "https://www.shutterstock.com/image-vector/goldfish-jumping-out-one-fishbowl-600nw-1870441930.jpg",
-  //     "Culture shock at UCT",
-  //     "content.html"
-  //   ),
-  //   new Content(8, "images/finals.jpg", "Acing exam season", "content.html"),
-  // ];
   return (
     <section className="recent-container">
       <h4>Recently uploaded content</h4>
@@ -89,7 +89,7 @@ export default function DashRecentlyUploaded() {
                 className="recent-start"
               >
                 <img
-                  src={content.imageSrc}
+                  src={content.image_url}
                   alt="Card Image"
                   className="recent-image"
                 />
@@ -121,20 +121,14 @@ export default function DashRecentlyUploaded() {
                     <FaHeart
                       style={{ color: "rgb(255, 62, 62)" }}
                       onClick={() =>
-                        setFavourite(
-                          content.id,
-                          content.favourite === null ? false : true
-                        )
+                        handleFavouriteUpdate(content.id, content.favourite)
                       }
                       className="recent-fav-item "
                     />
                   ) : (
                     <FaHeart
                       onClick={() =>
-                        setFavourite(
-                          content.id,
-                          content.favourite === null ? false : true
-                        )
+                        handleFavouriteUpdate(content.id, content.favourite)
                       }
                       className="recent-fav-item "
                     />
