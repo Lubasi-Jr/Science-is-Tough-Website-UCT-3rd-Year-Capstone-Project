@@ -1,12 +1,45 @@
-import { useState } from "react"
+import { useState } from "react";
 import "./Content.css";
 import { MdAudiotrack } from "react-icons/md";
 import { FaVideo } from "react-icons/fa";
 import { GrDocumentPdf } from "react-icons/gr";
+import { supabase } from "../lib/supabaseClient";
+import { useEffect } from "react";
 
-export default function Content({contentType}) {
+export default function Content({ content, contentType }) {
+  const [view, setView] = useState(contentType);
+  const [audioUrl, setAudioUrl] = useState("");
 
-  const [view,setView] = useState(contentType)
+  useEffect(() => {
+    fetchContent(content, contentType);
+  }, []);
+
+  async function fetchContent(content, contentType) {
+    // fetch pdf or audio url
+    if (contentType === "pdf") {
+      const { data, error } = await supabase
+        .from("content")
+        .select("audio_url")
+        .eq("id", content.id);
+
+      if (error) {
+        console.error("Error fetching audio URL:", error);
+      } else if (data && data.length > 0) {
+        setAudioUrl(data[0].audio_url);
+      }
+    } else {
+      const { data, error } = await supabase
+        .from("content")
+        .select("audio_url")
+        .eq("id", content.id);
+
+      if (error) {
+        console.error("Error fetching audio URL:", error);
+      } else if (data && data.length > 0) {
+        setAudioUrl(data[0].audio_url); // Set the URL into state
+      }
+    }
+  }
 
   return (
     <>
@@ -44,18 +77,18 @@ export default function Content({contentType}) {
           </div>
           {view === "video" && (
             <video controls>
-              <source src="your-video-url.mp4" type="video/mp4" />
+              <source src="test.mp4" type="video/mp4" />
               Your browser does not support the video tag.
             </video>
           )}
 
           {view === "pdf" && (
-            <iframe src="your-pdf-url.pdf" height="500" title="PDF Viewer" />
+            <iframe src={pdfUrl} height="500" title="PDF Viewer" />
           )}
 
           {view === "audio" && (
             <audio className="audio-player" controls>
-              <source src="your-audio-url.mp3" type="audio/mpeg" />
+              <source src={audioUrl} type="audio/mpeg" />
               Browser does not support the audio element
             </audio>
           )}
