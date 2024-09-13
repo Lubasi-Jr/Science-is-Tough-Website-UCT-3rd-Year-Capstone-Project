@@ -1,5 +1,5 @@
 // import "./Dashboard.css";
-import DashChallenges from "../components/Challenges";
+import DashChallenges from "../components/DashChallenges";
 import DashTrackProgress from "../components/DashTrackProgress";
 import DashRecentlyUploaded from "../components/DashRecentlyUploaded";
 // import DashFavourites from "../components/DashFavourites";
