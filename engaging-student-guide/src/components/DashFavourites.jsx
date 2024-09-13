@@ -51,7 +51,6 @@ export default function DashFavourites() {
 
     // Fetch initial favourites
     const fetchData = async () => {
-      console.log("Fetching favourites data....");
       const { data, error } = await supabase
         .from("content")
         .select()

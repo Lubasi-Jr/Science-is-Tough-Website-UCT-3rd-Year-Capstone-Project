@@ -2,7 +2,7 @@
 import DashChallenges from "../components/Challenges";
 import DashTrackProgress from "../components/DashTrackProgress";
 import DashRecentlyUploaded from "../components/DashRecentlyUploaded";
-import DashFavourites from "../components/DashFavourites";
+// import DashFavourites from "../components/DashFavourites";
 import DashRecentActivity from "../components/DashRecentActivity";
 
 export default function Dashboard() {
@@ -14,7 +14,7 @@ export default function Dashboard() {
             {/* Recent Activity */}
             <DashRecentActivity />
             {/* Favourite Container */}
-            <DashFavourites />
+            {/* <DashFavourites /> */}
             {/* Recently Uploaded  */}
             <DashRecentlyUploaded />
           </div>

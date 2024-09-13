@@ -5,13 +5,20 @@ import { GrDocumentPdf } from "react-icons/gr";
 import { FaHeart } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient";
+import { RecentContext } from "../context/contextRecentActivity";
 
 export default function DashRecentlyUploaded() {
   const [view, setView] = useState("pdf");
   const navigate = useNavigate();
 
+  const { setRecentContent, setContentType } = RecentContext();
+
   const handleContentClick = (content) => {
-    navigate(`/content/${content.id}`, {state: { content: content, contentType: "pdf"} });
+    navigate(`/content/${content.id}`, {
+      state: { content: content, contentType: "pdf" },
+    });
+    setContentType("pdf");
+    setRecentContent(content);
   };
 
   const [allContent, setAllContent] = useState([]);
@@ -57,7 +64,7 @@ export default function DashRecentlyUploaded() {
     fetchData();
 
     //! TODO: Check for network errors
-    // { message: "TypeError: NetworkError when attempting to fetch resource.", 
+    // { message: "TypeError: NetworkError when attempting to fetch resource.",
     // details: "", hint: "", code: ""
 
     // Clean up subscription on unmount
@@ -100,13 +107,19 @@ export default function DashRecentlyUploaded() {
               <div className="recent-end">
                 <div className="text-icon">
                   <GrDocumentPdf
-                    onClick={() => setView("pdf")}
+                    onClick={() => {
+                      setView("pdf");
+                      setContentType("pdf");
+                    }}
                     className="recent-end-item "
                   />
                 </div>
                 <div className="audio-icon">
                   <MdAudiotrack
-                    onClick={() => setView("audio")}
+                    onClick={() => {
+                      setView("audio");
+                      setContentType("audio");
+                    }}
                     className="recent-end-item "
                   />
                 </div>
