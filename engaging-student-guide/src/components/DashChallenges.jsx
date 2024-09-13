@@ -7,13 +7,12 @@ export default function DashChallenges() {
 
   const { user } = useAuth();
 
-  // fetch all challenges
+  // fetch all challenges with the number of completed quizzes
   useEffect(() => {
-    // fetchChallenges();
-    fetchNoCompletedChallenges();
+    fetchChallenges();
   }, []);
 
-  async function fetchNoCompletedChallenges() {
+  async function fetchChallenges() {
     // get the number of quizzes finished for a challenge by a student
     const { data, error } = await supabase.rpc("num_quizzes_finished", {
       s_id: user.id,
@@ -22,7 +21,6 @@ export default function DashChallenges() {
       console.log("Fetching completed quizes for challenge error: ", error);
     } else {
       setChallenges(data);
-      console.log("This is the challenges data received: ", data);
     }
   }
 

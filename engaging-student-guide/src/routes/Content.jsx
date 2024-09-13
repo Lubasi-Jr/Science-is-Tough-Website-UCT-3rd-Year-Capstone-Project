@@ -14,7 +14,6 @@ export default function Content() {
   const [audioUrl, setAudioUrl] = useState("");
   const [pdfUrl, setPDFUrl] = useState(null);
   const [isLoading, setIsLoading] = useState(true); // Track loading state
-  const [tags, setTags] = useState([]); // Store content tags
 
   // Handles loading states for audio
   function handleWaiting() {
@@ -29,36 +28,24 @@ export default function Content() {
     setIsLoading(false);
   }
 
-  // Fetch tags when content changes
-  useEffect(() => {
-    if (content) {
-      getTags(); // Get tags only when the content is available
-    }
-  }, [content]);
 
   // Fetches content when view changes
   useEffect(() => {
     if (view) {
-      fetchContent(view);
+      setSelectedContent(view);
     }
   }, [view]);
 
   // Function to set content view and update URLs
-  function fetchContent(v) {
+  function setSelectedContent(v) {
     setView(v);
     if (v === "pdf") {
       setPDFUrl(content?.pdf_url);
     } else if (v === "audio") {
       setAudioUrl(content?.audio_url);
     }
-  }
 
-  // Extract tags from content
-  function getTags() {
-    if (content?.category) {
-      const ts = content.category.split(",");
-      setTags(ts);
-    }
+    console.log("This was the content fetched: ", content ?? {});
   }
 
   return (
@@ -73,31 +60,37 @@ export default function Content() {
             <div className="media-select">
               <div className="text-icon">
                 <GrDocumentPdf
-                  onClick={() => fetchContent("pdf")}
+                  onClick={() => setSelectedContent("pdf")}
                   className="media-select-item "
                 />
               </div>
               <div className="audio-icon">
                 <MdAudiotrack
-                  onClick={() => fetchContent("audio")}
+                  onClick={() => setSelectedContent("audio")}
                   onWaiting={handleWaiting}
                   onCanPlay={handleCanPlay}
                   onLoadedData={handleLoadedData}
                   className="media-select-item "
                 />
-                {isLoading && view === "audio" && <p>Loading audio...</p>}
+                {/* {isLoading && view === "audio" && <p>Loading audio...</p>} */}
               </div>
               <div className="video-icon">
                 <FaVideo
-                  onClick={() => fetchContent("video")}
+                  onClick={() => setSelectedContent("video")}
                   className="media-select-item "
                 />
               </div>
             </div>
             <div className="media-tags">
-              {tags.map((tag, index) => (
-                <div key={index} className="media-tag">{tag}</div>
-              ))}
+              {content !== null ? (
+                content.category.split(",").map((tag, index) => (
+                  <div key={index} className="media-tag">
+                    {tag}
+                  </div>
+                ))
+              ) : (
+                <div></div>
+              )}
             </div>
           </div>
           {view === "video" && (
