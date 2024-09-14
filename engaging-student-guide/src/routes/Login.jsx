@@ -73,7 +73,7 @@ export default function SignUp() {
               <button type="submit" className="submit-btn">
                 Login
               </button>
-              <span className="signup">Already have an account? </span><Link className="signup" to={"/signup"}>Signup</Link>
+              <span className="signup">Dont have an account? </span><Link className="signup" to={"/signup"}>Signup</Link>
             </div>
             {errorMsg !== "" && (
               <p style={{ color: "red", paddingTop: "10px" }}>{errorMsg}</p>
