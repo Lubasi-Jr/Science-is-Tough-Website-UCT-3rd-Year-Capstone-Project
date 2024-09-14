@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { MdAudiotrack } from "react-icons/md";
 import { FaVideo } from "react-icons/fa";
 import { GrDocumentPdf } from "react-icons/gr";
-import { FaHeart } from "react-icons/fa";
+// import { FaHeart } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient";
 import { RecentContext } from "../context/contextRecentActivity";
@@ -72,16 +72,16 @@ export default function DashRecentlyUploaded() {
     };
   }, []);
 
-  async function handleFavouriteUpdate(id, fav) {
-    const { error } = await supabase
-      .from("content")
-      .update({ favourite: !fav }) // or false to unset the favourite
-      .eq("id", id);
+  // async function handleFavouriteUpdate(id, fav) {
+  //   const { error } = await supabase
+  //     .from("content")
+  //     .update({ favourite: !fav }) // or false to unset the favourite
+  //     .eq("id", id);
 
-    if (error) {
-      console.error("Error updating favourite:", error);
-    }
-  }
+  //   if (error) {
+  //     console.error("Error updating favourite:", error);
+  //   }
+  // }
 
   return (
     <section className="recent-container">
@@ -126,7 +126,7 @@ export default function DashRecentlyUploaded() {
                     className="recent-end-item "
                   />
                 </div>
-                <div className="fav-icon">
+                {/* <div className="fav-icon">
                   {content.favourite ? (
                     <FaHeart
                       style={{ color: "rgb(255, 62, 62)" }}
@@ -143,7 +143,7 @@ export default function DashRecentlyUploaded() {
                       className="recent-fav-item "
                     />
                   )}
-                </div>
+                </div> */}
               </div>
             </div>
           ))

@@ -28,21 +28,21 @@ export default function Discussion() {
   }
 
   useEffect(() => {
-    if (user) {
-      const channel = supabase.channel("messages");
-      setChannel(channel);
-      // channel.current = supabase.channel("discussion", {
-      //   config: {
-      //     broadcast: {
-      //       self: true,
-      //     },
-      //   },
-      // });
+    const channel = supabase.channel("messages");
+    setChannel(channel);
+    // channel.current = supabase.channel("discussion", {
+    //   config: {
+    //     broadcast: {
+    //       self: true,
+    //     },
+    //   },
+    // });
 
-      channel.subscribe((message) => {
-        setMessages((prev) => [...prev, message.payload]);
-      });
-    }
+    channel.subscribe((message) => {
+      console.log("Fetching messages: ", message);
+      
+      setMessages((prev) => [...prev, message.payload]);
+    });
     // if (!channel.current) {
 
     // we broadcast the messages to the current client
@@ -54,10 +54,10 @@ export default function Discussion() {
     // }
 
     return () => {
-    //   channel?.unsubscribe();
-    //   channel.current = null;
+      //   channel?.unsubscribe();
+      //   channel.current = null;
     };
-  }, [user]);
+  }, []);
 
   const currentUserStyle = {
     backgroundColor: "red",
@@ -74,17 +74,19 @@ export default function Discussion() {
         <h4>Discussion Forum</h4>
 
         <div className="chat-box">
-          {messages.map((msg, i) => (
-            <div
-              key={i}
-              style={
-                user.id === msg.user.id ? currentUserStyle : otherUserStyle
-              }
-            >
-              <strong>{msg.user}</strong> <span>21 Sept 2024</span>
-              <p>{msg.message}</p>
-            </div>
-          ))}
+          {messages.length > 0 &&
+            messages.map((msg, i) => (
+              <div
+                key={i}
+                // style={
+                //   user.id === msg.user.id ? currentUserStyle : otherUserStyle
+                // }
+              >
+                Message Thing: {msg}
+                {/* <strong>{msg.user}</strong> <span>21 Sept 2024</span>
+              <p>{msg.message}</p> */}
+              </div>
+            ))}
           <div className="chat-item">
             <strong>Student 2</strong> <span>21 Sept 2024</span>
             <p>I learned so much from this content.</p>

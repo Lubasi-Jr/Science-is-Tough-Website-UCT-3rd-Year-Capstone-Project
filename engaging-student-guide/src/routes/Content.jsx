@@ -4,37 +4,22 @@ import { MdAudiotrack } from "react-icons/md";
 import { FaVideo } from "react-icons/fa";
 import { GrDocumentPdf } from "react-icons/gr";
 import { useLocation } from "react-router-dom";
-import Discussion from "../components/Discussion";
+// import Discussion from "../components/Discussion";
 
 export default function Content() {
   const location = useLocation();
   const { content, contentType } = location.state || {}; // Handle cases where state might be undefined
 
-  const [view, setView] = useState(contentType || "audio"); // Default to 'audio' if undefined
+  const [view, setView] = useState(contentType || "pdf");
   const [audioUrl, setAudioUrl] = useState("");
   const [pdfUrl, setPDFUrl] = useState(null);
-  const [isLoading, setIsLoading] = useState(true); // Track loading state
-
-  // Handles loading states for audio
-  function handleWaiting() {
-    setIsLoading(true);
-  }
-
-  function handleLoadedData() {
-    setIsLoading(false);
-  }
-
-  function handleCanPlay() {
-    setIsLoading(false);
-  }
-
 
   // Fetches content when view changes
   useEffect(() => {
     if (view) {
       setSelectedContent(view);
     }
-  }, [view]);
+  }, []);
 
   // Function to set content view and update URLs
   function setSelectedContent(v) {
@@ -45,8 +30,13 @@ export default function Content() {
       setAudioUrl(content?.audio_url);
     }
 
-    console.log("This was the content fetched: ", content ?? {});
+    // console.log("This was the content fetched: ", content ?? {});
   }
+
+  const pdfViewer = {
+    width: "100%",
+    minHeight: "100vh",
+  };
 
   return (
     <>
@@ -67,9 +57,6 @@ export default function Content() {
               <div className="audio-icon">
                 <MdAudiotrack
                   onClick={() => setSelectedContent("audio")}
-                  onWaiting={handleWaiting}
-                  onCanPlay={handleCanPlay}
-                  onLoadedData={handleLoadedData}
                   className="media-select-item "
                 />
                 {/* {isLoading && view === "audio" && <p>Loading audio...</p>} */}
@@ -99,9 +86,10 @@ export default function Content() {
               Your browser does not support the video tag.
             </video>
           )}
-
           {view === "pdf" && (
-            <iframe src={pdfUrl} height="500" title="PDF Viewer" />
+            <div style={pdfViewer}>
+              <iframe src={pdfUrl}  width="100%" height="100%" title="pdf viewer" />
+            </div>
           )}
 
           {view === "audio" && (
