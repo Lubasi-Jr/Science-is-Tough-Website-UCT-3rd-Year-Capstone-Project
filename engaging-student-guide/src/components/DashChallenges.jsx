@@ -64,7 +64,7 @@ export default function DashChallenges() {
     }
   }
 
-  // Step 1: Check if user has started the challenge
+  //  Check if user has started the challenge
   async function checkIfChallengeStarted() {
     const { data, error } = await supabase
       .from("students_quizzes")
@@ -146,12 +146,15 @@ export default function DashChallenges() {
                     isExpanded === challenge.challenge_info.id ? "expanded" : ""
                   }`}
                 >
-                    {challenge.quizzes_list.map((quiz_item) => (
-                      <li className="challenge-content-item"  key={quiz_item.quiz.id}>
-                        <p className="content-text">{quiz_item.quiz.question}</p>
-                        <p> Points: {quiz_item.quiz.points}</p>
-                      </li>
-                    ))}
+                  {challenge.quizzes_list.map((quiz_item) => (
+                    <li
+                      className="challenge-content-item"
+                      key={quiz_item.quiz.id}
+                    >
+                      <p className="content-text">{quiz_item.quiz.question}</p>
+                      <p> Points: {quiz_item.quiz.points}</p>
+                    </li>
+                  ))}
                 </div>
               </div>
             ))
