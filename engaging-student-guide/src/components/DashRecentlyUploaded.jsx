@@ -8,16 +8,15 @@ import { supabase } from "../lib/supabaseClient";
 import { RecentContext } from "../context/contextRecentActivity";
 
 export default function DashRecentlyUploaded() {
-  const [view, setView] = useState("pdf");
   const navigate = useNavigate();
 
   const { setRecentContent, setContentType } = RecentContext();
 
-  const handleContentClick = (content) => {
+  const handleContentClick = (content, contentType) => {
     navigate(`/content/${content.id}`, {
-      state: { content: content, contentType: "pdf" },
+      state: { content: content, contentType: contentType },
     });
-    setContentType("pdf");
+    setContentType(contentType);
     setRecentContent(content);
   };
 
@@ -92,7 +91,7 @@ export default function DashRecentlyUploaded() {
           allContent.map((content) => (
             <div key={content.id} className="recent-item">
               <div
-                onClick={() => handleContentClick(content)}
+                onClick={() => handleContentClick(content, "pdf")}
                 className="recent-start"
               >
                 <img
@@ -108,8 +107,7 @@ export default function DashRecentlyUploaded() {
                 <div className="text-icon">
                   <GrDocumentPdf
                     onClick={() => {
-                      setView("pdf");
-                      setContentType("pdf");
+                      handleContentClick(content, "pdf");
                     }}
                     className="recent-end-item "
                   />
@@ -117,15 +115,14 @@ export default function DashRecentlyUploaded() {
                 <div className="audio-icon">
                   <MdAudiotrack
                     onClick={() => {
-                      setView("audio");
-                      setContentType("audio");
+                      handleContentClick(content, "audio");
                     }}
                     className="recent-end-item "
                   />
                 </div>
                 <div className="video-icon">
                   <FaVideo
-                    onClick={() => setView("video")}
+                    onClick={() => handleContentClick(content, "video")}
                     className="recent-end-item "
                   />
                 </div>

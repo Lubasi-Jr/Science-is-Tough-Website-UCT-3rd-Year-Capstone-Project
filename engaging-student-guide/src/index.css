@@ -179,6 +179,10 @@ html, body {
   border: 1px solid var(--primary-accent-color);
   padding: 5px;
   border-radius: 10px;
+  cursor: pointer;
+}
+.recent-item .recent-end-item:hover {
+  background-color: var(--icon-hover-color)
 }
 .recent-item .recent-fav-item {
   width: 40px;
@@ -261,6 +265,20 @@ html, body {
   object-fit: cover;
 }
 
+
+.challenge-item button {
+  border: 1px solid var(--secondary-accent-color);
+  background-color: var(--secondary-bg-color);
+  color: var(--secondary-text-color);
+  padding-left: 30px;
+  padding-right: 30px;
+  border-radius: 10px;
+}
+.challenge-item button:hover {
+  border: 1px solid var(--icon-hover-color);
+  background-color: var(--secondary-accent-color);
+  color: var(--secondary-bg-color);
+}
 /* =================== Progress Tracker ===========================  */
 .student-stats-container {
   background-color: var(--third-bg-color);
