@@ -23,16 +23,15 @@
 }
 
 * {
-
   margin: 0;
   padding: 0;
   font-family: "Oswald", sans-serif;
 }
 
-html, body {
+html,
+body {
   min-height: 100vh;
 }
-
 
 .dashboard-container {
   background-color: var(--primary-bg-color);
@@ -183,13 +182,13 @@ html, body {
   cursor: pointer;
 }
 .recent-item .recent-end-item:hover {
-  background-color: var(--icon-hover-color)
+  background-color: var(--icon-hover-color);
 }
 .recent-item .recent-fav-item {
   width: 40px;
   height: 40px;
   padding: 5px;
-  color: var(--third-bg-color)
+  color: var(--third-bg-color);
 }
 
 .recent-item .recent-fav-item:hover {
@@ -220,9 +219,16 @@ html, body {
   flex-direction: column;
   padding: 20px;
   border-radius: 20px;
-  row-gap: 1em;
+  row-gap: 2em;
 }
 .challenges-container .challenge-item {
+  display: flex;
+  flex-direction: column;
+  border-radius: 15px;
+  margin-bottom: 1em;
+}
+
+.challenges-container .challenge-item .challenge-item-details {
   display: flex;
   column-gap: 1em;
   align-items: center;
@@ -286,6 +292,39 @@ html, body {
   background-color: var(--secondary-accent-color);
   color: var(--secondary-bg-color);
 }
+
+/* Expand challenge-item */
+.challenge-item .expandable-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-in-out, padding 0.3s ease-in-out;
+  padding: 0;
+}
+
+
+
+.challenge-item .expandable-content li {
+  text-align: start;
+  display: flex;
+  justify-content: space-between;
+}
+
+.challenge-item .expandable-content .content-text {
+  flex: 3;
+}
+
+.expandable-content.expanded {
+  max-height: 150px;
+  padding: 10px;
+  background-color: var(--primary-bg-color);
+  border-radius: 10px;
+  border: 1px solid var(--disable-color);
+}
+
+/* .challenge-content-item {
+  border-bottom: 1px solid var(--third-bg-color);
+} */
+
 /* =================== Progress Tracker ===========================  */
 .student-stats-container {
   background-color: var(--third-bg-color);
