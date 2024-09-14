@@ -3,7 +3,7 @@
     justify-content: space-between;
     align-items: center;
     height: 100vh;
-    padding: 0 5%;
+    padding-left:2em;
     background-color: #f0f4f8; /* New background color for the container */
     font-weight: normal;
   }
@@ -53,14 +53,14 @@
   
   .input-field:focus,
   .select-field:focus {
-    border-color: #007bff;
+    border-color: var(--secondary-accent-color);
     outline: none;
   }
   
   .submit-btn {
     width: 100%;
     padding: 12px;
-    background-color: #007bff;
+    background-color: var(--secondary-accent-color);
     color: white;
     border: none;
     border-radius: 4px;
@@ -70,19 +70,39 @@
   }
   
   .submit-btn:hover {
-    background-color: #0056b3;
+    background-color: var(--hover-color );
+  }
+
+
+  .signup {
+    color: var(--primary-text-color);
+    /* text-decoration: none; */
+    font-size: smaller;
   }
   
   .image-container {
     width: 50%;
+    height: 100%;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    /* justify-content: center; */
+    /* align-items: center; */
   }
   
   .students-image {
     max-width: 100%;
-    height: auto;
-    border-radius: 8px;
+    object-fit: fill;
+    filter: blur(2px);
+    opacity: 0.7;
   }
   
+
+  .students-image::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--); /* Blue tint with transparency */
+    pointer-events: none;
+  }

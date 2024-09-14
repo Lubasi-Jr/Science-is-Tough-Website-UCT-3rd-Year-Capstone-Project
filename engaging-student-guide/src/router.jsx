@@ -7,6 +7,7 @@ import Quiz from "./routes/Quiz.jsx";
 import Game from "./routes/Game.jsx";
 import SignUp from "./routes/SignUp.jsx";
 import Login from "./routes/Login.jsx";
+//import Content from "./routes/Content.jsx";
 import ProtectedPage from "./routes/ProtectedPage.jsx";
 
 export const router = createBrowserRouter([

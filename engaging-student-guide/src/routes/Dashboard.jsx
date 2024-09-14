@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import "./Dashboard.css";
 import { Link } from "react-router-dom";
 //import MuscleIcon from "../assets/muscle.svg";
@@ -239,6 +240,33 @@ export default function Dashboard() {
             <section>
               
             </section>
+=======
+// import "./Dashboard.css";
+import DashChallenges from "../components/DashChallenges";
+import DashTrackProgress from "../components/DashTrackProgress";
+import DashRecentlyUploaded from "../components/DashRecentlyUploaded";
+// import DashFavourites from "../components/DashFavourites";
+import DashRecentActivity from "../components/DashRecentActivity";
+
+export default function Dashboard() {
+  return (
+    <>
+      <div className="dashboard-container">
+        <div className="bottom-container">
+          <div className="left-panel">
+            {/* Recent Activity */}
+            <DashRecentActivity />
+            {/* Favourite Container */}
+            {/* <DashFavourites /> */}
+            {/* Recently Uploaded  */}
+            <DashRecentlyUploaded />
+          </div>
+          <div className="right-panel">
+            {/* Track Progress */}
+            <DashTrackProgress />
+            {/* Weekly Challenges Component */}
+            <DashChallenges />
+>>>>>>> e77c3ed18dd8c6523f1b240c47a8a0d34d4b15bf
           </div>
         </div>
       </div>

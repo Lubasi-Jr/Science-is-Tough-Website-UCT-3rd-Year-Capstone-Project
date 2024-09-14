@@ -17,7 +17,7 @@ const AuthProvider = ({ children }) => {
   useEffect(() => {
     const { data: listener } = supabase.auth.onAuthStateChange(
       (_event, session) => {
-        console.log("session onAuthStateChange: ", session);
+        // console.log("session onAuthStateChange: ", session);
         setSession(session);
         setUser(session?.user || null);
         setLoading(false);
