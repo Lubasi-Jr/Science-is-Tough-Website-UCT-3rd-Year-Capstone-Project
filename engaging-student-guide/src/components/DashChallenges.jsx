@@ -4,17 +4,18 @@ import { useAuth } from "../hooks/useAuth";
 
 export default function DashChallenges() {
   const [challenges, setChallenges] = useState([]);
+  const [challengesStarted, setChallengesStarted] = useState([]);
 
   const { user } = useAuth();
 
   // fetch all challenges with the number of completed quizzes
   useEffect(() => {
     fetchChallenges();
+    checkIfChallengeStarted();
   }, []);
 
   // fetched all the challenges and wether the student has finished the quizzes associated
   async function fetchChallenges() {
-    console.log("This is the user _id : ", user.id);
     const { data, error } = await supabase.rpc(
       "get_all_challenges_with_quiz_status",
       { user_id: user.id }
@@ -25,8 +26,6 @@ export default function DashChallenges() {
     } else {
       setChallenges(data);
     }
-
-    console.log("The challenge information returned: ", data);
   }
 
   async function startChallenge(challenge_id) {
@@ -64,6 +63,23 @@ export default function DashChallenges() {
     }
   }
 
+  // Step 1: Check if user has started the challenge
+  async function checkIfChallengeStarted() {
+    const { data, error } = await supabase
+      .from("students_quizzes")
+      .select("challenge_id")
+      .eq("student_id", user.id)
+      .eq("started", true);
+
+    if (error) {
+      console.error("Error checking if challenge started :", error.message);
+    } else {
+      setChallengesStarted(data.map((i) => i.challenge_id));
+    }
+
+    // console.log("The challenge started returned: ", data);
+  }
+
   // formatting teh date to make it more readable
   function formatDate(d) {
     const date = new Date(d);
@@ -99,11 +115,15 @@ export default function DashChallenges() {
                   </p>
                   <p>Completed: {challenge.result}</p>
                 </div>
-                <button
-                  onClick={() => startChallenge(challenge.challenge_info.id)}
-                >
-                  Start
-                </button>
+                {challengesStarted.includes(challenge.challenge_info.id) ? (
+                  <div className="challenge-item-started">Started</div>
+                ) : (
+                  <button
+                    onClick={() => startChallenge(challenge.challenge_info.id)}
+                  >
+                    Start
+                  </button>
+                )}
               </div>
             ))
           ) : (

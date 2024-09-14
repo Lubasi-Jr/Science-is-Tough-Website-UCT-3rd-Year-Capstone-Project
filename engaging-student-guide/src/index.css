@@ -3,6 +3,7 @@
   --primary-bg-color: #f4f5f7;
   --secondary-bg-color: #ffffff;
   --third-bg-color: #ffc1c1;
+  --disable-color: #cacaca;
   /* --primary-accent-color: #1e293b; */
 
   /* --primary-bg-color: #fff5e1; Soft peach background */
@@ -265,6 +266,12 @@ html, body {
   object-fit: cover;
 }
 
+.challenge-item .challenge-item-started {
+  background-color: var(--disable-color);
+  color: var(--secondary-text-color);
+  padding: 10px 30px;
+  border-radius: 10px;
+}
 
 .challenge-item button {
   border: 1px solid var(--secondary-accent-color);
