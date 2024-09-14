@@ -155,7 +155,7 @@ export default function SignUp() {
               <button type="submit" className="submit-btn">
                 Create Account
               </button>
-              <span className="signup">Already have an account? </span><Link className="login" to={"/login"}>Login</Link>
+              <span className="signup">Already have an account? </span><Link className="signup" to={"/login"}>Login</Link>
 
             </div>
             {errorMsg !== "" && (
