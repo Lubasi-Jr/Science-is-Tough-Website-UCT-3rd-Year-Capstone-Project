@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { MdAudiotrack } from "react-icons/md";
 import { FaVideo } from "react-icons/fa";
 import { GrDocumentPdf } from "react-icons/gr";
+import QuizIcon from "./QuizIcon";
 // import { FaHeart } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient";
@@ -11,7 +12,12 @@ export default function DashRecentlyUploaded() {
   const navigate = useNavigate();
 
   const { setRecentContent, setContentType } = RecentContext();
-
+  const handleQuizClick = (content) => {
+    // console.log("Clicked on quizz thing: ...")
+    navigate(`/quiz/${content.id}`, {
+      state: { content: content },
+    });
+  };
   const handleContentClick = (content, contentType) => {
     navigate(`/content/${content.id}`, {
       state: { content: content, contentType: contentType },
@@ -72,20 +78,9 @@ export default function DashRecentlyUploaded() {
     };
   }, []);
 
-  // async function handleFavouriteUpdate(id, fav) {
-  //   const { error } = await supabase
-  //     .from("content")
-  //     .update({ favourite: !fav }) // or false to unset the favourite
-  //     .eq("id", id);
-
-  //   if (error) {
-  //     console.error("Error updating favourite:", error);
-  //   }
-  // }
-
   return (
     <section className="recent-container">
-      <h4>Recently uploaded content</h4>
+      <h4>Content</h4>
       <div className="recent-items">
         {allContent.length > 0 ? (
           allContent.map((content) => (
@@ -125,6 +120,9 @@ export default function DashRecentlyUploaded() {
                     onClick={() => handleContentClick(content, "video")}
                     className="recent-end-item "
                   />
+                </div>
+                <div className="quiz-icon">
+                  <QuizIcon onClick={() => handleQuizClick(content)} />
                 </div>
                 {/* <div className="fav-icon">
                   {content.favourite ? (

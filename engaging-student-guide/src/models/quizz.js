@@ -23,4 +23,8 @@ export class Question {
     this.question = q; // Assign the question content.
     this.options = o; // Assign the options for the question.
   }
+
+  static fromJson(obj) {
+    return new Question(obj.question, obj.options)
+  }
 }

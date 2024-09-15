@@ -19,7 +19,7 @@
 /*create a custom font*/
 @font-face {
   font-family: "myFont";
-  src: url("./OverloadBurn.ttf") format("truetype");
+  src: url("/OverloadBurn.ttf") format("truetype");
 }
 
 * {

@@ -2,7 +2,6 @@
 import DashChallenges from "../components/DashChallenges";
 import DashTrackProgress from "../components/DashTrackProgress";
 import DashRecentlyUploaded from "../components/DashRecentlyUploaded";
-// import DashFavourites from "../components/DashFavourites";
 import DashRecentActivity from "../components/DashRecentActivity";
 
 export default function Dashboard() {

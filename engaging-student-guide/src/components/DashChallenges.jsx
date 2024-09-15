@@ -10,25 +10,40 @@ export default function DashChallenges() {
 
   // fetch all challenges with the number of completed quizzes
   useEffect(() => {
+    // fetched all the challenges and wether the student has finished the quizzes associated
+    async function fetchChallenges() {
+      const { data, error } = await supabase.rpc(
+        "get_all_challenges_with_quiz_status",
+        { user_id: user.id }
+      );
+
+      if (error) {
+        console.log("Fetching completed quizes for challenge error: ", error);
+      } else {
+        setChallenges(data);
+      }
+    }
+
+    //  Check if user has started the challenge
+    async function checkIfChallengeStarted() {
+      const { data, error } = await supabase
+        .from("students_quizzes")
+        .select("challenge_id")
+        .eq("student_id", user.id)
+        .eq("started", true);
+
+      if (error) {
+        console.error("Error checking if challenge started :", error.message);
+      } else {
+        setChallengesStarted(data.map((i) => i.challenge_id));
+      }
+
+      // console.log("The challenge started returned: ", data);
+    }
+
     fetchChallenges();
     checkIfChallengeStarted();
-  }, []);
-
-  // fetched all the challenges and wether the student has finished the quizzes associated
-  async function fetchChallenges() {
-    const { data, error } = await supabase.rpc(
-      "get_all_challenges_with_quiz_status",
-      { user_id: user.id }
-    );
-
-    if (error) {
-      console.log("Fetching completed quizes for challenge error: ", error);
-    } else {
-      setChallenges(data);
-      console.log(data);
-    }
-  }
-
+  }, [user.id]);
   async function startChallenge(challenge_id) {
     // increment number of participants for this challenge in the challenge table
     const { error: updateChallengeError } = await supabase.rpc(
@@ -62,23 +77,6 @@ export default function DashChallenges() {
     if (insertChallengeError) {
       console.log("Start Challenge Error: ", insertChallengeError);
     }
-  }
-
-  //  Check if user has started the challenge
-  async function checkIfChallengeStarted() {
-    const { data, error } = await supabase
-      .from("students_quizzes")
-      .select("challenge_id")
-      .eq("student_id", user.id)
-      .eq("started", true);
-
-    if (error) {
-      console.error("Error checking if challenge started :", error.message);
-    } else {
-      setChallengesStarted(data.map((i) => i.challenge_id));
-    }
-
-    // console.log("The challenge started returned: ", data);
   }
 
   // formatting teh date to make it more readable
