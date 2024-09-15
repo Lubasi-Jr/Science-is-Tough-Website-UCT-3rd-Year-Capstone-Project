@@ -6,6 +6,7 @@
 - [ ] Maybe remove the challenge id from the quiz and add it to the junction table
 - [ ] Check content table, that all the urls point to the right thing
 - [ ] Should probably add a more info tag to click to expand the thing
+- [ ] Name the quizzes table to questions table and the questions should be linked to a quiz table
 
 This creates a table called challenge_quizzes with three columns: id, challenge_id, and quiz_id. The id column is an auto-incrementing integer that serves as the primary key for the table. The challenge_id and quiz_id columns are foreign keys that reference the id columns of the challenges and quizzes tables, respectively.
 

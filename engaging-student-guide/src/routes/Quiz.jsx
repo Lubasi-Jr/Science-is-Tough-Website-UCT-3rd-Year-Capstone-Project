@@ -3,13 +3,36 @@ import { useParams } from "react-router-dom";
 import "./Quiz.css";
 import { Question } from "../models/quizz";
 import { supabase } from "../lib/supabaseClient";
+import { useAuth } from "../hooks/useAuth";
 
 function Quiz() {
+  const { user } = useAuth();
   const { id } = useParams();
   const [questions, setQuestions] = useState([]);
   const [title, setTitle] = useState("");
-
+  const [showScore, setShowScore] = useState(false);
+  const [score, setScore] = useState(0);
+  // const [pointsEarned, setScore] = useState(0);
+  const MAX_SCORE = 3;
   useEffect(() => {
+    if (showScore && score == MAX_SCORE) {
+      // check if student has everything correct to get the points
+
+      async function updateScore() {
+        const { error } = await supabase.rpc("update_student_points", {
+          student_id: user.id,
+        });
+        if (error) {
+          console.log("Error updating score: ", error);
+        } else {
+          console.log("updated user points ");
+          // setQuestions(formatData(data));
+        }
+      }
+
+      updateScore();
+    }
+
     async function fetchQuizzes(id) {
       const { data: titleData, e } = await supabase
         .from("content")
@@ -34,7 +57,7 @@ function Quiz() {
     }
 
     fetchQuizzes(id);
-  }, [id]);
+  }, [id, showScore, score]);
 
   function formatData(data) {
     let res = [];
@@ -47,8 +70,6 @@ function Quiz() {
   }
 
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [showScore, setShowScore] = useState(false);
-  const [score, setScore] = useState(0);
   const [selectedOption, setSelectedOption] = useState(null);
 
   const handleRetry = () => {
