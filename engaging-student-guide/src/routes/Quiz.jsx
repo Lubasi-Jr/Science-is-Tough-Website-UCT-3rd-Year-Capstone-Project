@@ -7,9 +7,21 @@ import { supabase } from "../lib/supabaseClient";
 function Quiz() {
   const { id } = useParams();
   const [questions, setQuestions] = useState([]);
+  const [title, setTitle] = useState("");
 
   useEffect(() => {
     async function fetchQuizzes(id) {
+      const { data: titleData, e } = await supabase
+        .from("content")
+        .select("title")
+        .eq("id", id);
+
+      if (e) {
+        console.log("Error fetching title: ", e);
+      } else {
+        setTitle(titleData[0].title);
+      }
+
       const { data, error } = await supabase
         .from("quizzes")
         .select()
@@ -70,7 +82,7 @@ function Quiz() {
   return (
     <>
       <div className="quiz-container">
-        <div className="question-content">Acing exam season</div>
+        <div className="question-content">{title}</div>
         {showScore ? (
           <div className="score-section">
             <h5>
