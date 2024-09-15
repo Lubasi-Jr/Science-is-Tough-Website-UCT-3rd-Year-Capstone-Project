@@ -1,23 +1,33 @@
 import { useState, useEffect } from "react";
 import { MdAudiotrack } from "react-icons/md";
-import { FaVideo } from "react-icons/fa";
 import { GrDocumentPdf } from "react-icons/gr";
 // import { FaHeart } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+//import { useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient";
 import { RecentContext } from "../context/contextRecentActivity";
 
+
 export default function DashRecentlyUploaded() {
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
+  //const [viewingContentType, setViewingContentType] = useState(null);
+  //constant [currentContent, setCurrentContent] = useState(null);
 
   const { setRecentContent, setContentType } = RecentContext();
 
   const handleContentClick = (content, contentType) => {
-    navigate(`/content/${content.id}`, {
-      state: { content: content, contentType: contentType },
-    });
+    //navigate(`/content/${content.id}`, {
+      //state: { content: content, contentType: contentType },
+    //});
+   // console.log(`Clicked on ${contentType}:`, content); 
     setContentType(contentType);
     setRecentContent(content);
+    //setCurrentContent(content);
+    //setViewingContentType(contentType);
+    if (contentType === "pdf" && content.pdf_url) {
+      window.open(content.pdf_url, "_blank");//show pdf on new tab
+    } else if (contentType === "audio" && content.audio_url) {
+      window.open(content.audio_url, "_blank");//show audio on new tab
+    }
   };
 
   const [allContent, setAllContent] = useState([]);
@@ -94,16 +104,20 @@ export default function DashRecentlyUploaded() {
                 onClick={() => handleContentClick(content, "pdf")}
                 className="recent-start"
               >
+                
+                <div className="c-images">
                 <img
                   src={content.image_url}
                   alt="Card Image"
                   className="recent-image"
                 />
+                </div>
                 <div className="card-content">
                   <p className="card-title">{content.title}</p>
                 </div>
               </div>
               <div className="recent-end">
+                <div className="card-icons">
                 <div className="text-icon">
                   <GrDocumentPdf
                     onClick={() => {
@@ -119,31 +133,8 @@ export default function DashRecentlyUploaded() {
                     }}
                     className="recent-end-item "
                   />
+                  </div>
                 </div>
-                <div className="video-icon">
-                  <FaVideo
-                    onClick={() => handleContentClick(content, "video")}
-                    className="recent-end-item "
-                  />
-                </div>
-                {/* <div className="fav-icon">
-                  {content.favourite ? (
-                    <FaHeart
-                      style={{ color: "rgb(255, 62, 62)" }}
-                      onClick={() =>
-                        handleFavouriteUpdate(content.id, content.favourite)
-                      }
-                      className="recent-fav-item "
-                    />
-                  ) : (
-                    <FaHeart
-                      onClick={() =>
-                        handleFavouriteUpdate(content.id, content.favourite)
-                      }
-                      className="recent-fav-item "
-                    />
-                  )}
-                </div> */}
               </div>
             </div>
           ))
@@ -151,6 +142,8 @@ export default function DashRecentlyUploaded() {
           <div>Loading...</div>
         )}
       </div>
+      
+
     </section>
   );
 }

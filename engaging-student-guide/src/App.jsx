@@ -1,4 +1,4 @@
-//import NavBar from "./components/NavBar.jsx";
+import NavBar from "./components/NavBar.jsx";
 
 import { Outlet } from "react-router-dom";
 // import { useState, useEffect } from "react";
@@ -24,7 +24,7 @@ function App() {
 
   return (
     <>
-     
+     <NavBar />
       <div id="body">
         <Outlet />
       </div>

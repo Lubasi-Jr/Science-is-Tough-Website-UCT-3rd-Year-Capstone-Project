@@ -1,7 +1,6 @@
 import React from 'react';
 //import { FaStar } from 'react-icons/fa';
 import { MdAudiotrack } from "react-icons/md";
-import { FaVideo } from "react-icons/fa";
 import { GrDocumentPdf } from "react-icons/gr";
 
 function Card({id,imageSrc,title,link,favourite,Fave}){

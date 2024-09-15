@@ -11,15 +11,11 @@ export default function NavBar() {
             <Link to="/">Science is Tough</Link>
           </div>
           <div className="navbar-center">
-            <Link to="/">Game</Link>
-            <Link to="/"  onClick={() => auth.signOut()}>Logout</Link>
+            
+            
           </div>
           <div className="navbar-right">
-            <div className="icon-text">
-              <img className="muscle-icon" src={MuscleIcon} alt="muscle icon" />
-              <p className="first">1000</p>
-              <p className="second">pts</p>
-            </div>
+          <Link to="/"  onClick={() => auth.signOut()}>Logout</Link>
             <div className="profile-pic">
               <img
                 src="../../public/default-profile-icon.png"

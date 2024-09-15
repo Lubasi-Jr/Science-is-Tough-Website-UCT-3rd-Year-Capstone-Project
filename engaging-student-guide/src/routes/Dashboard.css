@@ -150,7 +150,6 @@ body {
   display: flex;
   flex-direction: column;
   row-gap: 2em;
-  background-color: var(--primary-bg-color);
   border-radius: 20px;
   text-align: center;
   /*height:300px;*/
@@ -159,7 +158,10 @@ body {
   
 }
 .Toughpoints{
-  margin-bottom: 20px;
+  padding-top: 5px;
+  background-color: var(--primary-bg-color);
+  padding-bottom: 20px;
+  border-radius: 15px;
 }
 
 /*  ============================= Recent Activity ====================================   */
@@ -229,6 +231,7 @@ body {
 .card-title {
   font-size: 1.25em; /* Font size for title */
   margin-bottom: 0.5em; /* Space below title */
+  
 }
 
 .card-rating {
@@ -238,17 +241,6 @@ body {
 
 .star {
   margin-right: 0.2em; /* Space between stars */
-}
-.card-img-top{
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: auto;
-  margin-bottom: auto;
-  max-width:100%;
-  max-height:100%;
-  object-fit:cover;
-  margin-top: 10px;
 }
 
 .card-body {
@@ -262,16 +254,28 @@ body {
 .card-icons{
   display: flex;
   gap: 1em;
-  margin-top: 1em;
+  margin-top: auto;
+  justify-content: center;
+  
 }
-.card-icon{
+.audio-icon{
   font-size: 1.5em;
   cursor: pointer;
   color:var(--primary-accent-color)
 }
-.card-icon:hover{
+.audio-icon:hover{
   color:var(--secondary-accent-color)
 }
+
+.text-icon{
+  font-size: 1.5em;
+  cursor: pointer;
+  color:var(--primary-accent-color)
+}
+.text-icon:hover{
+  color:var(--secondary-accent-color)
+}
+
 /* ================== Recent Uploaded Component ======================================= */
 .recent-container {
   background-color: var(--primary-bg-color);
@@ -329,12 +333,16 @@ body {
   cursor: pointer;
 }
 
-.recent-item img {
-  width: 100%;
-  height: auto;
+.recent-image {
+  width: 300px;
+  height: 250px;
+  object-fit: cover;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 
-  
 }
+
 
 
 /* ======================= Challenges Component ============================ */
@@ -475,11 +483,11 @@ body {
   margin-bottom: 10px;
 }
 
-.game .game-heading h4{
+.game-preview .game-heading{
   text-align: center;
+  justify-items: center;
   width:100%;
-  margin-top: 20px;
-  padding-top: 20px;
+  padding-top: 10px;
 }
 
 .game-preview-container{
