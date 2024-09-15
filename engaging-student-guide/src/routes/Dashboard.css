@@ -1,9 +1,8 @@
 :root {
   /* Primary colors */
   --primary-bg-color: #f4f5f7;
-  --secondary-bg-color: #ffffff;
+  --secondary-bg-color:#fefbc9;
   --third-bg-color: #ffc1c1;
-  --disable-color: #cacaca;
   /* --primary-accent-color: #1e293b; */
 
   /* --primary-bg-color: #fff5e1; Soft peach background */
@@ -13,68 +12,129 @@
   --secondary-text-color: #152663; /* Deep navy blue for text and panels */
 
   --icon-hover-color: #ffc1c1;
-  --hover-color: #ffc1c1; /* more geneeric */
+  --hover-color: #ffc1c1; /* more geneeric */ 
 }
 
 /*create a custom font*/
 @font-face {
   font-family: "myFont";
-<<<<<<< HEAD
-  src: url("/OverloadBurn.ttf") format("truetype");
-=======
-  src:url("/OverloadBurn.ttf") format("truetype");
-}
-/*use custom font on the website name */
-.navbar-brand h1{
-  font-family: "myFont";
-}
-/*change the background to a gradient like background*/
-body{
-background-color:whitesmoke;
- } /*background-image:url("/background_image.png");*/
-
-
-
-.d-flex{
-  background-color: rgb(208, 50, 81);
-  border-radius :7px;
-  margin-left: 80px;
-  
-}
-/*change the search button text and backgroud when a user hovers on search button*/
-.navbar .btn:Hover{
-  background-color: rgb(230, 8, 53);
-  color: whitesmoke;
->>>>>>> ac23fd9cad94d69bf426664ade3f3f74edb2ce19
+  src: url("./OverloadBurn.ttf") format("truetype");
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  font-family: "Oswald", sans-serif;
-}
-
-html,
 body {
-  min-height: 100vh;
+  background-color: var(--secondary-bg-color);
 }
 
 .dashboard-container {
-  background-color: var(--primary-bg-color);
+  width: 100vw;
+  margin: 0;
+  margin-bottom: 2em;
+  padding: 0;
+  box-sizing: border-box;
   color: var(--secondary-text-color);
-  padding-top: 2em;
-  padding-bottom: 4em;
+
+  display: grid;
+  grid-template-rows: auto 1fr;
   font-size: medium;
+  font-family: "Oswald", sans-serif;
+  row-gap: 3em;
 }
+/*   ============================ Navbar ======================================== */
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--secondary-bg-color);
+  color: var(--primary-accent-color);
+  padding-left: 2em;
+  padding-right: 2em;
+  box-sizing: border-box;
+  text-decoration-color: var(--primary-accent-color);
+}
+
+.navbar .navbar-left a {
+  text-decoration: none;
+  color: var(--primary-text-color);
+  margin: 0;
+  font-size: 40px;
+  font-family: "myFont";
+}
+
+/* Center section (Links) */
+.navbar-center {
+  display: flex;
+  gap: 1em;     
+}
+
+.navbar-center a {
+  color: var(--secondary-accent-color);
+  text-decoration: underline;
+  font-size: 18px;
+
+  /* padding: 10px 15px; */
+}
+
+/* Right section (Profile Picture) */
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+}
+
+.navbar-right .icon-text {
+  border: 2px solid var(--secondary-accent-color);
+  border-radius: 25px;
+  display: flex;
+  align-items: center;
+  gap: 0.2em;
+  padding-left: 1em;
+  padding-right: 1em;
+  background-color: var(--secondary-bg-color);
+}
+
+.navbar-right .icon-text p {
+  font-weight: bold;
+  margin: 0;
+  color: var(--primary-text-color);
+}
+
+.navbar .icon-text .second {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--secondary-text-color);
+}
+
+.navbar-right .muscle-icon {
+  /* background-color: #0c1844; */
+  transform: scaleX(-1);
+}
+
+.navbar-right .profile-pic {
+  width: 45px;
+  height: 45px;
+  overflow: hidden;
+  border-radius: 50%;
+  border: 3px solid;
+  border-color: var(--secondary-accent-color);
+}
+
+.navbar-right .profile-pic img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+/* =========================================================================== */
 
 /* Bottom section (Divided into left and right) */
 .bottom-container {
   display: grid;
   grid-template-columns: 2fr 1fr; /* Adjust the ratio as needed */
+  grid-template-rows: auto auto;
   height: 100%; /* Fill the remaining space */
   margin-left: 2em;
   margin-right: 2em;
   gap: 2em;
+
 }
 
 /* Left and right panels */
@@ -82,6 +142,24 @@ body {
   display: flex;
   flex-direction: column;
   row-gap: 2em;
+  grid-column: 1 / 2;
+  grid-row: 1 / 3;
+}
+.right-panel {
+  
+  display: flex;
+  flex-direction: column;
+  row-gap: 2em;
+  background-color: var(--primary-bg-color);
+  border-radius: 20px;
+  text-align: center;
+  /*height:300px;*/
+  grid-column: 2 / 3;
+  grid-row: 1 / 2;
+  
+}
+.Toughpoints{
+  margin-bottom: 20px;
 }
 
 /*  ============================= Recent Activity ====================================   */
@@ -92,7 +170,7 @@ body {
   padding-top: 1em;
   padding-bottom: 1em;
   gap: 1em;
-  background-color: var(--secondary-bg-color);
+  background-color: var(--primary-bg-color);
   text-align: start;
   padding-left: 2em;
   padding-right: 2em;
@@ -110,20 +188,21 @@ body {
   padding-top: 20px;
   gap: 1em;
   text-align: start;
-  background-color: var(--secondary-bg-color);
+  background-color: var(--primary-bg-color);
   padding-left: 2em;
   padding-right: 2em;
 }
 
 .fav-cards {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap:1em;
 }
 
 .dashboard-card {
-  display: flex;
-  flex-direction: column;
-  border-radius: 20px;
+  
+  /*border-radius: 20px;*/
   overflow: hidden;
   width: 30%;
   height: 200px;
@@ -160,38 +239,76 @@ body {
 .star {
   margin-right: 0.2em; /* Space between stars */
 }
+.card-img-top{
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: auto;
+  margin-bottom: auto;
+  max-width:100%;
+  max-height:100%;
+  object-fit:cover;
+  margin-top: 10px;
+}
 
+.card-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.card-icons{
+  display: flex;
+  gap: 1em;
+  margin-top: 1em;
+}
+.card-icon{
+  font-size: 1.5em;
+  cursor: pointer;
+  color:var(--primary-accent-color)
+}
+.card-icon:hover{
+  color:var(--secondary-accent-color)
+}
 /* ================== Recent Uploaded Component ======================================= */
 .recent-container {
-  background-color: var(--secondary-bg-color);
+  background-color: var(--primary-bg-color);
   display: flex;
   border-radius: 20px;
   flex-direction: column;
   padding-top: 20px;
+  padding-bottom: 30px;
   gap: 1em;
   padding-left: 2em;
   padding-right: 2em;
   text-align: start;
+
 }
 
 .recent-items {
   display: flex;
-  flex-direction: column;
-  row-gap: 1em;
+  justify-content: space-between;
+  flex-direction: row;
+  flex-wrap: wrap;
+  row-gap: 2em;
 }
 
 .recent-item {
   display: flex;
-  column-gap: 1em;
+  flex-direction: column;
   justify-content: space-between;
   transition: background-color 0.4s, transform 0.3s;
-  border-bottom: 1px solid var(--icon-hover-color);
+  width: calc(48% -1em);
 }
 
 .recent-item .recent-start {
   display: flex;
   align-items: center;
   cursor: pointer;
+  justify-content: center;
+
 }
 .recent-item .recent-end {
   display: flex;
@@ -205,56 +322,31 @@ body {
   border: 1px solid var(--primary-accent-color);
   padding: 5px;
   border-radius: 10px;
-  cursor: pointer;
-}
-.recent-item .recent-end-item:hover {
-  background-color: var(--icon-hover-color);
-}
-.recent-item .recent-fav-item {
-  width: 40px;
-  height: 40px;
-  padding: 5px;
-  color: var(--third-bg-color);
 }
 
-.recent-item .recent-fav-item:hover {
-  color: rgb(255, 62, 62);
+.recent-item .recent-end-item:hover {
+  background-color: var(--icon-hover-color);
   cursor: pointer;
 }
 
 .recent-item img {
-  width: 50px;
-  height: 50px;
-  overflow: hidden;
-  border-radius: 50%;
-  border: 3px solid;
-  border-color: var(--secondary-accent-color);
+  width: 100%;
+  height: auto;
+
+  
 }
 
-/* Right Panel */
-.right-panel {
-  display: flex;
-  flex-direction: column;
-  row-gap: 2em;
-}
 
 /* ======================= Challenges Component ============================ */
 .challenges-container {
-  background-color: var(--secondary-bg-color);
+  background-color: var(--primary-bg-color);
   display: flex;
   flex-direction: column;
   padding: 20px;
   border-radius: 20px;
-  row-gap: 2em;
+  row-gap: 1em;
 }
 .challenges-container .challenge-item {
-  display: flex;
-  flex-direction: column;
-  border-radius: 15px;
-  margin-bottom: 1em;
-}
-
-.challenges-container .challenge-item .challenge-item-details {
   display: flex;
   column-gap: 1em;
   align-items: center;
@@ -298,65 +390,17 @@ body {
   object-fit: cover;
 }
 
-.challenge-item .challenge-item-started {
-  background-color: var(--disable-color);
-  color: var(--secondary-text-color);
-  padding: 10px 30px;
-  border-radius: 10px;
-}
-
-.challenge-item button {
-  border: 1px solid var(--secondary-accent-color);
-  background-color: var(--secondary-bg-color);
-  color: var(--secondary-text-color);
-  padding-left: 30px;
-  padding-right: 30px;
-  border-radius: 10px;
-}
-.challenge-item button:hover {
-  border: 1px solid var(--icon-hover-color);
-  background-color: var(--secondary-accent-color);
-  color: var(--secondary-bg-color);
-}
-
-/* Expand challenge-item */
-.challenge-item .expandable-content {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.3s ease-in-out, padding 0.3s ease-in-out;
-  padding: 0;
-}
-
-
-
-.challenge-item .expandable-content li {
-  text-align: start;
-  display: flex;
-  justify-content: space-between;
-}
-
-.challenge-item .expandable-content .content-text {
-  flex: 3;
-}
-
-.expandable-content.expanded {
-  max-height: 150px;
-  padding: 10px;
-  background-color: var(--primary-bg-color);
-  border-radius: 10px;
-  border: 1px solid var(--disable-color);
-}
-
-/* .challenge-content-item {
-  border-bottom: 1px solid var(--third-bg-color);
-} */
-
 /* =================== Progress Tracker ===========================  */
 .student-stats-container {
+  grid-column: 2 / 3;
+  grid-row: 2 / 3;
   background-color: var(--third-bg-color);
   padding: 20px;
+  margin-bottom: 30px;
   border-radius: 15px;
   text-align: center;
+  margin-top: 30px;
+ 
 }
 
 .stats-title {
@@ -372,7 +416,7 @@ body {
 }
 
 .stat-item {
-  background-color: var(--secondary-bg-color);
+  background-color: var(--primary-bg-color);
   padding: 15px;
   border-radius: 10px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.05);
@@ -411,4 +455,65 @@ body {
     margin-top: 10px;
     align-self: flex-end;
   }
+}
+
+.coins {
+  width: 60px;
+  height: 60px;
+}
+/* ===========================================Game container================================ */
+.game-preview{
+  border-radius: 20px;
+  display:flex;
+  flex-direction: column;
+  padding-top:20px;
+  gap:1em;
+  text-align:start;
+  background-color: var(--primary-bg-color);
+  padding-left: 2em;
+  padding-right: 2em;
+  margin-bottom: 10px;
+}
+
+.game .game-heading h4{
+  text-align: center;
+  width:100%;
+  margin-top: 20px;
+  padding-top: 20px;
+}
+
+.game-preview-container{
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+  gap:1em;
+  padding-bottom: 10px;
+}
+
+.game-preview-gif{
+  width:100%;
+  max-width: 400px;
+  border-radius: 10px;
+}
+
+.play-button{
+  background-color: var(--secondary-accent-color);
+  color:white;
+  padding:10px 20px;
+  border:none;
+  border-radius: 5px;
+  text-decoration: none;
+  font-size: 16px;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+.play-button:hover{
+  background-color: var(--primary-accent-color);
+}
+.game{
+  background-color: var(--primary-bg-color);
+  border-radius: 10px;
+  text-align: center;
+  padding-top: 20px;
 }

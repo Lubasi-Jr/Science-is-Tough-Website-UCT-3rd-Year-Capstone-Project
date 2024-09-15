@@ -1,6 +1,8 @@
 import React from 'react';
-import { FaStar } from 'react-icons/fa';
-
+//import { FaStar } from 'react-icons/fa';
+import { MdAudiotrack } from "react-icons/md";
+import { FaVideo } from "react-icons/fa";
+import { GrDocumentPdf } from "react-icons/gr";
 
 function Card({id,imageSrc,title,link,favourite,Fave}){
   /*creating card for home page with specific dimensions(15x20)
@@ -14,8 +16,12 @@ function Card({id,imageSrc,title,link,favourite,Fave}){
     
     <div className="card-body">
      <h4 className="oswald-text">{title}</h4>
-    
-     <a href={link} className="btn btn-primary">Read more</a>
+      <div className="card-icons">
+          <GrDocumentPdf className="card-icon" />
+          <MdAudiotrack className="card-icon" />
+          
+      </div>
+     {/*<a href={link} className="btn btn-primary">Read more</a>
      <FaStar className="star"
             size={25}
             onClick={Fave}
@@ -23,7 +29,7 @@ function Card({id,imageSrc,title,link,favourite,Fave}){
               color: favourite ? 'gold' : 'lightgray',
               marginLeft: '30px',
             }}
-          />
+          />*/}
     </div>
   </div>
   

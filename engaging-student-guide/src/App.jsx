@@ -1,4 +1,4 @@
-import NavBar from "./components/NavBar.jsx";
+//import NavBar from "./components/NavBar.jsx";
 
 import { Outlet } from "react-router-dom";
 // import { useState, useEffect } from "react";
@@ -22,6 +22,7 @@ function App() {
   //   return () => subscription.unsubscribe();
   // }, []);
 
+<<<<<<< HEAD
   return (
     <>
       <NavBar />
@@ -35,6 +36,21 @@ function App() {
   // } else {
   //   // if logged in
   // }
+=======
+  if (!session) {
+    return <Login />;
+  } else {
+    // if logged in
+    return (
+      <>
+        
+        <div id="body">
+          <Outlet />
+        </div>
+      </>
+    );
+  }
+>>>>>>> ac23fd9cad94d69bf426664ade3f3f74edb2ce19
 }
 
 export default App;

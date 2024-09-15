@@ -4,7 +4,7 @@ import Challenges from "./routes/Challenges.jsx";
 import Favourites from "./routes/Favourites.jsx";
 import Dashboard from "./routes/Dashboard.jsx";
 import Quiz from "./routes/Quiz.jsx";
-import Memory from "./routes/Memory.jsx";
+import Game from "./routes/Game.jsx";
 import SignUp from "./routes/SignUp.jsx";
 import Login from "./routes/Login.jsx";
 import Content from "./routes/Content.jsx";
@@ -35,12 +35,17 @@ export const router = createBrowserRouter([
 
       {
         path: "/distract",
+<<<<<<< HEAD
         element: <Memory />,
       },
       {
         path: "/content/:id",
         element: <Content />,
       },
+=======
+        element: <Game />,
+     },
+>>>>>>> ac23fd9cad94d69bf426664ade3f3f74edb2ce19
     ],
   },
   {
