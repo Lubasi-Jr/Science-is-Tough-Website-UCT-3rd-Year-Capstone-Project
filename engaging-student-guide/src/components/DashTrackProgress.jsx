@@ -30,7 +30,7 @@ export default function DashTrackProgress() {
 
       const quizCompleted = quizdata.filter((quiz) => quiz.done).length;
       
-      const { data:audiodata, error:audioerror } = await supabase.from("students_content").select("audio_complete").eq("student_id",student_id);
+      const { data:audiodata, error:audioerror } = await supabase.from("student_content").select("audio_complete").eq("student_id",student_id);
       console.log("Audio data: ", audiodata);
       if(audioerror){
         console.error("Error fetching audio's completed:", audioerror);
@@ -48,18 +48,7 @@ export default function DashTrackProgress() {
   };
 
     fetchCompleted();
-    const subscription = supabase
-    .from("students_content")
-    .on("UPDATE", (payload) => {
-      console.log("Change received", payload);
-      fetchCompleted(); // Re-fetch progress data when there's an update
-    })
-    .subscribe();
-
-  return () => {
-    supabase.removeSubscription(subscription); 
-  };
-}, [user]);
+  },[user]);
 
   return (
     <section className="progress-container">
