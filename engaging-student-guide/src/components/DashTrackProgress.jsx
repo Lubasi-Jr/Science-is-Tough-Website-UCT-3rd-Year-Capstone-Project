@@ -5,7 +5,7 @@ import { useAuth } from "../hooks/useAuth";
 export default function DashTrackProgress() {
   const { user } = useAuth();
   const [stats,setStats] = useState ({
-    hoursRead :0,
+    
     finishedContent: 0, 
     engagementScore: 0, 
     quizCompleted:0, 
@@ -77,10 +77,6 @@ export default function DashTrackProgress() {
       <div className="student-stats-container">
         <h5 className="stats-title">Student Progress</h5>
         <div className="stats-content">
-          <div className="stat-item">
-            <span className="stat-value">{stats.hoursRead}</span>
-            <span className="stat-label">Hours Read</span>
-          </div>
           <div className="stat-item">
             <span className="stat-value">{stats.finishedContent}</span>
             <span className="stat-label">Audios Complete</span>
