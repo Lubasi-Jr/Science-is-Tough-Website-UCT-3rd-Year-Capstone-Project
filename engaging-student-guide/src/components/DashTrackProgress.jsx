@@ -48,6 +48,28 @@ export default function DashTrackProgress() {
   };
 
     fetchCompleted();
+    const contentsubscription = supabase
+      .channel("public:student_content")
+      .on("postgres_changes", { event: "UPDATE", schema: "public", table: "student_content" }, (payload) => {
+        console.log("Change received:", payload);
+        fetchCompleted(); // Re-fetch progress data when there's an update
+      })
+      .subscribe((status) => {
+        console.log('Subscription status:', status);  // Log subscription status
+      });
+      const quizSubscription = supabase
+      .channel("public:students_quizzes")
+      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'students_quizzes' }, (payload) => {
+        console.log("Change detected in students_quizzes:", payload);
+        fetchCompleted(); // Re-fetch data when quizzes are updated
+      })
+      .subscribe();
+
+    // Cleanup the subscription when the component unmounts
+    return () => {
+      supabase.removeChannel(contentsubscription);
+      supabase.removeChannel(quizSubscription);
+    };
   },[user]);
 
   return (

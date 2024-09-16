@@ -5,20 +5,21 @@ import { GrDocumentPdf } from "react-icons/gr";
 //import { useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient";
 import { RecentContext } from "../context/contextRecentActivity";
-
+import { useAuth } from "../hooks/useAuth";
 
 export default function DashRecentlyUploaded() {
+  const { user } = useAuth();
   //const navigate = useNavigate();
   //const [viewingContentType, setViewingContentType] = useState(null);
   //constant [currentContent, setCurrentContent] = useState(null);
 
   const { setRecentContent, setContentType } = RecentContext();
 
-  const handleContentClick = (content, contentType) => {
+  const handleContentClick = async (content, contentType) => {
     //navigate(`/content/${content.id}`, {
-      //state: { content: content, contentType: contentType },
+    //state: { content: content, contentType: contentType },
     //});
-   // console.log(`Clicked on ${contentType}:`, content); 
+    // console.log(`Clicked on ${contentType}:`, content); 
     setContentType(contentType);
     setRecentContent(content);
     //setCurrentContent(content);
@@ -27,7 +28,29 @@ export default function DashRecentlyUploaded() {
       window.open(content.pdf_url, "_blank");//show pdf on new tab
     } else if (contentType === "audio" && content.audio_url) {
       window.open(content.audio_url, "_blank");//show audio on new tab
+      await audioComplete(content.id);
     }
+  };
+  const audioComplete = async (contentId) => {
+
+    if (!user) {
+      console.error("User not authenticated");
+      return;
+    }
+    //console.log("User ID:", user.id);
+    const { id: student_id } = user;
+    console.log("Updating audio completion for user:", student_id, "Content ID:", contentId);
+    const i = {"student_id": student_id, "content_id": contentId, "audio_complete": true}
+    const { error } = await supabase
+    .from("student_content")
+    .insert(i)
+    .eq("student_id", student_id)
+    .eq("content_id", contentId);
+    
+    if (error) {
+      console.error("Error updating audio completion:", error);
+    }
+    console.log("updated");
   };
 
   const [allContent, setAllContent] = useState([]);
@@ -49,6 +72,12 @@ export default function DashRecentlyUploaded() {
       });
     };
 
+    // const handleAudioUpdate = (payload) => {
+    //   const updatedItem = payload.new;
+    //   console.log("Received payload: ", updatedItem);
+
+    // }
+
     // Subscribe to realtime updates on any field
     const subscription = supabase
       .channel("public:content")
@@ -58,6 +87,7 @@ export default function DashRecentlyUploaded() {
         handleUpdate
       )
       .subscribe();
+    // supabase
 
     // Fetch all data on initial load
     const fetchData = async () => {
@@ -104,13 +134,13 @@ export default function DashRecentlyUploaded() {
                 onClick={() => handleContentClick(content, "pdf")}
                 className="recent-start"
               >
-                
+
                 <div className="c-images">
-                <img
-                  src={content.image_url}
-                  alt="Card Image"
-                  className="recent-image"
-                />
+                  <img
+                    src={content.image_url}
+                    alt="Card Image"
+                    className="recent-image"
+                  />
                 </div>
                 <div className="card-content">
                   <p className="card-title">{content.title}</p>
@@ -118,21 +148,21 @@ export default function DashRecentlyUploaded() {
               </div>
               <div className="recent-end">
                 <div className="card-icons">
-                <div className="text-icon">
-                  <GrDocumentPdf
-                    onClick={() => {
-                      handleContentClick(content, "pdf");
-                    }}
-                    className="recent-end-item "
-                  />
-                </div>
-                <div className="audio-icon">
-                  <MdAudiotrack
-                    onClick={() => {
-                      handleContentClick(content, "audio");
-                    }}
-                    className="recent-end-item "
-                  />
+                  <div className="text-icon">
+                    <GrDocumentPdf
+                      onClick={() => {
+                        handleContentClick(content, "pdf");
+                      }}
+                      className="recent-end-item "
+                    />
+                  </div>
+                  <div className="audio-icon">
+                    <MdAudiotrack
+                      onClick={() => {
+                        handleContentClick(content, "audio");
+                      }}
+                      className="recent-end-item "
+                    />
                   </div>
                 </div>
               </div>
@@ -142,7 +172,7 @@ export default function DashRecentlyUploaded() {
           <div>Loading...</div>
         )}
       </div>
-      
+
 
     </section>
   );
