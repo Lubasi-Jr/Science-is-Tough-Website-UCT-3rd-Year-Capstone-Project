@@ -301,8 +301,6 @@ body {
   padding: 0;
 }
 
-
-
 .challenge-item .expandable-content li {
   text-align: start;
   display: flex;
@@ -319,11 +317,8 @@ body {
   background-color: var(--primary-bg-color);
   border-radius: 10px;
   border: 1px solid var(--disable-color);
+  overflow-y: auto;
 }
-
-/* .challenge-content-item {
-  border-bottom: 1px solid var(--third-bg-color);
-} */
 
 /* =================== Progress Tracker ===========================  */
 .student-stats-container {

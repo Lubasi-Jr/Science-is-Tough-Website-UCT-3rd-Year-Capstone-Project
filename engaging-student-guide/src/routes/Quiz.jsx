@@ -12,16 +12,19 @@ function Quiz() {
   const [title, setTitle] = useState("");
   const [showScore, setShowScore] = useState(false);
   const [score, setScore] = useState(0);
-  // const [pointsEarned, setScore] = useState(0);
+  const [pointsEarned, setPointsEarned] = useState(0);
   const MAX_SCORE = 3;
   useEffect(() => {
     if (showScore && score == MAX_SCORE) {
       // check if student has everything correct to get the points
-
       async function updateScore() {
+        // update the score of the student
         const { error } = await supabase.rpc("update_student_points", {
           student_id: user.id,
+          points: pointsEarned,
         });
+
+
         if (error) {
           console.log("Error updating score: ", error);
         } else {
@@ -53,6 +56,11 @@ function Quiz() {
         console.log("Error fetching quizzes: ", error);
       } else {
         setQuestions(formatData(data));
+        setPointsEarned(
+          questions.reduce((accumulator, currentQuestion) => {
+            return accumulator + currentQuestion.points;
+          }, 0)
+        );
       }
     }
 
