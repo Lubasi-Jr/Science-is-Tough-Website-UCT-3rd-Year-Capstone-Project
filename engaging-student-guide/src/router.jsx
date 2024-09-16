@@ -1,10 +1,9 @@
 import { createBrowserRouter } from "react-router-dom";
 // import App from "./App.jsx";
 import Challenges from "./routes/Challenges.jsx";
-import Favourites from "./routes/Favourites.jsx";
+import Game from "./routes/Game.jsx";
 import Dashboard from "./routes/Dashboard.jsx";
 import Quiz from "./routes/Quiz.jsx";
-import Memory from "./routes/Memory.jsx";
 import SignUp from "./routes/SignUp.jsx";
 import Login from "./routes/Login.jsx";
 import Content from "./routes/Content.jsx";
@@ -25,17 +24,12 @@ export const router = createBrowserRouter([
         element: <Challenges />,
       },
       {
-        path: "/favourites",
-        element: <Favourites />,
+        path: "/game",
+        element: <Game />,
       },
       {
         path: "/quiz/:id",
         element: <Quiz />,
-      },
-
-      {
-        path: "/distract",
-        element: <Memory />,
       },
       {
         path: "/content/:id",

@@ -42,37 +42,41 @@ export default function DashChallenges() {
   }, [user.id]);
   async function startChallenge(challenge_id) {
     // increment number of participants for this challenge in the challenge table
-    const { error: updateChallengeError } = await supabase.rpc(
-      "increment_no_participants",
-      { challenge_id: challenge_id }
-    );
+    // const { error: updateChallengeError } = await supabase.rpc(
+    //   "increment_no_participants",
+    //   { challenge_id: challenge_id }
+    // );
 
     const challengeToStart = challenges.find(
-      (challenge) => challenge.challenge_info.id === challenge_id
+      (challenge) => challenge.id === challenge_id
     );
+
+
+    console.log(challengeToStart);
+    
 
     let challengeToInsert = [];
 
     for (let i = 0; i < challengeToStart.quizzes_list.length; i++) {
       let obj = {
         challenge_id: challenge_id,
-        quiz_id: challengeToStart.quizzes_list[i].quiz.id,
+        q_id: challengeToStart.quiz.id,
         student_id: user.id,
         done: challengeToStart.quizzes_list[i].finished,
       };
       challengeToInsert.push(obj);
     }
 
-    const { error: insertChallengeError } = await supabase
-      .from("students_quizzes")
-      .insert(challengeToInsert);
+    // const { error: insertChallengeError } = await supabase
+    //   .from("students_quizzes")
+    //   .insert(challengeToInsert);
 
-    if (updateChallengeError) {
-      console.log("Update Challenge Error: ", updateChallengeError);
-    }
-    if (insertChallengeError) {
-      console.log("Start Challenge Error: ", insertChallengeError);
-    }
+    // if (updateChallengeError) {
+    //   console.log("Update Challenge Error: ", updateChallengeError);
+    // }
+    // if (insertChallengeError) {
+    //   console.log("Start Challenge Error: ", insertChallengeError);
+    // }
   }
 
   function formatData(data) {

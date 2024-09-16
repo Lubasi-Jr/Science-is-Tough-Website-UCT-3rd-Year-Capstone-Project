@@ -91,7 +91,13 @@ function Quiz() {
   }, [quiz, isPartOfChallenge]);
 
   async function handleQuizFinished() {
-    const item = { student_id: user.id, done: true, q_id: quiz.id };
+    const item = {
+      student_id: user.id,
+      done: true,
+      q_id: quiz.id,
+      challenge_id: challenge.id,
+      started: challenge.id === "" ? false : true,
+    };
 
     console.log("Inserting the following item: ", item);
     const { error } = await supabase.from("students_quizzes").insert(item);
