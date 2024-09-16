@@ -6,9 +6,7 @@
 - [ ] Maybe remove the challenge id from the quiz and add it to the junction table
 - [ ] Check content table, that all the urls point to the right thing
 - [ ] Should probably add a more info tag to click to expand the thing
+- [ ] Name the quizzes table to questions table and the questions should be linked to a quiz table
 
-This creates a table called challenge_quizzes with three columns: id, challenge_id, and quiz_id. The id column is an auto-incrementing integer that serves as the primary key for the table. The challenge_id and quiz_id columns are foreign keys that reference the id columns of the challenges and quizzes tables, respectively.
-
-This type of table is called a "join table" or a "junction table". It's used to represent a many-to-many relationship between two other tables. In this case, the challenge_quizzes table represents the fact that a challenge can have many quizzes, and a quiz can be part of many challenges. By storing the relationship between challenges and quizzes in a separate table, you can easily query for all the quizzes associated with a particular challenge, or all the challenges associated with a particular quiz.
 
 d8466e33-7b7f-4137-9f1d-37209b85c415

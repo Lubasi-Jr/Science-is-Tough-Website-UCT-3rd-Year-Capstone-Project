@@ -1,25 +1,36 @@
 import { useState, useEffect } from "react";
 import { MdAudiotrack } from "react-icons/md";
 import { GrDocumentPdf } from "react-icons/gr";
+import QuizIcon from "./QuizIcon";
 // import { FaHeart } from "react-icons/fa";
-//import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient";
 import { RecentContext } from "../context/contextRecentActivity";
 import { useAuth } from "../hooks/useAuth";
 
 export default function DashRecentlyUploaded() {
   const { user } = useAuth();
-  //const navigate = useNavigate();
+  const navigate = useNavigate();
   //const [viewingContentType, setViewingContentType] = useState(null);
   //constant [currentContent, setCurrentContent] = useState(null);
 
   const { setRecentContent, setContentType } = RecentContext();
 
-  const handleContentClick = async (content, contentType) => {
+  //const handleContentClicka = async (content, contentType) => {
     //navigate(`/content/${content.id}`, {
     //state: { content: content, contentType: contentType },
     //});
     // console.log(`Clicked on ${contentType}:`, content); 
+  const handleQuizClick = (content) => {
+    // console.log("Clicked on quizz thing: ...")
+    navigate(`/quiz/${content.id}`, {
+      state: { content: content },
+    });
+  };
+  const handleContentClick = async(content, contentType) => {
+    navigate(`/content/${content.id}`, {
+      state: { content: content, contentType: contentType },
+    });
     setContentType(contentType);
     setRecentContent(content);
     //setCurrentContent(content);
@@ -112,20 +123,9 @@ export default function DashRecentlyUploaded() {
     };
   }, []);
 
-  // async function handleFavouriteUpdate(id, fav) {
-  //   const { error } = await supabase
-  //     .from("content")
-  //     .update({ favourite: !fav }) // or false to unset the favourite
-  //     .eq("id", id);
-
-  //   if (error) {
-  //     console.error("Error updating favourite:", error);
-  //   }
-  // }
-
   return (
     <section className="recent-container">
-      <h4>Recently uploaded content</h4>
+      <h4>Content</h4>
       <div className="recent-items">
         {allContent.length > 0 ? (
           allContent.map((content) => (
@@ -147,26 +147,39 @@ export default function DashRecentlyUploaded() {
                 </div>
               </div>
               <div className="recent-end">
-                <div className="card-icons">
-                  <div className="text-icon">
-                    <GrDocumentPdf
-                      onClick={() => {
-                        handleContentClick(content, "pdf");
-                      }}
-                      className="recent-end-item "
+                <div className="text-icon">
+                  <GrDocumentPdf
+                    onClick={() => {
+                      handleContentClick(content, "pdf");
+                    }}
+                    className="recent-end-item "
+                  />
+                </div>
+                <div className="audio-icon">
+                  <MdAudiotrack
+                    onClick={() => {
+                      handleContentClick(content, "audio");
+                    }}
+                    className="recent-end-item "
+                  />
+                </div>
+                <div className="quiz-icon">
+                  <QuizIcon onClick={() => handleQuizClick(content)} />
+                </div>
+                {/* <div className="fav-icon">*
+                  {content.favourite ? (
+                    <FaHeart
+                      style={{ color: "rgb(255, 62, 62)" }}
+                      onClick={() =>
+                        handleFavouriteUpdate(content.id, content.favourite)
+                      }
+                      className="recent-fav-item "
                     />
                   </div>
-                  <div className="audio-icon">
-                    <MdAudiotrack
-                      onClick={() => {
-                        handleContentClick(content, "audio");
-                      }}
-                      className="recent-end-item "
-                    />
+                  */}
                   </div>
                 </div>
-              </div>
-            </div>
+            
           ))
         ) : (
           <div>Loading...</div>

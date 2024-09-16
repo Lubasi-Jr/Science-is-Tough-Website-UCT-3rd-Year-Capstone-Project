@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabaseClient";
 import { useAuth } from "../hooks/useAuth";
+import { Challenge } from "../models/challenge";
 
 export default function DashChallenges() {
   const [challenges, setChallenges] = useState([]);
@@ -10,25 +11,35 @@ export default function DashChallenges() {
 
   // fetch all challenges with the number of completed quizzes
   useEffect(() => {
+    // fetched all the challenges and wether the student has finished the quizzes associated
+    async function fetchChallenges() {
+      const { data, error } = await supabase.rpc("get_challenges");
+
+      if (error) {
+        console.log("Fetching completed quizes for challenge error: ", error);
+      } else {
+        setChallenges(formatData(data));
+      }
+    }
+
+    //  Check if user has started the challenge
+    async function checkIfChallengeStarted() {
+      const { data, error } = await supabase
+        .from("students_quizzes")
+        .select("challenge_id")
+        .eq("student_id", user.id)
+        .eq("started", true);
+
+      if (error) {
+        console.error("Error checking if challenge started :", error.message);
+      } else {
+        setChallengesStarted(data.map((i) => i.challenge_id));
+      }
+    }
+
     fetchChallenges();
     checkIfChallengeStarted();
-  }, []);
-
-  // fetched all the challenges and wether the student has finished the quizzes associated
-  async function fetchChallenges() {
-    const { data, error } = await supabase.rpc(
-      "get_all_challenges_with_quiz_status",
-      { user_id: user.id }
-    );
-
-    if (error) {
-      console.log("Fetching completed quizes for challenge error: ", error);
-    } else {
-      setChallenges(data);
-      console.log(data);
-    }
-  }
-
+  }, [user.id]);
   async function startChallenge(challenge_id) {
     // increment number of participants for this challenge in the challenge table
     const { error: updateChallengeError } = await supabase.rpc(
@@ -64,35 +75,17 @@ export default function DashChallenges() {
     }
   }
 
-  //  Check if user has started the challenge
-  async function checkIfChallengeStarted() {
-    const { data, error } = await supabase
-      .from("students_quizzes")
-      .select("challenge_id")
-      .eq("student_id", user.id)
-      .eq("started", true);
-
-    if (error) {
-      console.error("Error checking if challenge started :", error.message);
-    } else {
-      setChallengesStarted(data.map((i) => i.challenge_id));
+  function formatData(data) {
+    let res = [];
+    for (let i = 0; i < data.length; i++) {
+      const obj = data[i];
+      const c = Challenge.fromJson(obj);
+      res.push(c);
     }
-
-    // console.log("The challenge started returned: ", data);
+    return res;
   }
 
-  // formatting teh date to make it more readable
-  function formatDate(d) {
-    const date = new Date(d);
-    return new Intl.DateTimeFormat("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "numeric",
-      minute: "numeric",
-      hour12: true,
-    }).format(date);
-  }
+
 
   const [isExpanded, setIsExpanded] = useState(null);
 
@@ -107,7 +100,7 @@ export default function DashChallenges() {
           <h5>Weekly Challenges</h5>
           {challenges.length > 0 ? (
             challenges.map((challenge) => (
-              <div key={challenge.challenge_info.id} className="challenge-item">
+              <div key={challenge.id} className="challenge-item">
                 <div className="challenge-item-details">
                   <div className="challenge-item-icon">
                     <img src="../../public/quiz-icon.png" alt="quiz icon" />
@@ -115,24 +108,24 @@ export default function DashChallenges() {
 
                   <div
                     className="challenge-item-info"
-                    onClick={() => toggleExpand(challenge.challenge_info.id)}
+                    onClick={() => toggleExpand(challenge.id)}
                   >
-                    <p>{challenge.challenge_info.description}</p>
+                    <p>{challenge.description}</p>
                     <p>
-                      Participants: {challenge.challenge_info.no_participants}
+                      Participants: {challenge.noParticipants}
                     </p>
                     <p>
                       Closing Date:{" "}
-                      {formatDate(challenge.challenge_info.end_date)}
+                      {challenge.date_end}
                     </p>
-                    <p>Completed: {challenge.result}</p>
+                    {/* <p>Completed: {challenge.result}</p> */}
                   </div>
-                  {challengesStarted.includes(challenge.challenge_info.id) ? (
+                  {challengesStarted.includes(challenge.id) ? (
                     <div className="challenge-item-started">Started</div>
                   ) : (
                     <button
                       onClick={() =>
-                        startChallenge(challenge.challenge_info.id)
+                        startChallenge(challenge.id)
                       }
                     >
                       Start
@@ -143,16 +136,16 @@ export default function DashChallenges() {
                 {/* Expand content*/}
                 <div
                   className={`expandable-content ${
-                    isExpanded === challenge.challenge_info.id ? "expanded" : ""
+                    isExpanded === challenge.id ? "expanded" : ""
                   }`}
                 >
-                  {challenge.quizzes_list.map((quiz_item) => (
+                  {challenge.quizzes.map((quiz) => (
                     <li
                       className="challenge-content-item"
-                      key={quiz_item.quiz.id}
+                      key={quiz.id}
                     >
-                      <p className="content-text">{quiz_item.quiz.question}</p>
-                      <p> Points: {quiz_item.quiz.points}</p>
+                      <p className="content-text">{quiz.contentTitle}</p>
+                      <p> Points: {quiz.points}</p>
                     </li>
                   ))}
                 </div>
@@ -161,7 +154,10 @@ export default function DashChallenges() {
           ) : (
             <div>Loading...</div>
           )}
+<<<<<<< HEAD
           
+=======
+>>>>>>> 80ff65f029231cd3fe64d2edad0c81fd5a342c05
         </div>
       </section>
     </>

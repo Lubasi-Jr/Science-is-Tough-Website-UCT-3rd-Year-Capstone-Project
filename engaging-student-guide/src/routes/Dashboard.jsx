@@ -2,7 +2,6 @@ import "./Dashboard.css";
 import DashChallenges from "../components/DashChallenges";
 import DashTrackProgress from "../components/DashTrackProgress";
 import DashRecentlyUploaded from "../components/DashRecentlyUploaded";
-// import DashFavourites from "../components/DashFavourites";
 import DashRecentActivity from "../components/DashRecentActivity";
 import DashRewards from "../components/DashRewards";
 export default function Dashboard() {
@@ -24,6 +23,8 @@ export default function Dashboard() {
             <DashTrackProgress />
             {/* Weekly Challenges Component */}
             <DashChallenges />
+            {/* Game Component */}
+            {/* <DashGame /> */}
           </div>
         </div>
       </div>

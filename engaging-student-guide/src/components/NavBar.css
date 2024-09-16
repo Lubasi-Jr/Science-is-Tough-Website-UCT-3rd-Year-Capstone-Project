@@ -4,6 +4,7 @@
     align-items: center;
     justify-content: space-between;
     background-color: var(--secondary-bg-color);
+    /* background-color: red; */
   
     color: var(--primary-accent-color);
     padding-left: 2em;

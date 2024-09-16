@@ -1,12 +1,15 @@
+body {
+  background-color: var(--primary-bg-color);
+}
+
 .quiz-container {
   width: 100%;
   max-width: 75%;
   padding: 30px;
   margin: auto;
-  border-radius: 2em;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  background-color: white;
-  padding-left: 20px;
+  background-color: var(--secondary-bg-color);
+  margin-top: 1em;
+  border-radius: 15px;
 }
 
 .quiz-container .question-section {
@@ -16,97 +19,55 @@
 .quiz-container .question-content {
   font-size: 30px;
   font-weight: 600;
-  color: #0e1b4b;
+  color: var(--primary-text-color);
 }
 .quiz-container .question-text {
   font-size: 20px;
   font-weight: 400;
-  color: #0e1b4b;
+  color: var(--primary-text-color);
 }
 
 .quiz-container .option-section {
   margin-bottom: 2em;
 }
 .quiz-container .score-section {
-  color:#0e1b4b;
+  color:var(--primary-text-color);
 }
 
 .option-section .option-item {
   margin: 10px 0;
   padding: 10px;
   font-size: 18px;
-  border: 1px solid rgb(208, 50, 81);
+  border: 1px solid var(--secondary-accent-color);
   border-radius: 4px;
   cursor: pointer;
-  color: #0e1b4b;
+  color: var(--primary-text-color);
   transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 .option-section .option-item:hover {
-  background-color: #FFF5E1;
+  background-color: var(--hover-color);
 }
 
 .option-section .option-item.selected {
-  background-color: rgb(208, 50, 81);
+  background-color: var(--secondary-accent-color);
   color: white;
   border-color: #FFF5E1;
 }
 
 
 .quiz-next-btn {
-  background-color: #0e1b4b;
-  color: white;
+  background-color: var(--secondary-bg-color);
+  color: var(--primary-text-color);
   font-size: 15px;
   padding-left: 30px;
   padding-right: 30px;
   padding-top: 15px;
   padding-bottom: 15px;
+  border: 1px solid var(--secondary-accent-color);
+  border-radius: 10px;
+}
+.quiz-next-btn:hover {
+  background-color: var(--hover-color);
+  color: var(--primary-text-color);
 }
 
-.radio {
-  display: block;
-  cursor: pointer;
-  user-select: none;
-  text-align: left;
-  & + .radio {
-    margin-top: 12px;
-  }
-  input {
-    display: none;
-    & + span {
-      display: inline-block;
-      position: relative;
-      padding-left: 30px;
-      &:before {
-        content: "";
-        display: block;
-        position: absolute;
-        top: 0px;
-        left: 0px;
-        border-radius: 50%;
-        margin-right: 5px;
-        width: 16px;
-        height: 16px;
-        border: 1px solid #ccc;
-        background: #fff;
-      }
-      &:after {
-        content: "";
-        display: block;
-        width: 10px;
-        height: 10px;
-        background: #222;
-        position: absolute;
-        border-radius: 50%;
-        top: 3px;
-        left: 3px;
-        opacity: 0;
-        transform: scale(0, 0);
-        transition: all 0.2s cubic-bezier(0.64, 0.57, 0.67, 1.53);
-      }
-    }
-    &:checked + span:after {
-      opacity: 1;
-      transform: scale(1, 1);
-    }
-  }
-}
