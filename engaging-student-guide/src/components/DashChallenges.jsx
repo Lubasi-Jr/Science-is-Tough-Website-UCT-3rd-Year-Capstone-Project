@@ -145,7 +145,6 @@ export default function DashChallenges() {
                       key={quiz.id}
                     >
                       <p className="content-text">{quiz.contentTitle}</p>
-                      <p> Points: {quiz.points}</p>
                     </li>
                   ))}
                 </div>
