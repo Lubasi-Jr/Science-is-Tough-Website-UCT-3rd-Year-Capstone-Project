@@ -22,6 +22,8 @@ export default function Dashboard() {
             <DashTrackProgress />
             {/* Weekly Challenges Component */}
             <DashChallenges />
+            {/* Game Component */}
+            {/* <DashGame /> */}
           </div>
         </div>
       </div>

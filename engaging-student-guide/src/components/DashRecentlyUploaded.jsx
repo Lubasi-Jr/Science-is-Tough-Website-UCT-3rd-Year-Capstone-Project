@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { MdAudiotrack } from "react-icons/md";
-import { FaVideo } from "react-icons/fa";
 import { GrDocumentPdf } from "react-icons/gr";
 import QuizIcon from "./QuizIcon";
 // import { FaHeart } from "react-icons/fa";
@@ -112,12 +111,6 @@ export default function DashRecentlyUploaded() {
                     onClick={() => {
                       handleContentClick(content, "audio");
                     }}
-                    className="recent-end-item "
-                  />
-                </div>
-                <div className="video-icon">
-                  <FaVideo
-                    onClick={() => handleContentClick(content, "video")}
                     className="recent-end-item "
                   />
                 </div>

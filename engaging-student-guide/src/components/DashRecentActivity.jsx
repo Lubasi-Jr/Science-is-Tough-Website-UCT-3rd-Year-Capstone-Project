@@ -14,7 +14,7 @@ export default function DashRecentActivity() {
           {/* If audio was recently used */}
           <div className="audio-player-container">
             {contentType === "audio" ? (
-              <div>
+              <div style={{display:"flex", flexDirection:"column", rowGap: "1em", paddingBottom: "1em"}}>
                 <Link
                   to={`/content/${recentContent.id}`}
                   style={{ textDecoration: "underline", fontSize: "large" }}

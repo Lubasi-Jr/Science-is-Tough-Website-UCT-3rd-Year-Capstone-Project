@@ -1,6 +1,5 @@
 export default function DashTrackProgress() {
   const stats = {
-    hoursRead: Math.floor(Math.random() * 100), // Random number between 0 and 99
     finishedContent: Math.floor(Math.random() * 50), // Random number between 0 and 49
     engagementScore: Math.floor(Math.random() * 100), // Random number between 0 and 99
     quizzesCompleted: Math.floor(Math.random() * 30), // Random number between 0 and 29
@@ -11,10 +10,6 @@ export default function DashTrackProgress() {
       <div className="student-stats-container">
         <h5 className="stats-title">Student Progress</h5>
         <div className="stats-content">
-          <div className="stat-item">
-            <span className="stat-value">{stats.hoursRead}</span>
-            <span className="stat-label">Hours Read</span>
-          </div>
           <div className="stat-item">
             <span className="stat-value">{stats.finishedContent}</span>
             <span className="stat-label">Finished Content</span>
