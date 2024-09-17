@@ -3,6 +3,8 @@ import DashChallenges from "../components/DashChallenges";
 import DashTrackProgress from "../components/DashTrackProgress";
 import DashRecentlyUploaded from "../components/DashRecentlyUploaded";
 import DashRecentActivity from "../components/DashRecentActivity";
+import DashRewards from "../components/DashRewards";
+import DashGame from "../components/DashGame";
 
 export default function Dashboard() {
   return (
@@ -18,8 +20,13 @@ export default function Dashboard() {
             <DashRecentlyUploaded />
           </div>
           <div className="right-panel">
+            {/* Rewards */}
+            <DashRewards />
             {/* Track Progress */}
             <DashTrackProgress />
+            {/* Game preview */}
+            <DashGame />
+
             {/* Weekly Challenges Component */}
             <DashChallenges />
             {/* Game Component */}
