@@ -1,4 +1,8 @@
+import { GetPointsContext } from "../context/PointsContext";
+
 export default function DashRewards() {
+  const { points } = GetPointsContext();
+
   return (
     <>
       <section className="Toughpoints">
@@ -9,7 +13,7 @@ export default function DashRewards() {
             src="https://images.rawpixel.com/image_800/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIyLTA0L3YxMTYxLWItMDQ3LmpwZw.jpg"
           />
           <h1 className="first">
-            <b>1000</b>
+            <b>{points}</b>
           </h1>
           <p className="second">pts</p>
         </div>
