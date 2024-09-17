@@ -1,10 +1,77 @@
+import { useEffect,useState } from "react";
+import { supabase } from "../lib/supabaseClient";
+import { useAuth } from "../hooks/useAuth";
+
 export default function DashTrackProgress() {
-  const stats = {
-    finishedContent: Math.floor(Math.random() * 50), // Random number between 0 and 49
-    engagementScore: Math.floor(Math.random() * 100), // Random number between 0 and 99
-    quizzesCompleted: Math.floor(Math.random() * 30), // Random number between 0 and 29
-    gamesPlayed: Math.floor(Math.random() * 20), // Random number between 0 and 19
+  const { user } = useAuth();
+  const [stats,setStats] = useState ({
+    
+    finishedContent: 0, 
+    engagementScore: 0, 
+    quizCompleted:0, 
+     
+  });
+
+  useEffect(()=>{
+    const fetchCompleted = async () => {
+
+      if (!user) {
+        console.error("User not authenticated");
+        return;
+      }
+      console.log("User ID:", user.id);
+      const{id:student_id} = user;
+      const { data:quizdata, error:quizerror } = await supabase.from("students_quizzes").select("done").eq("student_id",student_id);
+      
+      if(quizerror){
+        console.error("Error fetching quizzes completed:", quizerror);
+        return;
+      } 
+
+      const quizCompleted = quizdata.filter((quiz) => quiz.done).length;
+      
+      const { data:audiodata, error:audioerror } = await supabase.from("student_content").select("audio_complete").eq("student_id",student_id);
+      console.log("Audio data: ", audiodata);
+      if(audioerror){
+        console.error("Error fetching audio's completed:", audioerror);
+        return;
+      } 
+
+      const finishedContent = audiodata.filter((audio) => audio.audio_complete).length;
+      
+      setStats((stat) =>({
+        ...stat,
+        quizCompleted:quizCompleted,
+        finishedContent:finishedContent,
+        engagementScore:quizCompleted+finishedContent,
+       }));
   };
+
+    fetchCompleted();
+    const contentsubscription = supabase
+      .channel("public:student_content")
+      .on("postgres_changes", { event: "UPDATE", schema: "public", table: "student_content" }, (payload) => {
+        console.log("Change received:", payload);
+        fetchCompleted(); // Re-fetch progress data when there's an update
+      })
+      .subscribe((status) => {
+        console.log('Subscription status:', status);  // Log subscription status
+      });
+      const quizSubscription = supabase
+      .channel("public:students_quizzes")
+      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'students_quizzes' }, (payload) => {
+        console.log("Change detected in students_quizzes:", payload);
+        fetchCompleted(); // Re-fetch data when quizzes are updated
+      })
+      .subscribe();
+
+    // Cleanup the subscription when the component unmounts
+    return () => {
+      supabase.removeChannel(contentsubscription);
+      supabase.removeChannel(quizSubscription);
+    };
+  },[user]);
+
   return (
     <section className="progress-container">
       <div className="student-stats-container">
@@ -12,19 +79,15 @@ export default function DashTrackProgress() {
         <div className="stats-content">
           <div className="stat-item">
             <span className="stat-value">{stats.finishedContent}</span>
-            <span className="stat-label">Finished Content</span>
+            <span className="stat-label">Audios Complete</span>
+          </div>
+          <div className="stat-item">
+            <span className="stat-value">{stats.quizCompleted}</span>
+            <span className="stat-label">Quizzes Completed</span>
           </div>
           <div className="stat-item">
             <span className="stat-value">{stats.engagementScore}</span>
             <span className="stat-label">Engagement Score</span>
-          </div>
-          <div className="stat-item">
-            <span className="stat-value">{stats.quizzesCompleted}</span>
-            <span className="stat-label">Quizzes Completed</span>
-          </div>
-          <div className="stat-item">
-            <span className="stat-value">{stats.gamesPlayed}</span>
-            <span className="stat-label">Games Played</span>
           </div>
         </div>
       </div>
