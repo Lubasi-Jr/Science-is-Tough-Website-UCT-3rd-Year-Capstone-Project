@@ -8,6 +8,7 @@ export default function DashChallenges() {
   const [challengesStarted, setChallengesStarted] = useState([]);
 
   const { user } = useAuth();
+  console.log("User: ", user);
 
   // fetch all challenges with the number of completed quizzes
   useEffect(() => {
@@ -51,9 +52,7 @@ export default function DashChallenges() {
       (challenge) => challenge.id === challenge_id
     );
 
-
     console.log(challengeToStart);
-    
 
     let challengeToInsert = [];
 
@@ -92,8 +91,6 @@ export default function DashChallenges() {
     return res;
   }
 
-
-
   const [isExpanded, setIsExpanded] = useState(null);
 
   // Toggle the state when clicking
@@ -118,23 +115,14 @@ export default function DashChallenges() {
                     onClick={() => toggleExpand(challenge.id)}
                   >
                     <p>{challenge.description}</p>
-                    <p>
-                      Participants: {challenge.noParticipants}
-                    </p>
-                    <p>
-                      Closing Date:{" "}
-                      {challenge.date_end}
-                    </p>
+                    <p>Participants: {challenge.noParticipants}</p>
+                    <p>Closing Date: {challenge.date_end}</p>
                     {/* <p>Completed: {challenge.result}</p> */}
                   </div>
                   {challengesStarted.includes(challenge.id) ? (
                     <div className="challenge-item-started">Started</div>
                   ) : (
-                    <button
-                      onClick={() =>
-                        startChallenge(challenge.id)
-                      }
-                    >
+                    <button onClick={() => startChallenge(challenge.id)}>
                       Start
                     </button>
                   )}
@@ -147,10 +135,7 @@ export default function DashChallenges() {
                   }`}
                 >
                   {challenge.quizzes.map((quiz) => (
-                    <li
-                      className="challenge-content-item"
-                      key={quiz.id}
-                    >
+                    <li className="challenge-content-item" key={quiz.id}>
                       <p className="content-text">{quiz.contentTitle}</p>
                     </li>
                   ))}
@@ -158,7 +143,11 @@ export default function DashChallenges() {
               </div>
             ))
           ) : (
-            <div>Loading...</div>
+            <div>
+              No open challenges at the moment. 🏖️ But don’t worry, new
+              adventures are just around the corner. Stay tuned for your next
+              challenge to conquer! 💪
+            </div>
           )}
         </div>
       </section>
