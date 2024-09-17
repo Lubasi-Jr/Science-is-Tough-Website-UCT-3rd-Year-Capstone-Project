@@ -14,6 +14,9 @@ export default function Dashboard() {
           <div className="left-panel">
             {/* Recent Activity */}
             <DashRecentActivity />
+
+            {/* Weekly Challenges Component */}
+            <DashChallenges />
             {/* Favourite Container */}
             {/* <DashFavourites /> */}
             {/* Recently Uploaded  */}
@@ -26,11 +29,6 @@ export default function Dashboard() {
             <DashTrackProgress />
             {/* Game preview */}
             <DashGame />
-
-            {/* Weekly Challenges Component */}
-            <DashChallenges />
-            {/* Game Component */}
-            {/* <DashGame /> */}
           </div>
         </div>
       </div>

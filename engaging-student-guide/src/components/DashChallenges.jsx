@@ -29,7 +29,7 @@ export default function DashChallenges() {
         .from("students_challenges")
         .select("challenge_id", "status")
         .eq("student_id", user.id)
-        .neq("status", '');
+        .neq("status", "");
 
       if (error) {
         console.error("Error checking if challenge started :", error.message);
@@ -106,55 +106,54 @@ export default function DashChallenges() {
   return (
     <>
       <section className="challenges-container">
-        <div>
-          <h5>Weekly Challenges</h5>
-          {challenges.length > 0 ? (
-            challenges.map((challenge) => (
-              <div key={challenge.id} className="challenge-item">
-                <div className="challenge-item-details">
+        <h5>Weekly Challenges</h5>
+        {challenges.length > 0 ? (
+          challenges.map((challenge) => (
+            <div key={challenge.id} className="challenge-item">
+              <div className="challenge-item-container">
+                <div
+                  onClick={() => toggleExpand(challenge.id)}
+                  className="challenge-item-details"
+                >
                   <div className="challenge-item-icon">
                     <img src="../../public/quiz-icon.png" alt="quiz icon" />
                   </div>
 
-                  <div
-                    className="challenge-item-info"
-                    onClick={() => toggleExpand(challenge.id)}
-                  >
+                  <div className="challenge-item-info">
                     <p>{challenge.description}</p>
                     <p>Participants: {challenge.noParticipants}</p>
                     <p>Closing Date: {challenge.date_end}</p>
-                    {/* <p>Completed: {challenge.result}</p> */}
                   </div>
-                  {challengesStarted.includes(challenge.id) ? (
-                    <div className="challenge-item-started">Started</div>
-                  ) : (
-                    <button onClick={() => startChallenge(challenge.id)}>
-                      Start
-                    </button>
-                  )}
                 </div>
-
-                {/* Expand content*/}
-                <div
-                  className={`expandable-content ${
-                    isExpanded === challenge.id ? "expanded" : ""
-                  }`}
-                >
-                  {challenge.quizzes.map((quiz) => (
-                    <li className="challenge-content-item" key={quiz.id}>
-                      <p className="content-text">{quiz.contentTitle}</p>
-                    </li>
-                  ))}
-                </div>
+                {challengesStarted.includes(challenge.id) ? (
+                  <div className="challenge-item-started">Started</div>
+                ) : (
+                  <button onClick={() => startChallenge(challenge.id)}>
+                    Start
+                  </button>
+                )}
               </div>
-            ))
-          ) : (
-            <div>
-              No open challenges at the moment. 🏖️ Feel free to continue with
-              the quizzes and games. 💪
+
+              {/* Expand content*/}
+              <div
+                className={`expandable-content ${
+                  isExpanded === challenge.id ? "expanded" : ""
+                }`}
+              >
+                {challenge.quizzes.map((quiz) => (
+                  <li className="challenge-content-item" key={quiz.id}>
+                    <p className="content-text">{quiz.contentTitle}</p>
+                  </li>
+                ))}
+              </div>
             </div>
-          )}
-        </div>
+          ))
+        ) : (
+          <div>
+            No open challenges at the moment. 🏖️ Feel free to continue with the
+            quizzes and games. 💪
+          </div>
+        )}
       </section>
     </>
   );

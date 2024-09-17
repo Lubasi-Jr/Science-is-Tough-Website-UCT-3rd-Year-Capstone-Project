@@ -217,9 +217,9 @@ body {
   background-color: var(--secondary-bg-color);
   display: flex;
   flex-direction: column;
-  padding: 20px;
+  padding: 1em;
   border-radius: 20px;
-  row-gap: 2em;
+  row-gap: 1em;
 }
 .challenges-container .challenge-item {
   display: flex;
@@ -232,16 +232,20 @@ body {
   display: flex;
   column-gap: 1em;
   align-items: center;
-  padding: 0.6em;
+  width: 100%;
   border-radius: 20px;
   transition: background-color 0.4s, transform 0.3s;
+}
+
+.challenge-item-container {
+  display: flex;
+  justify-content: space-between;
+  padding:  0.5em;
 }
 
 .challenges-container .challenge-item:hover {
   cursor: pointer;
   background-color: var(--hover-color);
-  /* transform: scale(1.03);  */
-  /* border: 1px solid var(--secondary-accent-color) */
 }
 
 .challenges-container .challenge-item .challenge-item-info {
@@ -277,6 +281,8 @@ body {
   color: var(--secondary-text-color);
   padding: 10px 30px;
   border-radius: 10px;
+  height: 50px;
+  align-self: center;
 }
 
 .challenge-item button {
@@ -375,15 +381,20 @@ body {
   column-gap: 1em;
   justify-content: center;
 }
-.Toughpoints .toughpoints-body .first{
+
+
+.Toughpoints .toughpoints-body .first {
   padding-left: 10px;
 }
 
-/* .Toughpoints */
-
-.Toughpoints p{
- padding-top: 10px;
+.Toughpoints p {
+  padding-top: 10px;
 }
+
+.Toughpoints .instruction {
+  margin-top: 10px;
+}
+
 
 .coins {
   width: 60px;

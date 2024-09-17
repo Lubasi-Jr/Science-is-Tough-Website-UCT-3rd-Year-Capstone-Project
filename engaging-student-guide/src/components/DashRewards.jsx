@@ -2,7 +2,7 @@ export default function DashRewards() {
   return (
     <>
       <section className="Toughpoints">
-        <h4 style={{ marginTop: "18px" }}>Rewards</h4>
+        <h4>Rewards</h4>
         <div className="toughpoints-body">
           <img
             className="coins"
@@ -13,12 +13,16 @@ export default function DashRewards() {
           </h1>
           <p className="second">pts</p>
         </div>
-        <b>Instructions:</b>
-        <br></br>
-        <p>
-          Earn points doing any of your available challenges.<br></br>
-          Once you reach 1000 points you will be able to claim a voucher.
-        </p>
+        <div className="instruction">
+          <b style={{ marginTop: "10px" }}>
+            Instructions:
+          </b>
+          <br></br>
+          <p >
+            Earn points doing any of your available challenges.<br></br>
+            Once you reach 1000 points you will be able to claim a voucher.
+          </p>
+        </div>
       </section>
     </>
   );
