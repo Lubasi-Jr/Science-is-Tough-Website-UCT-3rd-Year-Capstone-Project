@@ -42,10 +42,10 @@ export default function DashChallenges() {
   }, [user.id]);
   async function startChallenge(challenge_id) {
     // increment number of participants for this challenge in the challenge table
-    // const { error: updateChallengeError } = await supabase.rpc(
-    //   "increment_no_participants",
-    //   { challenge_id: challenge_id }
-    // );
+    const { error: updateChallengeError } = await supabase.rpc(
+      "increment_no_participants",
+      { challenge_id: challenge_id }
+    );
 
     const challengeToStart = challenges.find(
       (challenge) => challenge.id === challenge_id
@@ -57,32 +57,35 @@ export default function DashChallenges() {
 
     let challengeToInsert = [];
 
-    for (let i = 0; i < challengeToStart.quizzes_list.length; i++) {
+    for (let i = 0; i < challengeToStart.quizzes.length; i++) {
       let obj = {
         challenge_id: challenge_id,
-        q_id: challengeToStart.quiz.id,
+        q_id: challengeToStart.quizzes[i].id,
         student_id: user.id,
-        done: challengeToStart.quizzes_list[i].finished,
+        done: challengeToStart.quizzes[i].done,
+        started: true,
       };
       challengeToInsert.push(obj);
     }
+    // console.log("Inserting challenges: ", challengeToInsert);
 
-    // const { error: insertChallengeError } = await supabase
-    //   .from("students_quizzes")
-    //   .insert(challengeToInsert);
+    const { error: insertChallengeError } = await supabase
+      .from("students_quizzes")
+      .insert(challengeToInsert);
 
-    // if (updateChallengeError) {
-    //   console.log("Update Challenge Error: ", updateChallengeError);
-    // }
-    // if (insertChallengeError) {
-    //   console.log("Start Challenge Error: ", insertChallengeError);
-    // }
+    if (updateChallengeError) {
+      console.log("Update Challenge Error: ", updateChallengeError);
+    }
+    if (insertChallengeError) {
+      console.log("Start Challenge Error: ", insertChallengeError);
+    }
   }
 
   function formatData(data) {
     let res = [];
     for (let i = 0; i < data.length; i++) {
       const obj = data[i];
+      // console.log("Challenge datatata: ", obj)
       const c = Challenge.fromJson(obj);
       res.push(c);
     }

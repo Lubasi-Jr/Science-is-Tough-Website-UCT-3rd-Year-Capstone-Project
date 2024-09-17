@@ -54,7 +54,9 @@ export class Challenge {
 
     for (let i = 0; i < obj.quizzes_list.length; i++) {
       const q_obj = obj.quizzes_list[i].quiz;
+      const q_obj_done = obj.quizzes_list[i].done;
       const q = Quiz.fromJson(q_obj);
+      q.setDone(q_obj_done)
       quizzes.push(q);
     }
 
