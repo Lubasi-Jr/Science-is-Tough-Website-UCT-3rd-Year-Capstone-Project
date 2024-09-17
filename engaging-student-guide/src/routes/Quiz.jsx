@@ -18,6 +18,7 @@ function Quiz() {
   const [challenge, setChallenge] = useState(Challenge.empty());
 
   const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [currentQuiz, setCurrentQuiz] = useState(0);
   const [selectedOption, setSelectedOption] = useState(null);
 
   const [showScore, setShowScore] = useState(false);
@@ -35,6 +36,7 @@ function Quiz() {
       } else {
         const q = formatData(data);
         setQuiz(q);
+        setCurrentQuiz(0)
       }
     }
 
@@ -88,32 +90,7 @@ function Quiz() {
     }
   }, [showScore, score, user.id, quiz.points]); // Only when showScore and score hit MAX_SCORE
 
-  useEffect(() => {
-    let isMounted = true; // To avoid setting state if component is unmounted
-
-    async function fetchQuizzes(id) {
-      const { data, error } = await supabase.rpc("get_quiz", {
-        content_id: id,
-      });
-      if (isMounted) {
-        if (error) {
-          console.log("Error fetching quizzes:", error);
-        } else {
-          const q = formatData(data);
-          setQuiz(q);
-        }
-      }
-    }
-
-    if (id) {
-      fetchQuizzes(id);
-    }
-
-    return () => {
-      isMounted = false; // Cleanup when component unmounts
-    };
-  }, [id]); // Runs only when id changes
-
+  
   async function handleQuizFinished() {
     const item = {
       student_id: user.id,
@@ -133,11 +110,20 @@ function Quiz() {
     }
   }
 
-  async function handleNextQuiz(id) {
-    navigate(`/quiz/${id}`);
-    setShowScore(false);
-    setCurrentQuestion(0);
-    setScore(0);
+  async function handleNextQuiz() {
+    const nextQuiz = currentQuiz + 1;
+    if (nextQuiz < challenge.quizzes.length) {
+      setCurrentQuestion(nextQuiz);
+      setSelectedOption(null);
+      setShowScore(false);
+      setCurrentQuestion(0);
+      navigate(`/quiz/${challenge.quizzes[nextQuiz]}`);
+      setScore(0);
+    } else {
+      // setShowScore(true);
+      setIsDone(true);
+    }
+   
   }
 
   function formatData(obj) {
@@ -148,6 +134,7 @@ function Quiz() {
 
   const handleRetry = () => {
     setShowScore(false);
+    setIsDone(false);
     setCurrentQuestion(0);
     setScore(0);
   };
@@ -202,6 +189,16 @@ function Quiz() {
                     <button className="quiz-next-btn" onClick={handleRetry}>
                       Retry
                     </button>
+                    {isPartOfChallenge ? (
+                      <button
+                        className="quiz-next-btn"
+                        onClick={handleNextQuiz}
+                      >
+                        Next Quiz
+                      </button>
+                    ) : (
+                      <></>
+                    )}
                   </div>
                 </div>
               ) : (
@@ -251,7 +248,7 @@ function Quiz() {
             <div>Loading quiz...</div>
           )}
         </div>
-        {isPartOfChallenge ? (
+        {/* {isPartOfChallenge ? (
           <div className="quiz-list">
             <h4>Challenge: {challenge.description}</h4>
             {challenge.quizzes.map((challengeQuiz) =>
@@ -274,7 +271,7 @@ function Quiz() {
           </div>
         ) : (
           <></>
-        )}
+        )} */}
       </div>
     </>
   );
