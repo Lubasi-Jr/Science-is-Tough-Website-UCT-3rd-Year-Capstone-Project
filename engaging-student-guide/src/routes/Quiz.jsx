@@ -135,6 +135,9 @@ function Quiz() {
 
   async function handleNextQuiz(id) {
     navigate(`/quiz/${id}`);
+    setShowScore(false);
+    setCurrentQuestion(0);
+    setScore(0);
   }
 
   function formatData(obj) {
@@ -196,9 +199,6 @@ function Quiz() {
                       justifyContent: "center",
                     }}
                   >
-                    {/* <button className="quiz-next-btn" onClick={handleNextQuiz}>
-                      Next Quiz &gt;
-                    </button> */}
                     <button className="quiz-next-btn" onClick={handleRetry}>
                       Retry
                     </button>
