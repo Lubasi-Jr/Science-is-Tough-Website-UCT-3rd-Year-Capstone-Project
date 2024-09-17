@@ -26,7 +26,7 @@ export default function DashTrackProgress() {
         return;
       }
 
-      const quizCompleted = quizdata.filter((quiz) => quiz.done).length;
+      const quizCompleted = quizdata.filter((quiz) => quiz.complete).length;
 
       const { data: audiodata, error: audioerror } = await supabase
         .from("student_content")
