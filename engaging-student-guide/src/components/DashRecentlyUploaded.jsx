@@ -6,10 +6,11 @@ import QuizIcon from "./QuizIcon";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient";
 import { RecentContext } from "../context/contextRecentActivity";
+import { useAuth } from "../hooks/useAuth";
 
 export default function DashRecentlyUploaded() {
   const navigate = useNavigate();
-
+  const { user } = useAuth();
   const { setRecentContent, setContentType } = RecentContext();
   const handleQuizClick = (content) => {
     // console.log("Clicked on quizz thing: ...")
@@ -17,13 +18,45 @@ export default function DashRecentlyUploaded() {
       state: { content: content },
     });
   };
-  const handleContentClick = (content, contentType) => {
+  const handleContentClick = async (content, contentType) => {
     navigate(`/content/${content.id}`, {
       state: { content: content, contentType: contentType },
     });
     setContentType(contentType);
     setRecentContent(content);
+
+    if (contentType === "pdf" && content.pdf_url) {
+      window.open(content.pdf_url, "_blank");//show pdf on new tab
+    } else if (contentType === "audio" && content.audio_url) {
+      window.open(content.audio_url, "_blank");//show audio on new tab
+      await audioComplete(content.id);
+    }
+
   };
+
+
+  const audioComplete = async (contentId) => {
+
+    if (!user) {
+      console.error("User not authenticated");
+      return;
+    }
+    //console.log("User ID:", user.id);
+    const { id: student_id } = user;
+    console.log("Updating audio completion for user:", student_id, "Content ID:", contentId);
+    const i = {"student_id": student_id, "content_id": contentId, "audio_complete": true}
+    const { error } = await supabase
+    .from("student_content")
+    .insert(i)
+    .eq("student_id", student_id)
+    .eq("content_id", contentId);
+    
+    if (error) {
+      console.error("Error updating audio completion:", error);
+    }
+    console.log("updated");
+  };
+
 
   const [allContent, setAllContent] = useState([]);
 
