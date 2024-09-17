@@ -8,7 +8,6 @@ export default function DashChallenges() {
   const [challengesStarted, setChallengesStarted] = useState([]);
 
   const { user } = useAuth();
-  console.log("User: ", user);
 
   // fetch all challenges with the number of completed quizzes
   useEffect(() => {

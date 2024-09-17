@@ -32,7 +32,6 @@ export default function DashTrackProgress() {
         .from("student_content")
         .select("audio_complete")
         .eq("student_id", student_id);
-      console.log("Audio data: ", audiodata);
       if (audioerror) {
         console.error("Error fetching audio's completed:", audioerror);
         return;

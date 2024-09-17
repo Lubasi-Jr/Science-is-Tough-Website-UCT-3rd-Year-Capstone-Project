@@ -25,25 +25,6 @@ function Quiz() {
 
   const MAX_SCORE = 3;
   useEffect(() => {
-    if (showScore && score == MAX_SCORE) {
-      // check if student has everything correct to get the points
-      async function updateScore() {
-        // update the score of the student
-        const { error } = await supabase.rpc("update_student_points", {
-          student_id: user.id,
-          amount: quiz.points,
-        });
-        if (error) {
-          console.log("Error updating score: ", error);
-        } else {
-          console.log("updated user points ");
-          // setQuestions(formatData(data));
-        }
-      }
-
-      updateScore();
-    }
-
     async function fetchQuizzes(id) {
       const { data, error } = await supabase.rpc("get_quiz", {
         content_id: id,
@@ -57,28 +38,27 @@ function Quiz() {
       }
     }
 
-    fetchQuizzes(id);
-  }, [id, showScore, score, user, quiz]);
+    // Only call fetchQuizzes when id changes
+    if (id) {
+      fetchQuizzes(id);
+    }
+  }, [id]); // removed unnecessary dependencies like `showScore`, `score`, `user`, and `quiz`
 
   useEffect(() => {
-    // check if quiz is part of a challenge
-    if (quiz.id !== "") {
+    if (quiz.id) {
       async function handlePartOfChallenge() {
         if (quiz.challengeId == null) {
           setIsPartOfChallenge(false);
         } else {
           setIsPartOfChallenge(true);
 
-          // fetch the rest of the challenge items
           const { data, error } = await supabase.rpc(
             "get_challenge_and_quizzes",
-            {
-              challenge_id: quiz.challengeId,
-            }
+            { challenge_id: quiz.challengeId }
           );
           if (error) {
             console.log(
-              "Error fecthing the challenge realted to this quiz: ",
+              "Error fetching the challenge related to this quiz:",
               error
             );
           } else {
@@ -86,16 +66,59 @@ function Quiz() {
           }
         }
       }
+
       handlePartOfChallenge();
     }
-  }, [quiz, isPartOfChallenge]);
+  }, [quiz.challengeId, quiz.id]); // Trigger only when quiz.id changes
+
+  useEffect(() => {
+    if (showScore && score === MAX_SCORE) {
+      async function updateScore() {
+        const { error } = await supabase.rpc("update_student_points", {
+          student_id: user.id,
+          amount: quiz.points,
+        });
+
+        if (error) {
+          console.log("Error updating score:", error);
+        }
+      }
+
+      updateScore();
+    }
+  }, [showScore, score, user.id, quiz.points]); // Only when showScore and score hit MAX_SCORE
+
+  useEffect(() => {
+    let isMounted = true; // To avoid setting state if component is unmounted
+
+    async function fetchQuizzes(id) {
+      const { data, error } = await supabase.rpc("get_quiz", {
+        content_id: id,
+      });
+      if (isMounted) {
+        if (error) {
+          console.log("Error fetching quizzes:", error);
+        } else {
+          const q = formatData(data);
+          setQuiz(q);
+        }
+      }
+    }
+
+    if (id) {
+      fetchQuizzes(id);
+    }
+
+    return () => {
+      isMounted = false; // Cleanup when component unmounts
+    };
+  }, [id]); // Runs only when id changes
 
   async function handleQuizFinished() {
     const item = {
       student_id: user.id,
       complete: true,
       quiz_id: quiz.id,
-      challenge_id: challenge.id,
       content_id: quiz.contentId,
     };
 
