@@ -21,11 +21,24 @@ export default function DashRecentlyUploaded() {
     //state: { content: content, contentType: contentType },
     //});
     // console.log(`Clicked on ${contentType}:`, content); 
-  const handleQuizClick = (content) => {
+  const handleQuizClick = async(content) => {
+    const { data, error } = await supabase
+      .from("quiz")
+      .select("id")
+      .eq("content_id", content.id)
+      .single();  
+
+    if (error) {
+      console.error("Error fetching quiz ID:", error.message);
+      return;
+    }
+
+    const quizId = data.id; 
     // console.log("Clicked on quizz thing: ...")
     navigate(`/quiz/${content.id}`, {
       state: { content: content },
     });
+    await quizComplete(content.id,quizId);
   };
   const handleContentClick = async(content, contentType) => {
     navigate(`/content/${content.id}`, {
@@ -42,6 +55,7 @@ export default function DashRecentlyUploaded() {
       await audioComplete(content.id);
     }
   };
+
   const audioComplete = async (contentId) => {
 
     if (!user) {
@@ -63,7 +77,27 @@ export default function DashRecentlyUploaded() {
     }
     console.log("updated");
   };
+  const quizComplete = async (contentI,quizId) => {
 
+    if (!user) {
+      console.error("User not authenticated");
+      return;
+    }
+  const { id: student_id } = user;
+    console.log("Updating quiz completion for user:", student_id, "content ID:", contentI);
+    const details = {"student_id": student_id, "content_id": contentI,"quiz_id":quizId, "complete": true}
+    const { error } = await supabase
+    .from("student_quiz")
+    .insert(details)
+    .eq("student_id", student_id)
+    .eq("content_id", contentI)
+    .eq("quiz_id",quizId);
+    
+    if (error) {
+      console.error("Error updating audio completion:", error);
+    }
+    console.log("updated");
+  };
   const [allContent, setAllContent] = useState([]);
 
   useEffect(() => {

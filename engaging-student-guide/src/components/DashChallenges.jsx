@@ -154,10 +154,6 @@ export default function DashChallenges() {
           ) : (
             <div>Loading...</div>
           )}
-<<<<<<< HEAD
-          
-=======
->>>>>>> 80ff65f029231cd3fe64d2edad0c81fd5a342c05
         </div>
       </section>
     </>
