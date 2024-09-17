@@ -58,8 +58,8 @@ export default function DashTrackProgress() {
         console.log('Subscription status:', status);  // Log subscription status
       });
       const quizSubscription = supabase
-      .channel("public:students_quizzes")
-      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'students_quizzes' }, (payload) => {
+      .channel("public:student_quiz")
+      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'student_quiz' }, (payload) => {
         console.log("Change detected in students_quizzes:", payload);
         fetchCompleted(); // Re-fetch data when quizzes are updated
       })

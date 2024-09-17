@@ -93,14 +93,14 @@ function Quiz() {
   async function handleQuizFinished() {
     const item = {
       student_id: user.id,
-      done: true,
-      q_id: quiz.id,
+      complete: true,
+      quiz_id: quiz.id,
       challenge_id: challenge.id,
-      started: challenge.id === "" ? false : true,
+      content_id: quiz.contentId,
     };
 
     console.log("Inserting the following item: ", item);
-    const { error } = await supabase.from("students_quizzes").insert(item);
+    const { error } = await supabase.from("student_quiz").insert(item);
 
     if (error) {
       console.log("Error fetching quizzes: ", error);

@@ -69,7 +69,7 @@ export default function DashChallenges() {
     // console.log("Inserting challenges: ", challengeToInsert);
 
     const { error: insertChallengeError } = await supabase
-      .from("students_quizzes")
+      .from("student_quiz")
       .insert(challengeToInsert);
 
     await supabase.from("students_challenges").insert({
