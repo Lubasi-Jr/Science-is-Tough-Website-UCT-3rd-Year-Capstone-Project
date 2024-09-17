@@ -16,7 +16,7 @@ export default function DashGame() {
             alt="Game Preview"
             className="game-preview-gif"
           />
-          <Link to="/distract" className="play-button">
+          <Link to="/game" className="play-button">
             Start
           </Link>
         </div>

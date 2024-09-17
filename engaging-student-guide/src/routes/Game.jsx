@@ -76,12 +76,7 @@ function Game() {
     return (
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100px',marginTop:'100px'}}>
         <h1>Select Your Avatar:</h1>
-        <button 
-        style={{ position: 'absolute', top: '20px', left: '20px' ,borderRadius:'10px'}}
-        onClick={() => navigate('/')} 
-      >
-        &lt; Back to Home
-      </button>
+      
         <div style={{gap:'20px',display: 'flex', justifyContent: 'center' }}>
           {avatars.map((avatar, index) => (
             <img
@@ -107,12 +102,7 @@ function Game() {
   return (
     <div>
       <h1 style={{textAlign:'center'}}>Tough Game</h1>
-      <button 
-        style={{ position: 'absolute', top: '20px', left: '20px' ,borderRadius:'10px'}}
-        onClick={() => navigate('/')} 
-      >
-        &lt; Back to Home
-      </button>
+    
       <div style={{ position: 'relative', height: '400px', width: '1000px', marginBottom: '50px' }}>
         <svg height="400" width="1000" style={{ position: 'absolute', top: '0', left: '0' }}>
           {/*Creating a path between circles*/}
