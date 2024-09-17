@@ -348,6 +348,7 @@ body {
   flex-direction: column;
   align-items: center;
   cursor: pointer;
+  width: 100%;
 }
 
 .stat-value {

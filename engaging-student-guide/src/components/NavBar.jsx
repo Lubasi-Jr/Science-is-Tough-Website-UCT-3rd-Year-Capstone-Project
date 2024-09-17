@@ -31,12 +31,11 @@ export default function NavBar() {
           <Link to="/">Science is Tough</Link>
         </div>
         <div className="navbar-center">
-          <Link to="/">Game</Link>
+        </div>
+        <div className="navbar-right">
           <Link to="/" onClick={() => auth.signOut()}>
             Logout
           </Link>
-        </div>
-        <div className="navbar-right">
           <div className="icon-text">
             <img className="muscle-icon" src={MuscleIcon} alt="muscle icon" />
             <p className="first">{points}</p>
