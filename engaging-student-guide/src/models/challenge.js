@@ -6,37 +6,32 @@ export class Challenge {
   // Class properties to store various attributes of a challenge.
   id; // Unique identifier for the challenge.
   noParticipants; // Number of students participating in the challenge.
-  top_students; // Array or list of the top-performing students.
   description; // Description of the challenge.
   reward; // Reward given to the winners of the challenge.
   date_created; // Date when the challenge was created.
   date_end; // Date when the challenge will end.
-  name; // Name of the challenge.
-  studentsStarting; // number  of students who are starting the challenge.
 
   quizzes; // the quizzes of the challenge
 
   // Constructor method to initialize a new instance of the Challenge class.
   constructor(
     id, // Unique identifier for the challenge.
-    // name, // Name of the challenge.
     description, // Description of the challenge.
     // date_created, // Date when the challenge was created.
     date_end, // Date when the challenge will end.
     // reward, // Award or prize for the challenge.
     // studentsStarting // Array or list of students starting the challenge.
-    quizzes
+    quizzes,
+    noParticipants
   ) {
     // Assigning the passed parameters to the corresponding class properties.
     this.id = id;
     this.description = description;
     this.date_end = date_end;
     this.quizzes = quizzes;
-    this.noParticipants = 0;
+    this.noParticipants = noParticipants;
     // this.reward = reward;
     // this.date_created = date_created;
-    // this.name = name;
-    // this.studentsStarting = studentsStarting;
   }
 
   // Method to set the top students for the challenge.
@@ -77,11 +72,11 @@ export class Challenge {
 
     // const challengeData =
     // console.log("This was the challenge from json: ", challengeData);
-    return new Challenge(challenge.id, challenge.description, endDate, quizzes);
+    return new Challenge(challenge.id, challenge.description, endDate, quizzes, challenge.no_participants);
   }
 
   static empty() {
-    return new Challenge("", "", "", []);
+    return new Challenge("", "", "", [], 0);
   }
 
   // Method to retrieve the name of the challenge.

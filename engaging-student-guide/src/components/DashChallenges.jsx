@@ -26,10 +26,10 @@ export default function DashChallenges() {
     //  Check if user has started the challenge
     async function checkIfChallengeStarted() {
       const { data, error } = await supabase
-        .from("students_quizzes")
-        .select("challenge_id")
+        .from("students_challenges")
+        .select("challenge_id", "status")
         .eq("student_id", user.id)
-        .eq("started", true);
+        .neq("status", '');
 
       if (error) {
         console.error("Error checking if challenge started :", error.message);
@@ -71,6 +71,12 @@ export default function DashChallenges() {
     const { error: insertChallengeError } = await supabase
       .from("students_quizzes")
       .insert(challengeToInsert);
+
+    await supabase.from("students_challenges").insert({
+      student_id: user.id,
+      challenge_id: challengeToStart.id,
+      status: "in progress",
+    });
 
     if (updateChallengeError) {
       console.log("Update Challenge Error: ", updateChallengeError);
@@ -144,9 +150,8 @@ export default function DashChallenges() {
             ))
           ) : (
             <div>
-              No open challenges at the moment. 🏖️ But don’t worry, new
-              adventures are just around the corner. Stay tuned for your next
-              challenge to conquer! 💪
+              No open challenges at the moment. 🏖️ Feel free to continue with
+              the quizzes and games. 💪
             </div>
           )}
         </div>
