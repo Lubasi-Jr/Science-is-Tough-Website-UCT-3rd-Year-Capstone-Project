@@ -29,16 +29,16 @@ function Quiz() {
       // check if student has everything correct to get the points
       async function updateScore() {
         // update the score of the student
-        // const { error } = await supabase.rpc("update_student_points", {
-        //   student_id: user.id,
-        //   // points: pointsEarned,
-        // });
-        // if (error) {
-        //   console.log("Error updating score: ", error);
-        // } else {
-        //   console.log("updated user points ");
-        //   // setQuestions(formatData(data));
-        // }
+        const { error } = await supabase.rpc("update_student_points", {
+          student_id: user.id,
+          amount: quiz.points,
+        });
+        if (error) {
+          console.log("Error updating score: ", error);
+        } else {
+          console.log("updated user points ");
+          // setQuestions(formatData(data));
+        }
       }
 
       updateScore();
@@ -58,7 +58,7 @@ function Quiz() {
     }
 
     fetchQuizzes(id);
-  }, [id, showScore, score, user]);
+  }, [id, showScore, score, user, quiz]);
 
   useEffect(() => {
     // check if quiz is part of a challenge
