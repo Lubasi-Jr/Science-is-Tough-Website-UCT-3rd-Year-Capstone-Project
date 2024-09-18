@@ -4,6 +4,7 @@ export class Quiz {
   questions; // questions included in the quiz.
   contentTitle;
   challengeId;
+  contentId;
   points;
   done;
 

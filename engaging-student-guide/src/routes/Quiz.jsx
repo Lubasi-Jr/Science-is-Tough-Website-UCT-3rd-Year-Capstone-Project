@@ -5,7 +5,8 @@ import { useNavigate } from "react-router-dom";
 import { Quiz as QuizModel } from "../models/quiz";
 import { supabase } from "../lib/supabaseClient";
 import { useAuth } from "../hooks/useAuth";
-import { Challenge } from "../models/challenge";
+// import { Challenge } from "../models/challenge";
+import { Link } from "react-router-dom";
 
 function Quiz() {
   const navigate = useNavigate();
@@ -13,12 +14,12 @@ function Quiz() {
   const { user } = useAuth();
   const { id } = useParams();
   const [quiz, setQuiz] = useState(QuizModel.empty());
-  const [isPartOfChallenge, setIsPartOfChallenge] = useState(false);
+  // const [isPartOfChallenge, setIsPartOfChallenge] = useState(false);
   const [isDone, setIsDone] = useState(false);
-  const [challenge, setChallenge] = useState(Challenge.empty());
+  // const [challenge, setChallenge] = useState(Challenge.empty());
 
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [currentQuiz, setCurrentQuiz] = useState(0);
+  const [isCompleted, setIsCompleted] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
 
   const [showScore, setShowScore] = useState(false);
@@ -26,7 +27,7 @@ function Quiz() {
 
   const MAX_SCORE = 3;
   useEffect(() => {
-    async function fetchQuizzes(id) {
+    async function fetchQuiz(id) {
       const { data, error } = await supabase.rpc("get_quiz", {
         content_id: id,
       });
@@ -34,44 +35,17 @@ function Quiz() {
       if (error) {
         console.log("Error fetching quizzes: ", error);
       } else {
+        // console.log("Data from fetching quiz questions: ", id, data);
         const q = formatData(data);
         setQuiz(q);
-        setCurrentQuiz(0)
+        setIsCompleted(data.is_complete);
       }
     }
 
-    // Only call fetchQuizzes when id changes
     if (id) {
-      fetchQuizzes(id);
+      fetchQuiz(id);
     }
-  }, [id]); // removed unnecessary dependencies like `showScore`, `score`, `user`, and `quiz`
-
-  useEffect(() => {
-    if (quiz.id) {
-      async function handlePartOfChallenge() {
-        if (quiz.challengeId == null) {
-          setIsPartOfChallenge(false);
-        } else {
-          setIsPartOfChallenge(true);
-
-          const { data, error } = await supabase.rpc(
-            "get_challenge_and_quizzes",
-            { challenge_id: quiz.challengeId }
-          );
-          if (error) {
-            console.log(
-              "Error fetching the challenge related to this quiz:",
-              error
-            );
-          } else {
-            setChallenge(Challenge.fromJson(data));
-          }
-        }
-      }
-
-      handlePartOfChallenge();
-    }
-  }, [quiz.challengeId, quiz.id]); // Trigger only when quiz.id changes
+  }, [id]);
 
   useEffect(() => {
     if (showScore && score === MAX_SCORE) {
@@ -88,43 +62,59 @@ function Quiz() {
 
       updateScore();
     }
-  }, [showScore, score, user.id, quiz.points]); // Only when showScore and score hit MAX_SCORE
+  }, [showScore, score, user.id, quiz.points]);
 
-  
-  async function handleQuizFinished() {
-    const item = {
-      student_id: user.id,
-      complete: true,
-      quiz_id: quiz.id,
-      content_id: quiz.contentId,
-    };
+  // useEffect(() => {
+  //   if (quiz.id) {
+  //     async function handlePartOfChallenge() {
+  //       if (quiz.challengeId == null) {
+  //         setIsPartOfChallenge(false);
+  //       } else {
+  //         setIsPartOfChallenge(true);
 
-    console.log("Inserting the following item: ", item);
-    const { error } = await supabase.from("student_quiz").insert(item);
+  //         const { data, error } = await supabase.rpc(
+  //           "get_challenge_and_quizzes",
+  //           { challenge_id: quiz.challengeId }
+  //         );
+  //         if (error) {
+  //           console.log(
+  //             "Error fetching the challenge related to this quiz:",
+  //             error
+  //           );
+  //         } else {
+  //           setChallenge(Challenge.fromJson(data));
+  //         }
+  //       }
+  //     }
 
-    if (error) {
-      console.log("Error fetching quizzes: ", error);
-    } else {
-      console.log("Successfully inserted item");
-      setShowScore(true);
-    }
-  }
+  //     handlePartOfChallenge();
+  //   }
+  // }, [quiz.challengeId, quiz.id]); // Trigger only when quiz.id changes
 
-  async function handleNextQuiz() {
-    const nextQuiz = currentQuiz + 1;
-    if (nextQuiz < challenge.quizzes.length) {
-      setCurrentQuestion(nextQuiz);
-      setSelectedOption(null);
-      setShowScore(false);
-      setCurrentQuestion(0);
-      navigate(`/quiz/${challenge.quizzes[nextQuiz]}`);
-      setScore(0);
-    } else {
-      // setShowScore(true);
-      setIsDone(true);
-    }
-   
-  }
+  // async function handleQuizFinished() {
+  //   const item = {
+  //     student_id: user.id,
+  //     complete: true,
+  //     quiz_id: quiz.id,
+  //     content_id: quiz.contentId,
+  //   };
+
+  //   console.log("Inserting the following item: ", item);
+  //   const { error } = await supabase.from("student_quiz").insert(item);
+  //   // const { error } = await supabase.from("student_quiz").update(item);
+
+  //   if (error) {
+  //     console.log("Error fetching quizzes: ", error);
+  //   } else {
+  //     console.log("Successfully inserted item");
+  //     setShowScore(true);
+  //   }
+  // }
+
+  // async function handleNextQuiz(content_id) {
+  //   handleRetry(); // resetting the quiz state
+  //   navigate(`/quiz/${content_id}`);
+  // }
 
   function formatData(obj) {
     let q = QuizModel.fromJson(obj.quiz);
@@ -189,7 +179,13 @@ function Quiz() {
                     <button className="quiz-next-btn" onClick={handleRetry}>
                       Retry
                     </button>
-                    {isPartOfChallenge ? (
+                    <button
+                      className="quiz-next-btn"
+                      onClick={() => navigate("/")}
+                    >
+                      Return to Dashboard
+                    </button>
+                    {/* {isPartOfChallenge ? (
                       <button
                         className="quiz-next-btn"
                         onClick={handleNextQuiz}
@@ -198,7 +194,7 @@ function Quiz() {
                       </button>
                     ) : (
                       <></>
-                    )}
+                    )} */}
                   </div>
                 </div>
               ) : (
@@ -207,14 +203,14 @@ function Quiz() {
                   <button
                     style={{ margin: "1em" }}
                     className="quiz-next-btn"
-                    onClick={handleQuizFinished}
+                    // onClick={handleQuizFinished}
                   >
                     Submit quiz
                   </button>
                 </>
               )}
             </div>
-          ) : quiz.questions.length > 0 ? (
+          ) : !isCompleted && quiz.questions.length > 0 ? (
             <>
               <div className="question-section">
                 <div className="question-text">
@@ -245,7 +241,14 @@ function Quiz() {
               </button>
             </>
           ) : (
-            <div>Loading quiz...</div>
+            <div>
+              <p>
+                Awesome job! 🎉 You&apos;ve already completed this quiz. Why not
+                keep the momentum going and challenge yourself with some of the
+                other quizzes? Keep pushing your limits! 🚀
+              </p>
+              <Link to="/">Back to dashboard</Link>
+            </div>
           )}
         </div>
         {/* {isPartOfChallenge ? (

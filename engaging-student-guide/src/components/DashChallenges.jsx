@@ -41,6 +41,8 @@ export default function DashChallenges() {
     checkIfChallengeStarted();
   }, [user.id]);
   async function startChallenge(challenge_id) {
+    console.log("Starting challenge...");
+    
     // increment number of participants for this challenge in the challenge table
     const { error: updateChallengeError } = await supabase.rpc(
       "increment_no_participants",
@@ -134,7 +136,7 @@ export default function DashChallenges() {
               </div>
 
               {/* Expand content*/}
-              <div
+              {/* <div
                 className={`expandable-content ${
                   isExpanded === challenge.id ? "expanded" : ""
                 }`}
@@ -144,7 +146,7 @@ export default function DashChallenges() {
                     <p className="content-text">{quiz.contentTitle}</p>
                   </li>
                 ))}
-              </div>
+              </div> */}
             </div>
           ))
         ) : (
