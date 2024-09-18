@@ -26,7 +26,7 @@ function Quiz() {
 
   const MAX_SCORE = 3;
   useEffect(() => {
-    async function fetchQuizzes(id) {
+    async function fetchQuiz(id) {
       const { data, error } = await supabase.rpc("get_quiz", {
         content_id: id,
       });
@@ -34,17 +34,33 @@ function Quiz() {
       if (error) {
         console.log("Error fetching quizzes: ", error);
       } else {
+        console.log("Data from fetching quiz questions: ", id, data);
         const q = formatData(data);
         setQuiz(q);
-        setCurrentQuiz(0)
       }
     }
 
-    // Only call fetchQuizzes when id changes
     if (id) {
-      fetchQuizzes(id);
+      fetchQuiz(id);
     }
-  }, [id]); // removed unnecessary dependencies like `showScore`, `score`, `user`, and `quiz`
+  }, [id]);
+
+  useEffect(() => {
+    if (showScore && score === MAX_SCORE) {
+      async function updateScore() {
+        const { error } = await supabase.rpc("update_student_points", {
+          student_id: user.id,
+          amount: quiz.points,
+        });
+
+        if (error) {
+          console.log("Error updating score:", error);
+        }
+      }
+
+      updateScore();
+    }
+  }, [showScore, score, user.id, quiz.points]);
 
   useEffect(() => {
     if (quiz.id) {
@@ -73,24 +89,6 @@ function Quiz() {
     }
   }, [quiz.challengeId, quiz.id]); // Trigger only when quiz.id changes
 
-  useEffect(() => {
-    if (showScore && score === MAX_SCORE) {
-      async function updateScore() {
-        const { error } = await supabase.rpc("update_student_points", {
-          student_id: user.id,
-          amount: quiz.points,
-        });
-
-        if (error) {
-          console.log("Error updating score:", error);
-        }
-      }
-
-      updateScore();
-    }
-  }, [showScore, score, user.id, quiz.points]); // Only when showScore and score hit MAX_SCORE
-
-  
   async function handleQuizFinished() {
     const item = {
       student_id: user.id,
@@ -101,6 +99,7 @@ function Quiz() {
 
     console.log("Inserting the following item: ", item);
     const { error } = await supabase.from("student_quiz").insert(item);
+    // const { error } = await supabase.from("student_quiz").update(item);
 
     if (error) {
       console.log("Error fetching quizzes: ", error);
@@ -110,20 +109,28 @@ function Quiz() {
     }
   }
 
-  async function handleNextQuiz() {
-    const nextQuiz = currentQuiz + 1;
-    if (nextQuiz < challenge.quizzes.length) {
-      setCurrentQuestion(nextQuiz);
-      setSelectedOption(null);
-      setShowScore(false);
-      setCurrentQuestion(0);
-      navigate(`/quiz/${challenge.quizzes[nextQuiz]}`);
-      setScore(0);
-    } else {
-      // setShowScore(true);
-      setIsDone(true);
-    }
-   
+  // function setQuizOrder(arr, id) {
+  //   // Find the index of the item with the given id
+  //   const itemIndex = arr.findIndex((item) => item.id === id);
+
+  //   // Check if the item exists in the array
+  //   if (itemIndex === -1) {
+  //     console.error(`Item with id ${id} not found`);
+  //     return arr;
+  //   }
+
+  //   // Remove the item from its current position
+  //   const [item] = arr.splice(itemIndex, 1);
+
+  //   // Add to start
+  //   arr.unshift(item);
+
+  //   return arr;
+  // }
+
+  async function handleNextQuiz(content_id) {
+      handleRetry(); // resetting the quiz state
+      navigate(`/quiz/${content_id}`);
   }
 
   function formatData(obj) {
@@ -189,7 +196,14 @@ function Quiz() {
                     <button className="quiz-next-btn" onClick={handleRetry}>
                       Retry
                     </button>
-                    {isPartOfChallenge ? (
+                    <button
+                      className="quiz-next-btn"
+                      onClick={() => navigate("/")}
+                    >
+                      Return to Dashboard
+                    </button>
+                    {isPartOfChallenge &&
+                    currentQuiz + 1 < challenge.quizzes.length ? (
                       <button
                         className="quiz-next-btn"
                         onClick={handleNextQuiz}
@@ -248,7 +262,7 @@ function Quiz() {
             <div>Loading quiz...</div>
           )}
         </div>
-        {/* {isPartOfChallenge ? (
+        {isPartOfChallenge ? (
           <div className="quiz-list">
             <h4>Challenge: {challenge.description}</h4>
             {challenge.quizzes.map((challengeQuiz) =>
@@ -271,7 +285,7 @@ function Quiz() {
           </div>
         ) : (
           <></>
-        )} */}
+        )}
       </div>
     </>
   );
