@@ -19,7 +19,6 @@ function Quiz() {
   // const [challenge, setChallenge] = useState(Challenge.empty());
 
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [isCompleted, setIsCompleted] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
 
   const [showScore, setShowScore] = useState(false);
@@ -35,10 +34,9 @@ function Quiz() {
       if (error) {
         console.log("Error fetching quizzes: ", error);
       } else {
-        // console.log("Data from fetching quiz questions: ", id, data);
+        console.log("Data from fetching quiz questions: ", id, data);
         const q = formatData(data);
         setQuiz(q);
-        setIsCompleted(data.is_complete);
       }
     }
 
@@ -63,6 +61,33 @@ function Quiz() {
       updateScore();
     }
   }, [showScore, score, user.id, quiz.points]);
+
+  const completeQuiz = async (studentId, challengeId) => {
+    // Increment progress
+    // const { data, error } = await supabase
+    //   .from("update_challenge_progress")
+    //   .update({ progress: supabase.raw("progress + 1") }) // Assumes each quiz completion increments progress by 1
+    //   .eq("student_id", studentId)
+    //   .eq("challenge_id", challengeId);
+    // if (error) {
+    //   console.error("Error updating challenge progress:", error);
+    // } else {
+    //   // Check if challenge is completed
+    //   const challenge = await supabase
+    //     .from("challenges")
+    //     .select("requirements")
+    //     .eq("id", challengeId)
+    //     .single();
+    //   if (challenge.data.requirements <= data[0].progress) {
+    //     // Mark challenge as completed
+    //     await supabase
+    //       .from("student_challenges")
+    //       .update({ status: "completed" })
+    //       .eq("student_id", studentId)
+    //       .eq("challenge_id", challengeId);
+    //   }
+    // }
+  };
 
   // useEffect(() => {
   //   if (quiz.id) {
@@ -101,13 +126,13 @@ function Quiz() {
 
     console.log("Inserting the following item: ", item);
     const { error } = await supabase.from("student_quiz").insert(item);
-    // const { error } = await supabase.from("student_quiz").update(item);
 
     if (error) {
       console.log("Error fetching quizzes: ", error);
     } else {
       console.log("Successfully inserted item");
       setShowScore(true);
+      await completeQuiz(user.id, quiz.challengeId);
     }
   }
 
@@ -166,8 +191,7 @@ function Quiz() {
                   </h5>
                   <p>
                     You&apos;re doing great! Keep the momentum going by tackling
-                    any of the quizzes. Click on one to continue your challenge
-                    adventure!
+                    any of the quizzes.  
                   </p>
                   <div
                     style={{
@@ -210,7 +234,7 @@ function Quiz() {
                 </>
               )}
             </div>
-          ) : !isCompleted && quiz.questions.length > 0 ? (
+          ) : quiz.questions.length > 0 ? (
             <>
               <div className="question-section">
                 <div className="question-text">
@@ -242,11 +266,7 @@ function Quiz() {
             </>
           ) : (
             <div>
-              <p>
-                Awesome job! 🎉 You&apos;ve already completed this quiz. Why not
-                keep the momentum going and challenge yourself with some of the
-                other quizzes? Keep pushing your limits! 🚀
-              </p>
+              <p>fetching questions... </p>
               <Link to="/">Back to dashboard</Link>
             </div>
           )}

@@ -13,23 +13,23 @@ export default function DashRecentlyUploaded() {
   const { user } = useAuth();
   const { setRecentContent, setContentType } = RecentContext();
   const handleQuizClick = async (content) => {
-    const { data, error } = await supabase
-      .from("quiz")
-      .select("id")
-      .eq("content_id", content.id)
-      .single();
+    // const { data, error } = await supabase
+    //   .from("quiz")
+    //   .select("id")
+    //   .eq("content_id", content.id)
+    //   .single();
 
-    if (error) {
-      console.error("Error fetching quiz ID:", error.message);
-      return;
-    }
+    // if (error) {
+    //   console.error("Error fetching quiz ID:", error.message);
+    //   return;
+    // }
 
-    const quizId = data.id;
+    // const quizId = data.id;
     // console.log("Clicked on quizz thing: ...")
     navigate(`/quiz/${content.id}`, {
       state: { content: content },
     });
-    await quizComplete(content.id, quizId);
+    // await quizComplete(content.id, quizId);
   };
 
   const handleContentClick = async (content, contentType) => {
@@ -77,39 +77,39 @@ export default function DashRecentlyUploaded() {
     console.log("updated");
   };
 
-  const quizComplete = async (contentI, quizId) => {
-    console.log("Quiz is Complete execution....");
+  // const quizComplete = async (contentI, quizId) => {
+  //   console.log("Quiz is Complete execution....");
 
-    if (!user) {
-      console.error("User not authenticated");
-      return;
-    }
-    const { id: student_id } = user;
-    console.log(
-      "Updating quiz completion for user:",
-      student_id,
-      "content ID:",
-      contentI
-    );
-    const details = {
-      student_id: student_id,
-      content_id: contentI,
-      quiz_id: quizId,
-      complete: true,
-    };
-    const { error } = await supabase
-      .from("student_quiz")
-      .insert(details)
-      .eq("student_id", student_id)
-      .eq("content_id", contentI)
-      .eq("quiz_id", quizId);
-    // , { onConflict: ["student_id", "content_id", "quiz_id"] })
+  //   if (!user) {
+  //     console.error("User not authenticated");
+  //     return;
+  //   }
+  //   const { id: student_id } = user;
+  //   console.log(
+  //     "Updating quiz completion for user:",
+  //     student_id,
+  //     "content ID:",
+  //     contentI
+  //   );
+  //   const details = {
+  //     student_id: student_id,
+  //     content_id: contentI,
+  //     quiz_id: quizId,
+  //     complete: true,
+  //   };
+  //   const { error } = await supabase
+  //     .from("student_quiz")
+  //     .insert(details)
+  //     .eq("student_id", student_id)
+  //     .eq("content_id", contentI)
+  //     .eq("quiz_id", quizId);
+  //   // , { onConflict: ["student_id", "content_id", "quiz_id"] })
 
-    if (error) {
-      console.error("Error updating audio completion:", error);
-    }
-    console.log("updated");
-  };
+  //   if (error) {
+  //     console.error("Error updating audio completion:", error);
+  //   }
+  //   console.log("updated");
+  // };
 
   const [allContent, setAllContent] = useState([]);
 

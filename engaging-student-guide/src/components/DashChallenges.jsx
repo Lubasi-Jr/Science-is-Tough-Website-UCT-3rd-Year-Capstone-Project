@@ -98,12 +98,6 @@ export default function DashChallenges() {
     return res;
   }
 
-  const [isExpanded, setIsExpanded] = useState(null);
-
-  // Toggle the state when clicking
-  const toggleExpand = (challenge_id) => {
-    setIsExpanded(isExpanded === challenge_id ? null : challenge_id);
-  };
   return (
     <>
       <section className="challenges-container">
@@ -113,7 +107,7 @@ export default function DashChallenges() {
             <div key={challenge.id} className="challenge-item">
               <div className="challenge-item-container">
                 <div
-                  onClick={() => toggleExpand(challenge.id)}
+                  // onClick={() => toggleExpand(challenge.id)}
                   className="challenge-item-details"
                 >
                   <div className="challenge-item-icon">

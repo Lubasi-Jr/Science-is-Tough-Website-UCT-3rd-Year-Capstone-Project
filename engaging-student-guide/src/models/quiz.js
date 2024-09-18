@@ -38,6 +38,7 @@ export class Quiz {
 
   setQuestions(qs) {
     for (let i = 0; i < qs.length; i++) {
+      if (this.questions.length === 3) {return; }
       this.questions.push(Question.fromJson(qs[i]));
     }
   }
