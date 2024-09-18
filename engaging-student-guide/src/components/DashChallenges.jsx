@@ -134,7 +134,7 @@ export default function DashChallenges() {
               </div>
 
               {/* Expand content*/}
-              <div
+              {/* <div
                 className={`expandable-content ${
                   isExpanded === challenge.id ? "expanded" : ""
                 }`}
@@ -144,7 +144,7 @@ export default function DashChallenges() {
                     <p className="content-text">{quiz.contentTitle}</p>
                   </li>
                 ))}
-              </div>
+              </div> */}
             </div>
           ))
         ) : (
