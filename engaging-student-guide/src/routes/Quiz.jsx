@@ -91,25 +91,25 @@ function Quiz() {
   //   }
   // }, [quiz.challengeId, quiz.id]); // Trigger only when quiz.id changes
 
-  // async function handleQuizFinished() {
-  //   const item = {
-  //     student_id: user.id,
-  //     complete: true,
-  //     quiz_id: quiz.id,
-  //     content_id: quiz.contentId,
-  //   };
+  async function handleQuizFinished() {
+    const item = {
+      student_id: user.id,
+      complete: true,
+      quiz_id: quiz.id,
+      content_id: quiz.contentId,
+    };
 
-  //   console.log("Inserting the following item: ", item);
-  //   const { error } = await supabase.from("student_quiz").insert(item);
-  //   // const { error } = await supabase.from("student_quiz").update(item);
+    console.log("Inserting the following item: ", item);
+    const { error } = await supabase.from("student_quiz").insert(item);
+    // const { error } = await supabase.from("student_quiz").update(item);
 
-  //   if (error) {
-  //     console.log("Error fetching quizzes: ", error);
-  //   } else {
-  //     console.log("Successfully inserted item");
-  //     setShowScore(true);
-  //   }
-  // }
+    if (error) {
+      console.log("Error fetching quizzes: ", error);
+    } else {
+      console.log("Successfully inserted item");
+      setShowScore(true);
+    }
+  }
 
   // async function handleNextQuiz(content_id) {
   //   handleRetry(); // resetting the quiz state
@@ -203,7 +203,7 @@ function Quiz() {
                   <button
                     style={{ margin: "1em" }}
                     className="quiz-next-btn"
-                    // onClick={handleQuizFinished}
+                    onClick={handleQuizFinished}
                   >
                     Submit quiz
                   </button>

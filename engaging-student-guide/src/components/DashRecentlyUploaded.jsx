@@ -99,10 +99,11 @@ export default function DashRecentlyUploaded() {
     };
     const { error } = await supabase
       .from("student_quiz")
-      .upsert(details, { onConflict: ["student_id", "content_id", "quiz_id"] })
+      .insert(details)
       .eq("student_id", student_id)
       .eq("content_id", contentI)
       .eq("quiz_id", quizId);
+    // , { onConflict: ["student_id", "content_id", "quiz_id"] })
 
     if (error) {
       console.error("Error updating audio completion:", error);
