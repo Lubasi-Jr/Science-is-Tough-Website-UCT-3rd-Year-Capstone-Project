@@ -33,9 +33,9 @@ export default function DashRecentlyUploaded() {
   };
 
   const handleContentClick = async (content, contentType) => {
-    navigate(`/content/${content.id}`, {
-      state: { content: content, contentType: contentType },
-    });
+    // navigate(`/content/${content.id}`, {
+    //   state: { content: content, contentType: contentType },
+    // });
     setContentType(contentType);
     setRecentContent(content);
 
@@ -79,7 +79,7 @@ export default function DashRecentlyUploaded() {
 
   const quizComplete = async (contentI, quizId) => {
     console.log("Quiz is Complete execution....");
-    
+
     if (!user) {
       console.error("User not authenticated");
       return;
@@ -99,7 +99,7 @@ export default function DashRecentlyUploaded() {
     };
     const { error } = await supabase
       .from("student_quiz")
-      .upsert(details, {onConflict: ['student_id', 'content_id', 'quiz_id']})
+      .upsert(details, { onConflict: ["student_id", "content_id", "quiz_id"] })
       .eq("student_id", student_id)
       .eq("content_id", contentI)
       .eq("quiz_id", quizId);
@@ -202,24 +202,6 @@ export default function DashRecentlyUploaded() {
                 <div className="quiz-icon">
                   <QuizIcon onClick={() => handleQuizClick(content)} />
                 </div>
-                {/* <div className="fav-icon">
-                  {content.favourite ? (
-                    <FaHeart
-                      style={{ color: "rgb(255, 62, 62)" }}
-                      onClick={() =>
-                        handleFavouriteUpdate(content.id, content.favourite)
-                      }
-                      className="recent-fav-item "
-                    />
-                  ) : (
-                    <FaHeart
-                      onClick={() =>
-                        handleFavouriteUpdate(content.id, content.favourite)
-                      }
-                      className="recent-fav-item "
-                    />
-                  )}
-                </div> */}
               </div>
             </div>
           ))

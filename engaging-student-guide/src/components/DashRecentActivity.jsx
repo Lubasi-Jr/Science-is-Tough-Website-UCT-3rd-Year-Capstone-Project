@@ -38,9 +38,6 @@ export default function DashRecentActivity() {
               </div>
             )}
           </div>
-          <Link to={`/content/${recentContent.id}`}>
-            Continue on Content Page
-          </Link>
         </div>
       )}
     </section>
