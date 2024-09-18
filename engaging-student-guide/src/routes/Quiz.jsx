@@ -1,47 +1,32 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import "./Quiz.css";
+import { useNavigate } from "react-router-dom";
 import { Quiz as QuizModel } from "../models/quiz";
 import { supabase } from "../lib/supabaseClient";
 import { useAuth } from "../hooks/useAuth";
+// import { Challenge } from "../models/challenge";
+import { Link } from "react-router-dom";
 import { Challenge } from "../models/challenge";
 
 function Quiz() {
+  const navigate = useNavigate();
+
   const { user } = useAuth();
   const { id } = useParams();
   const [quiz, setQuiz] = useState(QuizModel.empty());
-  const [isPartOfChallenge, setIsPartOfChallenge] = useState(false);
-  const [challenge, setChallenge] = useState(Challenge.empty());
-
+  const [isDone, setIsDone] = useState(false);
+  const [prevScore, setPrevScore] = useState(0); // Track previous score
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedOption, setSelectedOption] = useState(null);
-
   const [showScore, setShowScore] = useState(false);
   const [score, setScore] = useState(0);
-  // const [pointsEarned, setPointsEarned] = useState(0);
+
   const MAX_SCORE = 3;
+
+  // fetching quiz data
   useEffect(() => {
-    if (showScore && score == MAX_SCORE) {
-      // check if student has everything correct to get the points
-      async function updateScore() {
-        // update the score of the student
-        const { error } = await supabase.rpc("update_student_points", {
-          student_id: user.id,
-          // points: pointsEarned,
-        });
-
-        if (error) {
-          console.log("Error updating score: ", error);
-        } else {
-          console.log("updated user points ");
-          // setQuestions(formatData(data));
-        }
-      }
-
-      updateScore();
-    }
-
-    async function fetchQuizzes(id) {
+    async function fetchQuiz(id) {
       const { data, error } = await supabase.rpc("get_quiz", {
         content_id: id,
       });
@@ -51,40 +36,88 @@ function Quiz() {
       } else {
         const q = formatData(data);
         setQuiz(q);
-        handlePartOfChallenge(q);
       }
     }
 
-    fetchQuizzes(id);
-  }, [id, showScore, score, user]);
+    if (id) {
+      fetchQuiz(id);
+    }
+  }, [id]);
 
-  // useEffect(() => {
-  // check if quiz is part of a challenge
-  async function handlePartOfChallenge(quiz) {
-    // console.log("Quizz Info ", quiz);
-    if (quiz.challengeId == null) {
-      setIsPartOfChallenge(false);
-    } else {
-      setIsPartOfChallenge(true);
+  useEffect(() => {
+    // if (showScore && score === MAX_SCORE && prevScore !== MAX_SCORE) {
+    if (showScore && score === MAX_SCORE) {
+      async function updateScore() {
+        console.log("Updated student points....");
+        const { error } = await supabase.rpc("update_student_points", {
+          student_id: user.id,
+          amount: quiz.points,
+        });
 
-      // fetch the rest of the challenge items
-      const { data, error } = await supabase.rpc("get_challenge_and_quizzes", {
-        challenge_id: quiz.challengeId,
-      });
-      if (error) {
-        console.log(
-          "Error fecthing the challenge realted to this quiz: ",
-          error
-        );
-      } else {
-        setChallenge(Challenge.fromJson(data));
-        console.log("Challenege related to quiz: ", data);
+        if (error) {
+          console.log("Error updating score:", error);
+        }
       }
+
+      updateScore();
+      async function update_progress() {
+        console.log("Updating student challenge:");
+
+        // fetch all challenges
+        const { data, error } = await supabase.rpc("get_challenges_data");
+
+        if (error) {
+          console.log("Fetching completed quizes for challenge error: ", error);
+        } else {
+          const challenges = formatDataC(data);
+          const insert = [];
+          for (let i = 0; i < challenges.length; i++) {
+            const insert_item = {
+              student_id: user.id,
+              challenge_id: challenges[i],
+              progress: 1,
+              status: "in progress",
+              completed_count: 2,
+            };
+            insert.push(insert_item);
+          }
+
+          console.log("Inserting into students_ challenges:", insert);
+
+          const { error } = await supabase.from("students_challenges").insert(insert);
+          if (error) {
+            console.log("Error updating students_ challenges:", error);
+          }
+        }
+      }
+
+      update_progress();
+    }
+
+    // update the student challenge progress
+
+    // Update previous score after the effect has run
+    setPrevScore(score);
+  }, [showScore, score, user.id, quiz.points, prevScore]);
+
+  async function handleQuizFinished() {
+    const item = {
+      student_id: user.id,
+      complete: true,
+      quiz_id: quiz.id,
+      content_id: quiz.contentId,
+    };
+
+    console.log("Inserting the following item: ", item);
+    const { error } = await supabase.from("student_quiz").insert(item);
+
+    if (error) {
+      console.log("Error fetching quizzes: ", error);
+    } else {
+      console.log("Successfully inserted item");
+      setShowScore(true);
     }
   }
-
-  // handlePartOfChallenge();
-  // }, [quiz]);
 
   function formatData(obj) {
     let q = QuizModel.fromJson(obj.quiz);
@@ -94,9 +127,21 @@ function Quiz() {
 
   const handleRetry = () => {
     setShowScore(false);
+    setIsDone(false);
     setCurrentQuestion(0);
     setScore(0);
   };
+
+  function formatDataC(data) {
+    let res = [];
+    for (let i = 0; i < data.length; i++) {
+      const obj = data[i];
+      // console.log("Challenge datatata: ", obj)
+      const c = Challenge.fromJson(obj);
+      res.push(c);
+    }
+    return res;
+  }
 
   const handleAnswerClick = () => {
     const isCorrect = quiz.questions[currentQuestion].options.find(
@@ -112,7 +157,7 @@ function Quiz() {
       setCurrentQuestion(nextQuestion);
       setSelectedOption(null);
     } else {
-      setShowScore(true);
+      setIsDone(true);
     }
   };
 
@@ -122,17 +167,60 @@ function Quiz() {
 
   return (
     <>
-      <div style={{ display: "flex", padding: "1em" }}>
+      <div style={{ display: "flex", padding: "1em", columnGap: "1em" }}>
         <div className="quiz-container">
           <div className="question-content">{quiz.contentTitle}</div>
-          {showScore ? (
+          {isDone ? (
             <div className="score-section">
-              <h5>
-                You scored {score} out of {quiz.questions.length}
-              </h5>
-              <button className="quiz-next-btn" onClick={handleRetry}>
-                Retry
-              </button>
+              {showScore ? (
+                <div>
+                  <h5 style={{ padding: "1em" }}>
+                    You scored {score} out of {quiz.questions.length}
+                  </h5>
+                  <p>
+                    You&apos;re doing great! Keep the momentum going by tackling
+                    any of the quizzes.
+                  </p>
+                  <div
+                    style={{
+                      display: "flex",
+                      columnGap: "1em",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <button className="quiz-next-btn" onClick={handleRetry}>
+                      Retry
+                    </button>
+                    <button
+                      className="quiz-next-btn"
+                      onClick={() => navigate("/")}
+                    >
+                      Return to Dashboard
+                    </button>
+                    {/* {isPartOfChallenge ? (
+                      <button
+                        className="quiz-next-btn"
+                        onClick={handleNextQuiz}
+                      >
+                        Next Quiz
+                      </button>
+                    ) : (
+                      <></>
+                    )} */}
+                  </div>
+                </div>
+              ) : (
+                <>
+                  {" "}
+                  <button
+                    style={{ margin: "1em" }}
+                    className="quiz-next-btn"
+                    onClick={handleQuizFinished}
+                  >
+                    Submit quiz
+                  </button>
+                </>
+              )}
             </div>
           ) : quiz.questions.length > 0 ? (
             <>
@@ -165,10 +253,36 @@ function Quiz() {
               </button>
             </>
           ) : (
-            <div>Loading quiz...</div>
+            <div>
+              <p>fetching questions... </p>
+              <Link to="/">Back to dashboard</Link>
+            </div>
           )}
         </div>
-        {/* {isPartOfChallenge ? {challenge.questions.map(<div className="" ><p></p></div>} : <></>} */}
+        {/* {isPartOfChallenge ? (
+          <div className="quiz-list">
+            <h4>Challenge: {challenge.description}</h4>
+            {challenge.quizzes.map((challengeQuiz) =>
+              quiz.id === challengeQuiz.id ? (
+                <div className="quiz-item selected-quiz" key={challengeQuiz.id}>
+                  <h3 className="quiz-title ">
+                    Active: {challengeQuiz.contentTitle}
+                  </h3>
+                </div>
+              ) : (
+                <div
+                  onClick={() => handleNextQuiz(challengeQuiz.contentId)}
+                  className="quiz-item"
+                  key={challengeQuiz.id}
+                >
+                  <h3 className="quiz-title ">{challengeQuiz.contentTitle}</h3>
+                </div>
+              )
+            )}
+          </div>
+        ) : (
+          <></>
+        )} */}
       </div>
     </>
   );

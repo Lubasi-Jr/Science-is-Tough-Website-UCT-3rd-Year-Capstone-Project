@@ -2,7 +2,7 @@
 import React, { useState,useEffect } from 'react';
 import Confetti from 'react-confetti';//importing confetti to use when someone wins/completes all levels
 import { useNavigate } from 'react-router-dom';
-import { gameModel } from "../models/gameModel";
+import { Game as gameModel } from "../models/game";
 //const avatarUrl = 'https://as2.ftcdn.net/v2/jpg/01/40/46/19/1000_F_140461947_tWo9D0W8QQnrhzhCXJbDHIXblMV9BTZv.jpg';
 const avatars = ['https://static.vecteezy.com/system/resources/previews/014/212/681/non_2x/female-user-profile-avatar-is-a-woman-a-character-for-a-screen-saver-with-emotions-for-website-and-mobile-app-design-illustration-on-a-white-isolated-background-vector.jpg',
   'https://img.freepik.com/premium-vector/symbol-male-user-icon-circle-profile-icon-vector-illustration_276184-154.jpg',
@@ -76,12 +76,7 @@ function Game() {
     return (
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100px',marginTop:'100px'}}>
         <h1>Select Your Avatar:</h1>
-        <button 
-        style={{ position: 'absolute', top: '20px', left: '20px' ,borderRadius:'10px'}}
-        onClick={() => navigate('/')} 
-      >
-        &lt; Back to Home
-      </button>
+      
         <div style={{gap:'20px',display: 'flex', justifyContent: 'center' }}>
           {avatars.map((avatar, index) => (
             <img
@@ -107,12 +102,7 @@ function Game() {
   return (
     <div>
       <h1 style={{textAlign:'center'}}>Tough Game</h1>
-      <button 
-        style={{ position: 'absolute', top: '20px', left: '20px' ,borderRadius:'10px'}}
-        onClick={() => navigate('/')} 
-      >
-        &lt; Back to Home
-      </button>
+    
       <div style={{ position: 'relative', height: '400px', width: '1000px', marginBottom: '50px' }}>
         <svg height="400" width="1000" style={{ position: 'absolute', top: '0', left: '0' }}>
           {/*Creating a path between circles*/}

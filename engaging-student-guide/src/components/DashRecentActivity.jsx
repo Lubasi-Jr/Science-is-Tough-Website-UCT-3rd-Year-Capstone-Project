@@ -1,8 +1,15 @@
-import { Link } from "react-router-dom";
 import { RecentContext } from "../context/contextRecentActivity";
 
 export default function DashRecentActivity() {
   const { recentContent, contentType } = RecentContext();
+
+  async function handleRecentActivityNav(contentType, content) {
+    if (contentType === "pdf" && content.pdf_url) {
+      window.open(content.pdf_url, "_blank"); //show pdf on new tab
+    } else if (contentType === "audio" && content.audio_url) {
+      window.open(content.audio_url, "_blank"); //show audio on new tab
+    }
+  }
 
   return (
     <section className="recent-activity">
@@ -14,13 +21,25 @@ export default function DashRecentActivity() {
           {/* If audio was recently used */}
           <div className="audio-player-container">
             {contentType === "audio" ? (
-              <div style={{display:"flex", flexDirection:"column", rowGap: "1em", paddingBottom: "1em"}}>
-                <Link
-                  to={`/content/${recentContent.id}`}
-                  style={{ textDecoration: "underline", fontSize: "large" }}
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  rowGap: "1em",
+                  paddingBottom: "1em",
+                }}
+              >
+                <div
+                  onClick={() => handleRecentActivityNav("audio", recentContent)}
+                  style={{
+                    textDecoration: "underline",
+                    fontSize: "large",
+                    width: "fit-content",
+                    cursor: "pointer"
+                  }}
                 >
-                  {recentContent.title}
-                </Link>
+                  Listen in new window: {recentContent.title}
+                </div>
 
                 <audio controls className="custom-audio-player">
                   <source src={recentContent.audio_url} type="audio/wav" />
@@ -31,16 +50,18 @@ export default function DashRecentActivity() {
               <div style={{ paddingBottom: "10px" }}>
                 <span>Continue reading </span>
                 <span
-                  style={{ textDecoration: "underline", fontSize: "large" }}
+                  onClick={() => handleRecentActivityNav("pdf", recentContent)}
+                  style={{
+                    textDecoration: "underline",
+                    fontSize: "large",
+                    cursor: "pointer",
+                  }}
                 >
                   {recentContent.title}
                 </span>
               </div>
             )}
           </div>
-          <Link to={`/content/${recentContent.id}`}>
-            Continue on Content Page
-          </Link>
         </div>
       )}
     </section>

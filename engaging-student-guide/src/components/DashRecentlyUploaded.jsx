@@ -11,93 +11,107 @@ import { useAuth } from "../hooks/useAuth";
 export default function DashRecentlyUploaded() {
   const { user } = useAuth();
   const navigate = useNavigate();
-  //const [viewingContentType, setViewingContentType] = useState(null);
-  //constant [currentContent, setCurrentContent] = useState(null);
-
+  const { user } = useAuth();
   const { setRecentContent, setContentType } = RecentContext();
+  const handleQuizClick = async (content) => {
+    // const { data, error } = await supabase
+    //   .from("quiz")
+    //   .select("id")
+    //   .eq("content_id", content.id)
+    //   .single();
 
-  //const handleContentClicka = async (content, contentType) => {
-    //navigate(`/content/${content.id}`, {
-    //state: { content: content, contentType: contentType },
-    //});
-    // console.log(`Clicked on ${contentType}:`, content); 
-  const handleQuizClick = async(content) => {
-    const { data, error } = await supabase
-      .from("quiz")
-      .select("id")
-      .eq("content_id", content.id)
-      .single();  
+    // if (error) {
+    //   console.error("Error fetching quiz ID:", error.message);
+    //   return;
+    // }
 
-    if (error) {
-      console.error("Error fetching quiz ID:", error.message);
-      return;
-    }
-
-    const quizId = data.id; 
+    // const quizId = data.id;
     // console.log("Clicked on quizz thing: ...")
     navigate(`/quiz/${content.id}`, {
       state: { content: content },
     });
-    await quizComplete(content.id,quizId);
+    // await quizComplete(content.id, quizId);
   };
-  const handleContentClick = async(content, contentType) => {
-    navigate(`/content/${content.id}`, {
-      state: { content: content, contentType: contentType },
-    });
+
+  const handleContentClick = async (content, contentType) => {
+    // navigate(`/content/${content.id}`, {
+    //   state: { content: content, contentType: contentType },
+    // });
     setContentType(contentType);
     setRecentContent(content);
-    //setCurrentContent(content);
-    //setViewingContentType(contentType);
+
     if (contentType === "pdf" && content.pdf_url) {
-      window.open(content.pdf_url, "_blank");//show pdf on new tab
+      window.open(content.pdf_url, "_blank"); //show pdf on new tab
     } else if (contentType === "audio" && content.audio_url) {
-      window.open(content.audio_url, "_blank");//show audio on new tab
+      window.open(content.audio_url, "_blank"); //show audio on new tab
       await audioComplete(content.id);
     }
   };
 
   const audioComplete = async (contentId) => {
-
     if (!user) {
       console.error("User not authenticated");
       return;
     }
     //console.log("User ID:", user.id);
     const { id: student_id } = user;
-    console.log("Updating audio completion for user:", student_id, "Content ID:", contentId);
-    const i = {"student_id": student_id, "content_id": contentId, "audio_complete": true}
+    console.log(
+      "Updating audio completion for user:",
+      student_id,
+      "Content ID:",
+      contentId
+    );
+    const i = {
+      student_id: student_id,
+      content_id: contentId,
+      audio_complete: true,
+    };
     const { error } = await supabase
-    .from("student_content")
-    .insert(i)
-    .eq("student_id", student_id)
-    .eq("content_id", contentId);
-    
-    if (error) {
-      console.error("Error updating audio completion:", error);
-    }
-    console.log("updated");
-  };
-  const quizComplete = async (contentI,quizId) => {
+      .from("student_content")
+      .insert(i)
+      .eq("student_id", student_id)
+      .eq("content_id", contentId);
 
-    if (!user) {
-      console.error("User not authenticated");
-      return;
-    }
-  const { id: student_id } = user;
-    console.log("Updating quiz completion for user:", student_id, "content ID:", contentI);
-    const details = {"student_id": student_id, "content_id": contentI,"quiz_id":quizId, "complete": true}
-    const { error } = await supabase
-    .from("student_quiz")
-    .insert(details)
-    .eq("student_id", student_id)
-    .eq("content_id", contentI)
-    .eq("quiz_id",quizId);
-    
     if (error) {
       console.error("Error updating audio completion:", error);
     }
     console.log("updated");
   };
+
+  // const quizComplete = async (contentI, quizId) => {
+  //   console.log("Quiz is Complete execution....");
+
+  //   if (!user) {
+  //     console.error("User not authenticated");
+  //     return;
+  //   }
+  //   const { id: student_id } = user;
+  //   console.log(
+  //     "Updating quiz completion for user:",
+  //     student_id,
+  //     "content ID:",
+  //     contentI
+  //   );
+  //   const details = {
+  //     student_id: student_id,
+  //     content_id: contentI,
+  //     quiz_id: quizId,
+  //     complete: true,
+  //   };
+  //   const { error } = await supabase
+  //     .from("student_quiz")
+  //     .insert(details)
+  //     .eq("student_id", student_id)
+  //     .eq("content_id", contentI)
+  //     .eq("quiz_id", quizId);
+  //   // , { onConflict: ["student_id", "content_id", "quiz_id"] })
+
+  //   if (error) {
+  //     console.error("Error updating audio completion:", error);
+  //   }
+  //   console.log("updated");
+  // };
+
   const [allContent, setAllContent] = useState([]);
 
   useEffect(() => {
@@ -200,20 +214,8 @@ export default function DashRecentlyUploaded() {
                 <div className="quiz-icon">
                   <QuizIcon onClick={() => handleQuizClick(content)} />
                 </div>
-                {/* <div className="fav-icon">*
-                  {content.favourite ? (
-                    <FaHeart
-                      style={{ color: "rgb(255, 62, 62)" }}
-                      onClick={() =>
-                        handleFavouriteUpdate(content.id, content.favourite)
-                      }
-                      className="recent-fav-item "
-                    />
-                  </div>
-                  */}
-                  </div>
-                </div>
-            
+              </div>
+            </div>
           ))
         ) : (
           <div>Loading...</div>

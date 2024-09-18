@@ -4,7 +4,9 @@ export class Quiz {
   questions; // questions included in the quiz.
   contentTitle;
   challengeId;
+  contentId;
   points;
+  done;
 
   // Constructor to initialize the Quiz with an id.
   constructor(id, challengeId, contentId, contentTitle, points) {
@@ -16,6 +18,7 @@ export class Quiz {
     this.challengeId = challengeId;
     this.contentId = contentId;
     this.points = points;
+    this.done = false;
     // Assign the challenge id. can be null if quiz is not associated with a challenge
   }
 
@@ -29,8 +32,13 @@ export class Quiz {
     );
   }
 
+  setDone(done) {
+    this.done = done;
+  }
+
   setQuestions(qs) {
     for (let i = 0; i < qs.length; i++) {
+      if (this.questions.length === 3) {return; }
       this.questions.push(Question.fromJson(qs[i]));
     }
   }
@@ -56,7 +64,7 @@ export class Question {
 
   static fromJson(obj) {
     const question = obj.question;
-    const options = question.options
+    const options = question.options;
     return new Question(question.id, question.question, options);
   }
 }
