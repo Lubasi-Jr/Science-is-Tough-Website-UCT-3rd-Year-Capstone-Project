@@ -41,6 +41,8 @@ export default function DashChallenges() {
     checkIfChallengeStarted();
   }, [user.id]);
   async function startChallenge(challenge_id) {
+    console.log("Starting challenge...");
+    
     // increment number of participants for this challenge in the challenge table
     const { error: updateChallengeError } = await supabase.rpc(
       "increment_no_participants",

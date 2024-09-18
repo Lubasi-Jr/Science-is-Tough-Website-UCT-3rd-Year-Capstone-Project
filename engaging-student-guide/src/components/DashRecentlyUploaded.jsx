@@ -78,6 +78,8 @@ export default function DashRecentlyUploaded() {
   };
 
   const quizComplete = async (contentI, quizId) => {
+    console.log("Quiz is Complete execution....");
+    
     if (!user) {
       console.error("User not authenticated");
       return;
@@ -97,7 +99,7 @@ export default function DashRecentlyUploaded() {
     };
     const { error } = await supabase
       .from("student_quiz")
-      .insert(details)
+      .upsert(details, {onConflict: ['student_id', 'content_id', 'quiz_id']})
       .eq("student_id", student_id)
       .eq("content_id", contentI)
       .eq("quiz_id", quizId);
