@@ -16,8 +16,7 @@ function Quiz() {
   const [quiz, setQuiz] = useState(QuizModel.empty());
   // const [isPartOfChallenge, setIsPartOfChallenge] = useState(false);
   const [isDone, setIsDone] = useState(false);
-  // const [challenge, setChallenge] = useState(Challenge.empty());
-
+  const [prevScore, setPrevScore] = useState(0); // Track previous score
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedOption, setSelectedOption] = useState(null);
 
@@ -46,7 +45,7 @@ function Quiz() {
   }, [id]);
 
   useEffect(() => {
-    if (showScore && score === MAX_SCORE) {
+    if (showScore && score === MAX_SCORE && prevScore !== MAX_SCORE) {
       async function updateScore() {
         const { error } = await supabase.rpc("update_student_points", {
           student_id: user.id,
@@ -60,8 +59,12 @@ function Quiz() {
 
       updateScore();
     }
-  }, [showScore, score, user.id, quiz.points]);
 
+    // Update previous score after the effect has run
+    setPrevScore(score);
+  }, [showScore, score, user.id, quiz.points, prevScore]);
+
+  
   const completeQuiz = async (studentId, challengeId) => {
     // Increment progress
     // const { data, error } = await supabase
@@ -144,7 +147,7 @@ function Quiz() {
   function formatData(obj) {
     let q = QuizModel.fromJson(obj.quiz);
     q.setQuestions(obj.questions);
-    return q;
+    return q;  
   }
 
   const handleRetry = () => {
