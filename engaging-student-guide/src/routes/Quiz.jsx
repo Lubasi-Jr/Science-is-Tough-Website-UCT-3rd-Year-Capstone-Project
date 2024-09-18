@@ -7,6 +7,7 @@ import { supabase } from "../lib/supabaseClient";
 import { useAuth } from "../hooks/useAuth";
 // import { Challenge } from "../models/challenge";
 import { Link } from "react-router-dom";
+import { Challenge } from "../models/challenge";
 
 function Quiz() {
   const navigate = useNavigate();
@@ -14,16 +15,16 @@ function Quiz() {
   const { user } = useAuth();
   const { id } = useParams();
   const [quiz, setQuiz] = useState(QuizModel.empty());
-  // const [isPartOfChallenge, setIsPartOfChallenge] = useState(false);
   const [isDone, setIsDone] = useState(false);
   const [prevScore, setPrevScore] = useState(0); // Track previous score
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedOption, setSelectedOption] = useState(null);
-
   const [showScore, setShowScore] = useState(false);
   const [score, setScore] = useState(0);
 
   const MAX_SCORE = 3;
+
+  // fetching quiz data
   useEffect(() => {
     async function fetchQuiz(id) {
       const { data, error } = await supabase.rpc("get_quiz", {
@@ -33,7 +34,6 @@ function Quiz() {
       if (error) {
         console.log("Error fetching quizzes: ", error);
       } else {
-        console.log("Data from fetching quiz questions: ", id, data);
         const q = formatData(data);
         setQuiz(q);
       }
@@ -45,8 +45,10 @@ function Quiz() {
   }, [id]);
 
   useEffect(() => {
-    if (showScore && score === MAX_SCORE && prevScore !== MAX_SCORE) {
+    // if (showScore && score === MAX_SCORE && prevScore !== MAX_SCORE) {
+    if (showScore && score === MAX_SCORE) {
       async function updateScore() {
+        console.log("Updated student points....");
         const { error } = await supabase.rpc("update_student_points", {
           student_id: user.id,
           amount: quiz.points,
@@ -58,66 +60,45 @@ function Quiz() {
       }
 
       updateScore();
+      async function update_progress() {
+        console.log("Updating student challenge:");
+
+        // fetch all challenges
+        const { data, error } = await supabase.rpc("get_challenges_data");
+
+        if (error) {
+          console.log("Fetching completed quizes for challenge error: ", error);
+        } else {
+          const challenges = formatDataC(data);
+          const insert = [];
+          for (let i = 0; i < challenges.length; i++) {
+            const insert_item = {
+              student_id: user.id,
+              challenge_id: challenges[i],
+              progress: 1,
+              status: "in progress",
+              completed_count: 2,
+            };
+            insert.push(insert_item);
+          }
+
+          console.log("Inserting into students_ challenges:", insert);
+
+          const { error } = await supabase.from("students_challenges").insert(insert);
+          if (error) {
+            console.log("Error updating students_ challenges:", error);
+          }
+        }
+      }
+
+      update_progress();
     }
+
+    // update the student challenge progress
 
     // Update previous score after the effect has run
     setPrevScore(score);
   }, [showScore, score, user.id, quiz.points, prevScore]);
-
-  
-  const completeQuiz = async (studentId, challengeId) => {
-    // Increment progress
-    // const { data, error } = await supabase
-    //   .from("update_challenge_progress")
-    //   .update({ progress: supabase.raw("progress + 1") }) // Assumes each quiz completion increments progress by 1
-    //   .eq("student_id", studentId)
-    //   .eq("challenge_id", challengeId);
-    // if (error) {
-    //   console.error("Error updating challenge progress:", error);
-    // } else {
-    //   // Check if challenge is completed
-    //   const challenge = await supabase
-    //     .from("challenges")
-    //     .select("requirements")
-    //     .eq("id", challengeId)
-    //     .single();
-    //   if (challenge.data.requirements <= data[0].progress) {
-    //     // Mark challenge as completed
-    //     await supabase
-    //       .from("student_challenges")
-    //       .update({ status: "completed" })
-    //       .eq("student_id", studentId)
-    //       .eq("challenge_id", challengeId);
-    //   }
-    // }
-  };
-
-  // useEffect(() => {
-  //   if (quiz.id) {
-  //     async function handlePartOfChallenge() {
-  //       if (quiz.challengeId == null) {
-  //         setIsPartOfChallenge(false);
-  //       } else {
-  //         setIsPartOfChallenge(true);
-
-  //         const { data, error } = await supabase.rpc(
-  //           "get_challenge_and_quizzes",
-  //           { challenge_id: quiz.challengeId }
-  //         );
-  //         if (error) {
-  //           console.log(
-  //             "Error fetching the challenge related to this quiz:",
-  //             error
-  //           );
-  //         } else {
-  //           setChallenge(Challenge.fromJson(data));
-  //         }
-  //       }
-  //     }
-
-  //     handlePartOfChallenge();
-  //   }
-  // }, [quiz.challengeId, quiz.id]); // Trigger only when quiz.id changes
 
   async function handleQuizFinished() {
     const item = {
@@ -135,19 +116,13 @@ function Quiz() {
     } else {
       console.log("Successfully inserted item");
       setShowScore(true);
-      await completeQuiz(user.id, quiz.challengeId);
     }
   }
-
-  // async function handleNextQuiz(content_id) {
-  //   handleRetry(); // resetting the quiz state
-  //   navigate(`/quiz/${content_id}`);
-  // }
 
   function formatData(obj) {
     let q = QuizModel.fromJson(obj.quiz);
     q.setQuestions(obj.questions);
-    return q;  
+    return q;
   }
 
   const handleRetry = () => {
@@ -156,6 +131,17 @@ function Quiz() {
     setCurrentQuestion(0);
     setScore(0);
   };
+
+  function formatDataC(data) {
+    let res = [];
+    for (let i = 0; i < data.length; i++) {
+      const obj = data[i];
+      // console.log("Challenge datatata: ", obj)
+      const c = Challenge.fromJson(obj);
+      res.push(c);
+    }
+    return res;
+  }
 
   const handleAnswerClick = () => {
     const isCorrect = quiz.questions[currentQuestion].options.find(
@@ -171,7 +157,6 @@ function Quiz() {
       setCurrentQuestion(nextQuestion);
       setSelectedOption(null);
     } else {
-      // setShowScore(true);
       setIsDone(true);
     }
   };
@@ -194,7 +179,7 @@ function Quiz() {
                   </h5>
                   <p>
                     You&apos;re doing great! Keep the momentum going by tackling
-                    any of the quizzes.  
+                    any of the quizzes.
                   </p>
                   <div
                     style={{

@@ -13,6 +13,9 @@ export class Challenge {
 
   quizzes; // the quizzes of the challenge
 
+  progress;
+  completedCount;
+
   // Constructor method to initialize a new instance of the Challenge class.
   constructor(
     id, // Unique identifier for the challenge.
@@ -22,7 +25,9 @@ export class Challenge {
     // reward, // Award or prize for the challenge.
     // studentsStarting // Array or list of students starting the challenge.
     quizzes,
-    noParticipants
+    noParticipants,
+    progress,
+    completedCount
   ) {
     // Assigning the passed parameters to the corresponding class properties.
     this.id = id;
@@ -30,6 +35,8 @@ export class Challenge {
     this.date_end = date_end;
     this.quizzes = quizzes;
     this.noParticipants = noParticipants;
+    this.progress = progress;
+    this.completedCount = completedCount;
     // this.reward = reward;
     // this.date_created = date_created;
   }
@@ -51,11 +58,13 @@ export class Challenge {
       const q_obj = obj.quizzes_list[i].quiz;
       const q_obj_done = obj.quizzes_list[i].done;
       const q = Quiz.fromJson(q_obj);
-      q.setDone(q_obj_done)
+      q.setDone(q_obj_done);
       quizzes.push(q);
     }
 
     const challenge = obj.challenge_info;
+    const progress = obj.progress;
+    const completed_count = obj.completed_count;
     // formatting teh date to make it more readable
     function formatDate(d) {
       const date = new Date(d);
@@ -72,7 +81,15 @@ export class Challenge {
 
     // const challengeData =
     // console.log("This was the challenge from json: ", challengeData);
-    return new Challenge(challenge.id, challenge.description, endDate, quizzes, challenge.no_participants);
+    return new Challenge(
+      challenge.id,
+      challenge.description,
+      endDate,
+      quizzes,
+      challenge.no_participants,
+      progress,
+      completed_count
+    );
   }
 
   static empty() {

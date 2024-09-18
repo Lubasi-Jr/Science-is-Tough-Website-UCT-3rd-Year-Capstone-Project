@@ -5,7 +5,7 @@ import { Challenge } from "../models/challenge";
 
 export default function DashChallenges() {
   const [challenges, setChallenges] = useState([]);
-  const [challengesStarted, setChallengesStarted] = useState([]);
+  // const [challengesStarted, setChallengesStarted] = useState([]);
 
   const { user } = useAuth();
 
@@ -13,79 +13,64 @@ export default function DashChallenges() {
   useEffect(() => {
     // fetched all the challenges and wether the student has finished the quizzes associated
     async function fetchChallenges() {
-      const { data, error } = await supabase.rpc("get_challenges");
+      const { data, error } = await supabase.rpc("get_challenges_data");
 
       if (error) {
         console.log("Fetching completed quizes for challenge error: ", error);
       } else {
+        console.log("Received for this challenge :", data);
         setChallenges(formatData(data));
       }
     }
 
-    //  Check if user has started the challenge
-    async function checkIfChallengeStarted() {
-      const { data, error } = await supabase
-        .from("students_challenges")
-        .select("challenge_id", "status")
-        .eq("student_id", user.id)
-        .neq("status", "");
-
-      if (error) {
-        console.error("Error checking if challenge started :", error.message);
-      } else {
-        setChallengesStarted(data.map((i) => i.challenge_id));
-      }
-    }
-
     fetchChallenges();
-    checkIfChallengeStarted();
   }, [user.id]);
-  async function startChallenge(challenge_id) {
-    console.log("Starting challenge...");
-    
-    // increment number of participants for this challenge in the challenge table
-    const { error: updateChallengeError } = await supabase.rpc(
-      "increment_no_participants",
-      { challenge_id: challenge_id }
-    );
+  // async function startChallenge(challenge_id) {
+  //   console.log("Starting challenge...");
 
-    const challengeToStart = challenges.find(
-      (challenge) => challenge.id === challenge_id
-    );
+  //   // increment number of participants for this challenge in the challenge table
+  //   const { error: updateChallengeError } = await supabase.rpc(
+  //     "increment_no_participants",
+  //     { challenge_id: challenge_id }
+  //   );
 
-    console.log(challengeToStart);
+  //   const challengeToStart = challenges.find(
+  //     (challenge) => challenge.id === challenge_id
+  //   );
 
-    let challengeToInsert = [];
+  //   console.log(challengeToStart);
 
-    for (let i = 0; i < challengeToStart.quizzes.length; i++) {
-      let obj = {
-        challenge_id: challenge_id,
-        q_id: challengeToStart.quizzes[i].id,
-        student_id: user.id,
-        done: challengeToStart.quizzes[i].done,
-        started: true,
-      };
-      challengeToInsert.push(obj);
-    }
-    // console.log("Inserting challenges: ", challengeToInsert);
+  //   let challengeToInsert = [];
 
-    const { error: insertChallengeError } = await supabase
-      .from("student_quiz")
-      .insert(challengeToInsert);
+  //   for (let i = 0; i < challengeToStart.quizzes.length; i++) {
+  //     let obj = {
+  //       challenge_id: challenge_id,
+  //       q_id: challengeToStart.quizzes[i].id,
+  //       student_id: user.id,
+  //       done: challengeToStart.quizzes[i].done,
+  //       started: true,
+  //     };
+  //     challengeToInsert.push(obj);
+  //   }
+  //   // console.log("Inserting challenges: ", challengeToInsert);
 
-    await supabase.from("students_challenges").insert({
-      student_id: user.id,
-      challenge_id: challengeToStart.id,
-      status: "in progress",
-    });
+  //   const { error: insertChallengeError } = await supabase
+  //     .from("student_quiz")
+  //     .insert(challengeToInsert);
 
-    if (updateChallengeError) {
-      console.log("Update Challenge Error: ", updateChallengeError);
-    }
-    if (insertChallengeError) {
-      console.log("Start Challenge Error: ", insertChallengeError);
-    }
-  }
+  //   await supabase.from("students_challenges").insert({
+  //     student_id: user.id,
+  //     challenge_id: challengeToStart.id,
+  //     status: "in progress",
+  //   });
+
+  //   if (updateChallengeError) {
+  //     console.log("Update Challenge Error: ", updateChallengeError);
+  //   }
+  //   if (insertChallengeError) {
+  //     console.log("Start Challenge Error: ", insertChallengeError);
+  //   }
+  // }
 
   function formatData(data) {
     let res = [];
@@ -116,17 +101,19 @@ export default function DashChallenges() {
 
                   <div className="challenge-item-info">
                     <p>{challenge.description}</p>
-                    <p>Participants: {challenge.noParticipants}</p>
+                    <p>
+                      Completed: {challenge.progress}/{challenge.completedCount}
+                    </p>
                     <p>Closing Date: {challenge.date_end}</p>
                   </div>
                 </div>
-                {challengesStarted.includes(challenge.id) ? (
+                {/* {challengesStarted.includes(challenge.id) ? (
                   <div className="challenge-item-started">Started</div>
                 ) : (
                   <button onClick={() => startChallenge(challenge.id)}>
                     Start
                   </button>
-                )}
+                )} */}
               </div>
 
               {/* Expand content*/}
