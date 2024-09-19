@@ -25,22 +25,20 @@ export default function SignUp() {
       password === confirmPassword &&
       studentYear !== ""
     ) {
+      const { error } = await supabase.auth.signUp({
+        email: email,
+        password: password,
+        options: {
+          data: {
+            name: name,
+          },
+        },
+      });
 
-        const { error } = await supabase.auth.signUp({
-            email: email,
-            password: password,
-            options: {
-                data: {
-                    name: name,
-                }
-            }
-          });
-      
-          if (error) {
-            setErrorMsg(error.message);
-            return;
-          }
-
+      if (error) {
+        setErrorMsg(error.message);
+        return;
+      }
 
       const userResponse = await supabase.auth.getUser();
 
@@ -56,13 +54,12 @@ export default function SignUp() {
         };
 
         const { error } = await supabase.from("student").insert(student);
-        if (error === null) {
-          navigate("/");
-        } else {
+        if (error) {
           setErrorMsg("Error inserting student data.");
-          console.log("Error inserting data ",error.details);
-          return
-          
+          console.log("Error inserting data ", error);
+          return;
+        } else {
+          navigate("/");
         }
       }
     } else {
@@ -155,8 +152,10 @@ export default function SignUp() {
               <button type="submit" className="submit-btn">
                 Create Account
               </button>
-              <span className="signup">Already have an account? </span><Link className="signup" to={"/login"}>Login</Link>
-
+              <span className="signup">Already have an account? </span>
+              <Link className="signup" to={"/login"}>
+                Login
+              </Link>
             </div>
             {errorMsg !== "" && (
               <p style={{ color: "red", paddingTop: "10px" }}>{errorMsg}</p>

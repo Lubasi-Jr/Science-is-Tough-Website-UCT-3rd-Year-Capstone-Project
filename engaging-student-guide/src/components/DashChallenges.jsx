@@ -5,87 +5,115 @@ import { Challenge } from "../models/challenge";
 
 export default function DashChallenges() {
   const [challenges, setChallenges] = useState([]);
-  const [challengesStarted, setChallengesStarted] = useState([]);
+  // const [challengesStarted, setChallengesStarted] = useState([]);
 
   const { user } = useAuth();
 
-  // fetch all challenges with the number of completed quizzes
   useEffect(() => {
-    // fetched all the challenges and wether the student has finished the quizzes associated
-    async function fetchChallenges() {
-      const { data, error } = await supabase.rpc("get_challenges");
+    async function checkChallengeCompletion() {
+      const { data, error } = await supabase.rpc(
+        "fetch_all_challenges_with_status",
+        { s_id: user.id }
+      );
 
       if (error) {
-        console.log("Fetching completed quizes for challenge error: ", error);
+        console.error("Error fetching challenge progress:", error);
       } else {
+        console.log("FINALS DATA: ", data);
         setChallenges(formatData(data));
       }
     }
-
-    //  Check if user has started the challenge
-    async function checkIfChallengeStarted() {
-      const { data, error } = await supabase
-        .from("students_challenges")
-        .select("challenge_id", "status")
-        .eq("student_id", user.id)
-        .neq("status", "");
-
-      if (error) {
-        console.error("Error checking if challenge started :", error.message);
-      } else {
-        setChallengesStarted(data.map((i) => i.challenge_id));
-      }
-    }
-
-    fetchChallenges();
-    checkIfChallengeStarted();
+    checkChallengeCompletion();
   }, [user.id]);
-  async function startChallenge(challenge_id) {
-    console.log("Starting challenge...");
-    
-    // increment number of participants for this challenge in the challenge table
-    const { error: updateChallengeError } = await supabase.rpc(
-      "increment_no_participants",
-      { challenge_id: challenge_id }
-    );
 
-    const challengeToStart = challenges.find(
-      (challenge) => challenge.id === challenge_id
-    );
+  // useEffect(() => {
 
-    console.log(challengeToStart);
+  //   const studentChallengeSubscription = supabase
+  //     .channel("public:students_challenges")
+  //     .on(
+  //       "postgres_changes",
+  //       { event: "INSERT", schema: "public", table: "students_challenges" },
+  //       (payload) => {
+  //         console.log("NEW INSERT INTO STUDENT CHALLNGES:", payload);
+  //         // fetchCompleted(); // Re-fetch data when quizzes are updated
+  //       }
+  //     )
+  //     .subscribe((status, error) => {
+  //       if (status === 'CHALLENGES: SUBSCRIBED') {
+  //         console.log('CHALLENGES: Subscribed to real-time changes for students_challenges');
+  //       }
+  //       if (error) {
+  //         console.error('CHALLENGES: Error subscribing to real-time changes:', error);
+  //       }
+  //     });
 
-    let challengeToInsert = [];
+  //   return () => {
+  //     supabase.removeChannel(studentChallengeSubscription);
+  //   };
+  // }, []);
 
-    for (let i = 0; i < challengeToStart.quizzes.length; i++) {
-      let obj = {
-        challenge_id: challenge_id,
-        q_id: challengeToStart.quizzes[i].id,
-        student_id: user.id,
-        done: challengeToStart.quizzes[i].done,
-        started: true,
-      };
-      challengeToInsert.push(obj);
-    }
-    // console.log("Inserting challenges: ", challengeToInsert);
+  // fetch all challenges with the number of completed quizzes
+  // useEffect(() => {
+  //   // fetched all the challenges and wether the student has finished the quizzes associated
+  //   async function fetchChallenges() {
+  //     const { data, error } = await supabase.rpc("get_challenges");
 
-    const { error: insertChallengeError } = await supabase
-      .from("student_quiz")
-      .insert(challengeToInsert);
+  //     if (error) {
+  //       console.log("Fetching completed quizes for challenge error: ", error);
+  //     } else {
+  //       console.log("Received for this challenge :", data);
+  //       setChallenges(formatData(data));
+  //     }
+  //   }
 
-    await supabase.from("students_challenges").insert({
-      student_id: user.id,
-      challenge_id: challengeToStart.id,
-      status: "in progress",
-    });
+  //   fetchChallenges();
+  // }, [user.id]);
+  // async function startChallenge(challenge_id) {
+  //   console.log("Starting challenge...");
 
-    if (updateChallengeError) {
-      console.log("Update Challenge Error: ", updateChallengeError);
-    }
-    if (insertChallengeError) {
-      console.log("Start Challenge Error: ", insertChallengeError);
-    }
-  }
+  //   // increment number of participants for this challenge in the challenge table
+  //   const { error: updateChallengeError } = await supabase.rpc(
+  //     "increment_no_participants",
+  //     { challenge_id: challenge_id }
+  //   );
+
+  //   const challengeToStart = challenges.find(
+  //     (challenge) => challenge.id === challenge_id
+  //   );
+
+  //   console.log(challengeToStart);
+
+  //   let challengeToInsert = [];
+
+  //   for (let i = 0; i < challengeToStart.quizzes.length; i++) {
+  //     let obj = {
+  //       challenge_id: challenge_id,
+  //       q_id: challengeToStart.quizzes[i].id,
+  //       student_id: user.id,
+  //       done: challengeToStart.quizzes[i].done,
+  //       started: true,
+  //     };
+  //     challengeToInsert.push(obj);
+  //   }
+  //   // console.log("Inserting challenges: ", challengeToInsert);
+
+  //   const { error: insertChallengeError } = await supabase
+  //     .from("student_quiz")
+  //     .insert(challengeToInsert);
+
+  //   await supabase.from("students_challenges").insert({
+  //     student_id: user.id,
+  //     challenge_id: challengeToStart.id,
+  //     status: "in progress",
+  //   });
+
+  //   if (updateChallengeError) {
+  //     console.log("Update Challenge Error: ", updateChallengeError);
+  //   }
+  //   if (insertChallengeError) {
+  //     console.log("Start Challenge Error: ", insertChallengeError);
+  //   }
+  // }
 
   function formatData(data) {
     let res = [];
@@ -93,17 +121,12 @@ export default function DashChallenges() {
       const obj = data[i];
       // console.log("Challenge datatata: ", obj)
       const c = Challenge.fromJson(obj);
+      c.wasCompleted = obj.student_completed_count;
       res.push(c);
     }
     return res;
   }
 
-  const [isExpanded, setIsExpanded] = useState(null);
-
-  // Toggle the state when clicking
-  const toggleExpand = (challenge_id) => {
-    setIsExpanded(isExpanded === challenge_id ? null : challenge_id);
-  };
   return (
     <>
       <section className="challenges-container">
@@ -113,7 +136,7 @@ export default function DashChallenges() {
             <div key={challenge.id} className="challenge-item">
               <div className="challenge-item-container">
                 <div
-                  onClick={() => toggleExpand(challenge.id)}
+                  // onClick={() => toggleExpand(challenge.id)}
                   className="challenge-item-details"
                 >
                   <div className="challenge-item-icon">
@@ -122,17 +145,28 @@ export default function DashChallenges() {
 
                   <div className="challenge-item-info">
                     <p>{challenge.description}</p>
-                    <p>Participants: {challenge.noParticipants}</p>
+                    <p>
+                      Completed: {challenge.wasCompleted}/
+                      {challenge.completedCount}
+                    </p>
+                    {challenge.wasCompleted === challenge.completedCount ? (
+                      <p style={{color: "#ff6969"}}>
+                       Challenge finished
+                      </p>
+                    ) : (
+                      <></>
+                    )}
+
                     <p>Closing Date: {challenge.date_end}</p>
                   </div>
                 </div>
-                {challengesStarted.includes(challenge.id) ? (
+                {/* {challengesStarted.includes(challenge.id) ? (
                   <div className="challenge-item-started">Started</div>
                 ) : (
                   <button onClick={() => startChallenge(challenge.id)}>
                     Start
                   </button>
-                )}
+                )} */}
               </div>
 
               {/* Expand content*/}

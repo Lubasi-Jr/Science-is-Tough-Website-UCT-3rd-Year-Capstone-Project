@@ -13,29 +13,29 @@ export default function DashRecentlyUploaded() {
   const { user } = useAuth();
   const { setRecentContent, setContentType } = RecentContext();
   const handleQuizClick = async (content) => {
-    const { data, error } = await supabase
-      .from("quiz")
-      .select("id")
-      .eq("content_id", content.id)
-      .single();
+    // const { data, error } = await supabase
+    //   .from("quiz")
+    //   .select("id")
+    //   .eq("content_id", content.id)
+    //   .single();
 
-    if (error) {
-      console.error("Error fetching quiz ID:", error.message);
-      return;
-    }
+    // if (error) {
+    //   console.error("Error fetching quiz ID:", error.message);
+    //   return;
+    // }
 
-    const quizId = data.id;
+    // const quizId = data.id;
     // console.log("Clicked on quizz thing: ...")
     navigate(`/quiz/${content.id}`, {
       state: { content: content },
     });
-    await quizComplete(content.id, quizId);
+    // await quizComplete(content.id, quizId);
   };
 
   const handleContentClick = async (content, contentType) => {
-    navigate(`/content/${content.id}`, {
-      state: { content: content, contentType: contentType },
-    });
+    // navigate(`/content/${content.id}`, {
+    //   state: { content: content, contentType: contentType },
+    // });
     setContentType(contentType);
     setRecentContent(content);
 
@@ -77,38 +77,39 @@ export default function DashRecentlyUploaded() {
     console.log("updated");
   };
 
-  const quizComplete = async (contentI, quizId) => {
-    console.log("Quiz is Complete execution....");
-    
-    if (!user) {
-      console.error("User not authenticated");
-      return;
-    }
-    const { id: student_id } = user;
-    console.log(
-      "Updating quiz completion for user:",
-      student_id,
-      "content ID:",
-      contentI
-    );
-    const details = {
-      student_id: student_id,
-      content_id: contentI,
-      quiz_id: quizId,
-      complete: true,
-    };
-    const { error } = await supabase
-      .from("student_quiz")
-      .upsert(details, {onConflict: ['student_id', 'content_id', 'quiz_id']})
-      .eq("student_id", student_id)
-      .eq("content_id", contentI)
-      .eq("quiz_id", quizId);
+  // const quizComplete = async (contentI, quizId) => {
+  //   console.log("Quiz is Complete execution....");
 
-    if (error) {
-      console.error("Error updating audio completion:", error);
-    }
-    console.log("updated");
-  };
+  //   if (!user) {
+  //     console.error("User not authenticated");
+  //     return;
+  //   }
+  //   const { id: student_id } = user;
+  //   console.log(
+  //     "Updating quiz completion for user:",
+  //     student_id,
+  //     "content ID:",
+  //     contentI
+  //   );
+  //   const details = {
+  //     student_id: student_id,
+  //     content_id: contentI,
+  //     quiz_id: quizId,
+  //     complete: true,
+  //   };
+  //   const { error } = await supabase
+  //     .from("student_quiz")
+  //     .insert(details)
+  //     .eq("student_id", student_id)
+  //     .eq("content_id", contentI)
+  //     .eq("quiz_id", quizId);
+  //   // , { onConflict: ["student_id", "content_id", "quiz_id"] })
+
+  //   if (error) {
+  //     console.error("Error updating audio completion:", error);
+  //   }
+  //   console.log("updated");
+  // };
 
   const [allContent, setAllContent] = useState([]);
 
@@ -202,24 +203,6 @@ export default function DashRecentlyUploaded() {
                 <div className="quiz-icon">
                   <QuizIcon onClick={() => handleQuizClick(content)} />
                 </div>
-                {/* <div className="fav-icon">
-                  {content.favourite ? (
-                    <FaHeart
-                      style={{ color: "rgb(255, 62, 62)" }}
-                      onClick={() =>
-                        handleFavouriteUpdate(content.id, content.favourite)
-                      }
-                      className="recent-fav-item "
-                    />
-                  ) : (
-                    <FaHeart
-                      onClick={() =>
-                        handleFavouriteUpdate(content.id, content.favourite)
-                      }
-                      className="recent-fav-item "
-                    />
-                  )}
-                </div> */}
               </div>
             </div>
           ))

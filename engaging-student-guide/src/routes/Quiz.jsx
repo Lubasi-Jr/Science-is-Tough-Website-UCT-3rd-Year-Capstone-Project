@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 import { Quiz as QuizModel } from "../models/quiz";
 import { supabase } from "../lib/supabaseClient";
 import { useAuth } from "../hooks/useAuth";
-// import { Challenge } from "../models/challenge";
 import { Link } from "react-router-dom";
 
 function Quiz() {
@@ -14,18 +13,16 @@ function Quiz() {
   const { user } = useAuth();
   const { id } = useParams();
   const [quiz, setQuiz] = useState(QuizModel.empty());
-  // const [isPartOfChallenge, setIsPartOfChallenge] = useState(false);
   const [isDone, setIsDone] = useState(false);
-  // const [challenge, setChallenge] = useState(Challenge.empty());
-
+  const [prevScore, setPrevScore] = useState(0); // Track previous score
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [isCompleted, setIsCompleted] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
-
   const [showScore, setShowScore] = useState(false);
   const [score, setScore] = useState(0);
 
   const MAX_SCORE = 3;
+
+  // fetching quiz data
   useEffect(() => {
     async function fetchQuiz(id) {
       const { data, error } = await supabase.rpc("get_quiz", {
@@ -35,10 +32,9 @@ function Quiz() {
       if (error) {
         console.log("Error fetching quizzes: ", error);
       } else {
-        // console.log("Data from fetching quiz questions: ", id, data);
+        console.log("Quiz data looks like: ", data);
         const q = formatData(data);
         setQuiz(q);
-        setIsCompleted(data.is_complete);
       }
     }
 
@@ -48,6 +44,7 @@ function Quiz() {
   }, [id]);
 
   useEffect(() => {
+    // if (showScore && score === MAX_SCORE && prevScore !== MAX_SCORE) {
     if (showScore && score === MAX_SCORE) {
       async function updateScore() {
         const { error } = await supabase.rpc("update_student_points", {
@@ -61,60 +58,54 @@ function Quiz() {
       }
 
       updateScore();
+
+      if (quiz.challengeId) {
+        async function completeActivity() {
+          const insert = {
+            status: "complete",
+            student_id: user.id,
+            challenge_id: quiz.challengeId,
+            quiz_id: quiz.id,
+          };
+          const { error } = await supabase
+            .from("students_challenges")
+            .upsert(insert, {
+              onConflict: ["student_id", "challenge_id", "quiz_id"],
+            });
+
+          if (error) {
+            console.error("Error updating progress: ", error);
+          } else {
+            console.log("Activity completed successfully");
+          }
+        }
+        completeActivity();
+      }
     }
-  }, [showScore, score, user.id, quiz.points]);
 
-  // useEffect(() => {
-  //   if (quiz.id) {
-  //     async function handlePartOfChallenge() {
-  //       if (quiz.challengeId == null) {
-  //         setIsPartOfChallenge(false);
-  //       } else {
-  //         setIsPartOfChallenge(true);
+    // update the student challenge progress
 
-  //         const { data, error } = await supabase.rpc(
-  //           "get_challenge_and_quizzes",
-  //           { challenge_id: quiz.challengeId }
-  //         );
-  //         if (error) {
-  //           console.log(
-  //             "Error fetching the challenge related to this quiz:",
-  //             error
-  //           );
-  //         } else {
-  //           setChallenge(Challenge.fromJson(data));
-  //         }
-  //       }
-  //     }
+    // Update previous score after the effect has run
+    setPrevScore(score);
+  }, [showScore, score, user.id, quiz, prevScore]);
 
-  //     handlePartOfChallenge();
-  //   }
-  // }, [quiz.challengeId, quiz.id]); // Trigger only when quiz.id changes
+  async function handleQuizFinished() {
+    const item = {
+      student_id: user.id,
+      complete: true,
+      quiz_id: quiz.id,
+      content_id: quiz.contentId,
+    };
 
-  // async function handleQuizFinished() {
-  //   const item = {
-  //     student_id: user.id,
-  //     complete: true,
-  //     quiz_id: quiz.id,
-  //     content_id: quiz.contentId,
-  //   };
+    const { error } = await supabase.from("student_quiz").insert(item);
 
-  //   console.log("Inserting the following item: ", item);
-  //   const { error } = await supabase.from("student_quiz").insert(item);
-  //   // const { error } = await supabase.from("student_quiz").update(item);
-
-  //   if (error) {
-  //     console.log("Error fetching quizzes: ", error);
-  //   } else {
-  //     console.log("Successfully inserted item");
-  //     setShowScore(true);
-  //   }
-  // }
-
-  // async function handleNextQuiz(content_id) {
-  //   handleRetry(); // resetting the quiz state
-  //   navigate(`/quiz/${content_id}`);
-  // }
+    if (error) {
+      console.log("Error fetching quizzes: ", error);
+    } else {
+      console.log("Successfully inserted item");
+      setShowScore(true);
+    }
+  }
 
   function formatData(obj) {
     let q = QuizModel.fromJson(obj.quiz);
@@ -143,7 +134,6 @@ function Quiz() {
       setCurrentQuestion(nextQuestion);
       setSelectedOption(null);
     } else {
-      // setShowScore(true);
       setIsDone(true);
     }
   };
@@ -166,8 +156,7 @@ function Quiz() {
                   </h5>
                   <p>
                     You&apos;re doing great! Keep the momentum going by tackling
-                    any of the quizzes. Click on one to continue your challenge
-                    adventure!
+                    any of the quizzes.
                   </p>
                   <div
                     style={{
@@ -185,16 +174,6 @@ function Quiz() {
                     >
                       Return to Dashboard
                     </button>
-                    {/* {isPartOfChallenge ? (
-                      <button
-                        className="quiz-next-btn"
-                        onClick={handleNextQuiz}
-                      >
-                        Next Quiz
-                      </button>
-                    ) : (
-                      <></>
-                    )} */}
                   </div>
                 </div>
               ) : (
@@ -203,14 +182,14 @@ function Quiz() {
                   <button
                     style={{ margin: "1em" }}
                     className="quiz-next-btn"
-                    // onClick={handleQuizFinished}
+                    onClick={handleQuizFinished}
                   >
                     Submit quiz
                   </button>
                 </>
               )}
             </div>
-          ) : !isCompleted && quiz.questions.length > 0 ? (
+          ) : quiz.questions.length > 0 ? (
             <>
               <div className="question-section">
                 <div className="question-text">
@@ -242,39 +221,11 @@ function Quiz() {
             </>
           ) : (
             <div>
-              <p>
-                Awesome job! 🎉 You&apos;ve already completed this quiz. Why not
-                keep the momentum going and challenge yourself with some of the
-                other quizzes? Keep pushing your limits! 🚀
-              </p>
+              <p>No questions available... </p>
               <Link to="/">Back to dashboard</Link>
             </div>
           )}
         </div>
-        {/* {isPartOfChallenge ? (
-          <div className="quiz-list">
-            <h4>Challenge: {challenge.description}</h4>
-            {challenge.quizzes.map((challengeQuiz) =>
-              quiz.id === challengeQuiz.id ? (
-                <div className="quiz-item selected-quiz" key={challengeQuiz.id}>
-                  <h3 className="quiz-title ">
-                    Active: {challengeQuiz.contentTitle}
-                  </h3>
-                </div>
-              ) : (
-                <div
-                  onClick={() => handleNextQuiz(challengeQuiz.contentId)}
-                  className="quiz-item"
-                  key={challengeQuiz.id}
-                >
-                  <h3 className="quiz-title ">{challengeQuiz.contentTitle}</h3>
-                </div>
-              )
-            )}
-          </div>
-        ) : (
-          <></>
-        )} */}
       </div>
     </>
   );

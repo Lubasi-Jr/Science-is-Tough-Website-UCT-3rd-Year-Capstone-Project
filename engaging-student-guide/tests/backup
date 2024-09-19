@@ -1,0 +1,111 @@
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { vi } from 'vitest';
+import { useParams, useNavigate } from 'react-router-dom';
+import { supabase } from '../lib/supabaseClient';
+import { useAuth } from '../hooks/useAuth';
+import Quiz from './Quiz';
+import { Quiz as QuizModel } from '../models/quiz';
+
+// Mocking external dependencies
+vi.mock('react-router-dom', () => ({
+  useParams: vi.fn(),
+  useNavigate: vi.fn(),
+  Link: ({ children }) => <div>{children}</div>,
+}));
+
+vi.mock('../lib/supabaseClient', () => ({
+  supabase: {
+    rpc: vi.fn(),
+    from: vi.fn(),
+  },
+}));
+
+vi.mock('../hooks/useAuth', () => ({
+  useAuth: vi.fn(),
+}));
+
+vi.mock('../models/quiz', () => ({
+  Quiz: {
+    empty: vi.fn(() => new QuizModel('', '', '', '', 0)),
+    fromJson: vi.fn((json) => {
+      const quiz = new QuizModel(
+        json.id,
+        json.challenge_id,
+        json.content_id,
+        json.content_title,
+        json.points
+      );
+      quiz.setQuestions = vi.fn();
+      return quiz;
+    }),
+  },
+}));
+
+describe('Quiz Component', () => {
+  const mockNavigate = vi.fn();
+  const mockUser = { id: 'user-id' };
+
+  beforeEach(() => {
+    useParams.mockReturnValue({ id: 'quiz-id' });
+    useNavigate.mockReturnValue(mockNavigate);
+    useAuth.mockReturnValue({ user: mockUser });
+    supabase.rpc.mockResolvedValue({ data: { quiz: {}, questions: [] }, error: null });
+    supabase.from.mockResolvedValue({ error: null });
+  });
+
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
+
+  test('renders Quiz component', async () => {
+    render(<Quiz />);
+
+    expect(screen.getByText('Loading...')).toBeInTheDocument();
+
+    await waitFor(() => {
+      expect(supabase.rpc).toHaveBeenCalledWith('get_quiz', { content_id: 'quiz-id' });
+    });
+
+    expect(screen.getByText('Quiz data looks like:')).toBeInTheDocument();
+  });
+
+  test('handles quiz completion', async () => {
+    render(<Quiz />);
+
+    await waitFor(() => {
+      expect(supabase.rpc).toHaveBeenCalledWith('get_quiz', { content_id: 'quiz-id' });
+    });
+
+    fireEvent.click(screen.getByText('Finish Quiz'));
+
+    await waitFor(() => {
+      expect(supabase.from).toHaveBeenCalledWith('student_quiz');
+      expect(supabase.from().insert).toHaveBeenCalledWith({
+        student_id: 'user-id',
+        complete: true,
+        quiz_id: 'quiz-id',
+        content_id: 'quiz-id',
+      });
+    });
+
+    expect(screen.getByText('Successfully inserted item')).toBeInTheDocument();
+  });
+
+  test('handles answer selection and navigation', async () => {
+    render(<Quiz />);
+
+    await waitFor(() => {
+      expect(supabase.rpc).toHaveBeenCalledWith('get_quiz', { content_id: 'quiz-id' });
+    });
+
+    fireEvent.click(screen.getByText('Option 1'));
+
+    expect(screen.getByText('Option 1').classList).toContain('selected');
+
+    fireEvent.click(screen.getByText('Next 1/1'));
+
+    await waitFor(() => {
+      expect(screen.getByText('You scored 1 out of 1')).toBeInTheDocument();
+    });
+  });
+});
