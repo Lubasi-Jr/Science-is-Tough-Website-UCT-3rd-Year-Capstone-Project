@@ -23,7 +23,7 @@ export default function Login() {
       setEmailError("Please enter a valid email.");
       isValid = false;
     } else {
-      setEmailError(""); // Clear error if valid
+      setEmailError(""); // Clear error if we have a valid email  
     }
 
     if (!password) {

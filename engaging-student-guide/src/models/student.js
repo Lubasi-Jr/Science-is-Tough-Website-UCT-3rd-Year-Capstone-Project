@@ -6,7 +6,7 @@ export class Student {
   points;
   level;
 
-  // Constructor to initialize the Content class with id, imageSrc, title, and link.
+  // Constructor to initialize the Student class
   constructor(id, isInternational, studentYear, email, points) {
     this.id = id;
     this.studentYear = studentYear;
@@ -17,7 +17,7 @@ export class Student {
   }
 
   static fromJson(obj) {
-    console.log("To Student from object: ", obj)
+    console.log("To Student from object: ", obj);
     return new Student(
       obj.id,
       obj.isInternational,
