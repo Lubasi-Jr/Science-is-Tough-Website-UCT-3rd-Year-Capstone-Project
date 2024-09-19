@@ -178,7 +178,6 @@ function Quiz() {
                 </div>
               ) : (
                 <>
-                  {" "}
                   <button
                     style={{ margin: "1em" }}
                     className="quiz-next-btn"

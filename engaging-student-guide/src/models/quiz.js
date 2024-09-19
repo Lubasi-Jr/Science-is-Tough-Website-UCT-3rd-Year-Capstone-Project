@@ -23,7 +23,6 @@ export class Quiz {
   }
 
   static fromJson(obj) {
-    console.log("JSON FROM QUIZ: ", obj)
     return new Quiz(
       obj.id,
       obj.challenge_id,
@@ -38,7 +37,6 @@ export class Quiz {
   }
 
   setQuestions(qs) {
-    console.log("This was the data past test: ", qs);
     for (let i = 0; i < qs.length; i++) {
       if (this.questions.length === 3) {
         return;
