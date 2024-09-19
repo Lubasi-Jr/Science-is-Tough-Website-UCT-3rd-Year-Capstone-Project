@@ -1,4 +1,4 @@
-// __tests__/DashRecentActivity.test.jsx
+// test for the contextRecentActivity
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
 import RecentActivityContextProvider, {
