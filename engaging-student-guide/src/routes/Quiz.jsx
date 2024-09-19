@@ -34,6 +34,7 @@ function Quiz() {
       if (error) {
         console.log("Error fetching quizzes: ", error);
       } else {
+        console.log("Quiz data looks like: ", data);
         const q = formatData(data);
         setQuiz(q);
       }
@@ -111,7 +112,10 @@ function Quiz() {
   }
 
   function formatData(obj) {
+    console.log("Before quiz format: ", obj)
     let q = QuizModel.fromJson(obj.quiz);
+    console.log("After balah blahahah: ",obj.quiz)
+    console.log("After quiz format: ",q)
     q.setQuestions(obj.questions);
     return q;
   }
@@ -245,7 +249,7 @@ function Quiz() {
             </>
           ) : (
             <div>
-              <p>fetching questions... </p>
+              <p>No questions available... </p>
               <Link to="/">Back to dashboard</Link>
             </div>
           )}
