@@ -5,9 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { Quiz as QuizModel } from "../models/quiz";
 import { supabase } from "../lib/supabaseClient";
 import { useAuth } from "../hooks/useAuth";
-// import { Challenge } from "../models/challenge";
 import { Link } from "react-router-dom";
-// import { Challenge } from "../models/challenge";
 
 function Quiz() {
   const navigate = useNavigate();
@@ -49,7 +47,6 @@ function Quiz() {
     // if (showScore && score === MAX_SCORE && prevScore !== MAX_SCORE) {
     if (showScore && score === MAX_SCORE) {
       async function updateScore() {
-        console.log("Updated student points....");
         const { error } = await supabase.rpc("update_student_points", {
           student_id: user.id,
           amount: quiz.points,
@@ -100,7 +97,6 @@ function Quiz() {
       content_id: quiz.contentId,
     };
 
-    console.log("Inserting the following item: ", item);
     const { error } = await supabase.from("student_quiz").insert(item);
 
     if (error) {
@@ -112,10 +108,7 @@ function Quiz() {
   }
 
   function formatData(obj) {
-    console.log("Before quiz format: ", obj)
     let q = QuizModel.fromJson(obj.quiz);
-    console.log("After balah blahahah: ",obj.quiz)
-    console.log("After quiz format: ",q)
     q.setQuestions(obj.questions);
     return q;
   }
@@ -126,17 +119,6 @@ function Quiz() {
     setCurrentQuestion(0);
     setScore(0);
   };
-
-  // function formatDataC(data) {
-  //   let res = [];
-  //   for (let i = 0; i < data.length; i++) {
-  //     const obj = data[i];
-  //     // console.log("Challenge datatata: ", obj)
-  //     const c = Challenge.fromJson(obj);
-  //     res.push(c);
-  //   }
-  //   return res;
-  // }
 
   const handleAnswerClick = () => {
     const isCorrect = quiz.questions[currentQuestion].options.find(
@@ -192,16 +174,6 @@ function Quiz() {
                     >
                       Return to Dashboard
                     </button>
-                    {/* {isPartOfChallenge ? (
-                      <button
-                        className="quiz-next-btn"
-                        onClick={handleNextQuiz}
-                      >
-                        Next Quiz
-                      </button>
-                    ) : (
-                      <></>
-                    )} */}
                   </div>
                 </div>
               ) : (
@@ -254,30 +226,6 @@ function Quiz() {
             </div>
           )}
         </div>
-        {/* {isPartOfChallenge ? (
-          <div className="quiz-list">
-            <h4>Challenge: {challenge.description}</h4>
-            {challenge.quizzes.map((challengeQuiz) =>
-              quiz.id === challengeQuiz.id ? (
-                <div className="quiz-item selected-quiz" key={challengeQuiz.id}>
-                  <h3 className="quiz-title ">
-                    Active: {challengeQuiz.contentTitle}
-                  </h3>
-                </div>
-              ) : (
-                <div
-                  onClick={() => handleNextQuiz(challengeQuiz.contentId)}
-                  className="quiz-item"
-                  key={challengeQuiz.id}
-                >
-                  <h3 className="quiz-title ">{challengeQuiz.contentTitle}</h3>
-                </div>
-              )
-            )}
-          </div>
-        ) : (
-          <></>
-        )} */}
       </div>
     </>
   );
