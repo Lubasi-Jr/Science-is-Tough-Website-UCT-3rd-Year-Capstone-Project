@@ -56,8 +56,8 @@ This project includes unit tests written with **Vitest**. To run the tests, use 
 
 ```bash
 npm test 
-
-or ```
+```
+ or
 
 ```bash
 npm vitest
