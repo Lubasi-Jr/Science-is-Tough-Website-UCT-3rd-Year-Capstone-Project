@@ -60,45 +60,36 @@ function Quiz() {
       }
 
       updateScore();
-      async function update_progress() {
-        console.log("Updating student challenge:");
 
-        // fetch all challenges
-        const { data, error } = await supabase.rpc("get_challenges_data");
+      if (quiz.challengeId) {
+        async function completeActivity() {
+          const insert = {
+            status: "complete",
+            student_id: user.id,
+            challenge_id: quiz.challengeId,
+            quiz_id: quiz.id,
+          };
+          const { error } = await supabase
+            .from("students_challenges")
+            .upsert(insert, {
+              onConflict: ["student_id", "challenge_id", "quiz_id"],
+            });
 
-        if (error) {
-          console.log("Fetching completed quizes for challenge error: ", error);
-        } else {
-          const challenges = formatDataC(data);
-          const insert = [];
-          for (let i = 0; i < challenges.length; i++) {
-            const insert_item = {
-              student_id: user.id,
-              challenge_id: challenges[i],
-              progress: 1,
-              status: "in progress",
-              completed_count: 2,
-            };
-            insert.push(insert_item);
-          }
-
-          console.log("Inserting into students_ challenges:", insert);
-
-          const { error } = await supabase.from("students_challenges").insert(insert);
           if (error) {
-            console.log("Error updating students_ challenges:", error);
+            console.error("Error updating progress: ", error);
+          } else {
+            console.log("Activity completed successfully");
           }
         }
+        completeActivity();
       }
-
-      update_progress();
     }
 
     // update the student challenge progress
 
     // Update previous score after the effect has run
     setPrevScore(score);
-  }, [showScore, score, user.id, quiz.points, prevScore]);
+  }, [showScore, score, user.id, quiz.points, prevScore, quiz.challengeId]);
 
   async function handleQuizFinished() {
     const item = {

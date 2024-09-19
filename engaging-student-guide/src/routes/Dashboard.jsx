@@ -7,6 +7,7 @@ import DashRewards from "../components/DashRewards";
 import DashGame from "../components/DashGame";
 
 export default function Dashboard() {
+  
   return (
     <>
       <div className="dashboard-container">

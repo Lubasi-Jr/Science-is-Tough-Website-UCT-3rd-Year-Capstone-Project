@@ -1,6 +1,6 @@
 // Exporting the Challenge class so it can be imported and used in other files.
 
-import { Quiz } from "./quiz";
+// import { Quiz } from "./quiz";
 
 export class Challenge {
   // Class properties to store various attributes of a challenge.
@@ -15,6 +15,7 @@ export class Challenge {
 
   progress;
   completedCount;
+  wasCompleted;
 
   // Constructor method to initialize a new instance of the Challenge class.
   constructor(
@@ -27,7 +28,8 @@ export class Challenge {
     quizzes,
     noParticipants,
     progress,
-    completedCount
+    completedCount,
+    wasCompleted
   ) {
     // Assigning the passed parameters to the corresponding class properties.
     this.id = id;
@@ -37,6 +39,7 @@ export class Challenge {
     this.noParticipants = noParticipants;
     this.progress = progress;
     this.completedCount = completedCount;
+    this.wasCompleted = wasCompleted;
     // this.reward = reward;
     // this.date_created = date_created;
   }
@@ -54,17 +57,17 @@ export class Challenge {
   static fromJson(obj) {
     let quizzes = [];
 
-    for (let i = 0; i < obj.quizzes_list.length; i++) {
-      const q_obj = obj.quizzes_list[i].quiz;
-      const q_obj_done = obj.quizzes_list[i].done;
-      const q = Quiz.fromJson(q_obj);
-      q.setDone(q_obj_done);
-      quizzes.push(q);
-    }
+    // for (let i = 0; i < obj.quizzes_list.length; i++) {
+    //   const q_obj = obj.quizzes_list[i].quiz;
+    //   const q_obj_done = obj.quizzes_list[i].done;
+    //   const q = Quiz.fromJson(q_obj);
+    //   q.setDone(q_obj_done);
+    //   quizzes.push(q);
+    // }
 
     const challenge = obj.challenge_info;
     const progress = obj.progress;
-    const completed_count = obj.completed_count;
+    // const completed_count = obj.completed_count;
     // formatting teh date to make it more readable
     function formatDate(d) {
       const date = new Date(d);
@@ -88,7 +91,7 @@ export class Challenge {
       quizzes,
       challenge.no_participants,
       progress,
-      completed_count
+      challenge.completed_count
     );
   }
 

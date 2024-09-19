@@ -9,22 +9,65 @@ export default function DashChallenges() {
 
   const { user } = useAuth();
 
-  // fetch all challenges with the number of completed quizzes
   useEffect(() => {
-    // fetched all the challenges and wether the student has finished the quizzes associated
-    async function fetchChallenges() {
-      const { data, error } = await supabase.rpc("get_challenges_data");
+    async function checkChallengeCompletion() {
+      const { data, error } = await supabase.rpc(
+        "fetch_all_challenges_with_status",
+        { s_id: user.id }
+      );
 
       if (error) {
-        console.log("Fetching completed quizes for challenge error: ", error);
+        console.error("Error fetching challenge progress:", error);
       } else {
-        console.log("Received for this challenge :", data);
+        console.log("FINALS DATA: ", data);
         setChallenges(formatData(data));
       }
     }
-
-    fetchChallenges();
+    checkChallengeCompletion();
   }, [user.id]);
+
+  // useEffect(() => {
+
+  //   const studentChallengeSubscription = supabase
+  //     .channel("public:students_challenges")
+  //     .on(
+  //       "postgres_changes",
+  //       { event: "INSERT", schema: "public", table: "students_challenges" },
+  //       (payload) => {
+  //         console.log("NEW INSERT INTO STUDENT CHALLNGES:", payload);
+  //         // fetchCompleted(); // Re-fetch data when quizzes are updated
+  //       }
+  //     )
+  //     .subscribe((status, error) => {
+  //       if (status === 'CHALLENGES: SUBSCRIBED') {
+  //         console.log('CHALLENGES: Subscribed to real-time changes for students_challenges');
+  //       }
+  //       if (error) {
+  //         console.error('CHALLENGES: Error subscribing to real-time changes:', error);
+  //       }
+  //     });
+
+  //   return () => {
+  //     supabase.removeChannel(studentChallengeSubscription);
+  //   };
+  // }, []);
+
+  // fetch all challenges with the number of completed quizzes
+  // useEffect(() => {
+  //   // fetched all the challenges and wether the student has finished the quizzes associated
+  //   async function fetchChallenges() {
+  //     const { data, error } = await supabase.rpc("get_challenges");
+
+  //     if (error) {
+  //       console.log("Fetching completed quizes for challenge error: ", error);
+  //     } else {
+  //       console.log("Received for this challenge :", data);
+  //       setChallenges(formatData(data));
+  //     }
+  //   }
+
+  //   fetchChallenges();
+  // }, [user.id]);
   // async function startChallenge(challenge_id) {
   //   console.log("Starting challenge...");
 
@@ -78,6 +121,7 @@ export default function DashChallenges() {
       const obj = data[i];
       // console.log("Challenge datatata: ", obj)
       const c = Challenge.fromJson(obj);
+      c.wasCompleted = obj.student_completed_count;
       res.push(c);
     }
     return res;
@@ -102,8 +146,17 @@ export default function DashChallenges() {
                   <div className="challenge-item-info">
                     <p>{challenge.description}</p>
                     <p>
-                      Completed: {challenge.progress}/{challenge.completedCount}
+                      Completed: {challenge.wasCompleted}/
+                      {challenge.completedCount}
                     </p>
+                    {challenge.wasCompleted === challenge.completedCount ? (
+                      <p style={{color: "#ff6969"}}>
+                       Challenge finished
+                      </p>
+                    ) : (
+                      <></>
+                    )}
+
                     <p>Closing Date: {challenge.date_end}</p>
                   </div>
                 </div>
