@@ -27,26 +27,11 @@ export default function NavBar() {
             <p className="first">{points}</p>
             <p className="second">pts</p>
           </div>
-<<<<<<< HEAD
-          <div className="navbar-center">
-            
-            
-          </div>
-          <div className="navbar-right">
-          <Link to="/"  onClick={() => auth.signOut()}>Logout</Link>
-            <div className="profile-pic">
-              <img
-                src="../../public/default-profile-icon.png"
-                alt="Profile Picture"
-              />
-            </div>
-=======
           <div className="profile-pic">
             <img
               src="../../public/default-profile-icon.png"
               alt="Profile Picture"
             />
->>>>>>> 80ff65f029231cd3fe64d2edad0c81fd5a342c05
           </div>
         </div>
       </div>

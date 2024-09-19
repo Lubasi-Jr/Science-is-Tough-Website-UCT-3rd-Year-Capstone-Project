@@ -4,13 +4,9 @@ import Challenges from "./routes/Challenges.jsx";
 import Game from "./routes/Game.jsx";
 import Dashboard from "./routes/Dashboard.jsx";
 import Quiz from "./routes/Quiz.jsx";
-<<<<<<< HEAD
-import Game from "./routes/Game.jsx";
-=======
->>>>>>> 04438eba207cdaaab2e8bda1780d5ecce53ae40d
 import SignUp from "./routes/SignUp.jsx";
 import Login from "./routes/Login.jsx";
-//import Content from "./routes/Content.jsx";
+import Content from "./routes/Content.jsx";
 import ProtectedPage from "./routes/ProtectedPage.jsx";
 
 export const router = createBrowserRouter([
