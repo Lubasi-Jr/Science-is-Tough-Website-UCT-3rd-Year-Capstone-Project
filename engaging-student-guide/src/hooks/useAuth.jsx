@@ -28,7 +28,7 @@ const AuthProvider = ({ children }) => {
     };
   }, []);
 
-
+{/*sgns user out of website*/}
   const signOut = async () => {
     const { error } = await supabase.auth.signOut();
     console.log("error: ", error);

@@ -2,6 +2,7 @@ import { GetPointsContext } from "../context/PointsContext";
 
 export default function DashRewards() {
   const { points } = GetPointsContext();
+ {/*creates rewards container which displays the total amount of points a user has earned over time*/}
 
   return (
     <>

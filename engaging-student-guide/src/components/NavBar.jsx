@@ -2,14 +2,12 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import MuscleIcon from "../assets/muscle.svg";
 import "./NavBar.css";
-// import { useEffect } from "react";
-// import { useState } from "react";
-// import { supabase } from "../lib/supabaseClient";
 import { GetPointsContext } from "../context/PointsContext";
 export default function NavBar() {
   const auth = useAuth();
 
   const { points } = GetPointsContext();
+/*creates navbar on top of webpage which has a logout options,amount of points and profile picture*/
 
   return (
     <>

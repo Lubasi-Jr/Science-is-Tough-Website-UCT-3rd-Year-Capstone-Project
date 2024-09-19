@@ -2,6 +2,10 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import "./SignUp.css";
 import { supabase } from "../lib/supabaseClient";
+/* Login component for handling user login functionality.
+  Allows users to input their email and password, validates the form,
+  and submits the data to the Supabase authentication system.
+ */
 
 export default function Login() {
   // State hooks for form inputs and error messages
@@ -12,6 +16,10 @@ export default function Login() {
   const [passwordError, setPasswordError] = useState("");
 
   const navigate = useNavigate();
+/*
+    Validates the form fields to ensure that the email and password
+    inputs are correctly formatted before submission.
+   */
 
   const validateForm = () => {
     let isValid = true;
@@ -38,6 +46,11 @@ export default function Login() {
 
     return isValid;
   };
+  /*Handles the form submission for logging in the user.
+   First, it validates the form and then sends the login request to Supabase.
+   If the login is successful, it navigates the user to the home page.
+   Otherwise, displays an error message if login fails.
+   */
 
   const signIn = async (e) => {
     e.preventDefault();
@@ -63,7 +76,7 @@ export default function Login() {
       navigate("/");
     }
   };
-
+{/*Login container*/}
   return (
     <>
       <div className="signup-container">

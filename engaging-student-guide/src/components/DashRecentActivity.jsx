@@ -2,6 +2,7 @@ import { RecentContext } from "../context/contextRecentActivity";
 
 export default function DashRecentActivity() {
   const { recentContent, contentType } = RecentContext();
+{/*opens a new tab and displays either a pdf or audio depending on content type*/}
 
   async function handleRecentActivityNav(contentType, content) {
     if (contentType === "pdf" && content.pdf_url) {
@@ -10,6 +11,7 @@ export default function DashRecentActivity() {
       window.open(content.audio_url, "_blank"); //show audio on new tab
     }
   }
+{/*Provide quick access to what users previously interacted with*/}
 
   return (
     <section className="recent-activity">

@@ -11,8 +11,6 @@ export class Quiz {
   // Constructor to initialize the Quiz with an id.
   constructor(id, challengeId, contentId, contentTitle, points) {
     this.id = id; // Assign the unique identifier to the quiz.
-    // The questions, answers, and options properties could be initialized later.
-    // implement, when intergrating with database
     this.questions = [];
     this.contentTitle = contentTitle;
     this.challengeId = challengeId;
@@ -23,7 +21,6 @@ export class Quiz {
   }
 
   static fromJson(obj) {
-    console.log("JSON FROM QUIZ: ", obj)
     return new Quiz(
       obj.id,
       obj.challenge_id,
@@ -33,12 +30,7 @@ export class Quiz {
     );
   }
 
-  setDone(done) {
-    this.done = done;
-  }
-
   setQuestions(qs) {
-    console.log("This was the data past test: ", qs);
     for (let i = 0; i < qs.length; i++) {
       if (this.questions.length === 3) {
         return;

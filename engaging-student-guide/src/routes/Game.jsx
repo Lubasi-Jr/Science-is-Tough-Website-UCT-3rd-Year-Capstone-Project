@@ -3,7 +3,8 @@ import React, { useState,useEffect } from 'react';
 import Confetti from 'react-confetti';//importing confetti to use when someone wins/completes all levels
 import { useNavigate } from 'react-router-dom';
 import { Game as gameModel } from "../models/game";
-//const avatarUrl = 'https://as2.ftcdn.net/v2/jpg/01/40/46/19/1000_F_140461947_tWo9D0W8QQnrhzhCXJbDHIXblMV9BTZv.jpg';
+/* Avatar options for the player to select before starting the game */
+
 const avatars = ['https://static.vecteezy.com/system/resources/previews/014/212/681/non_2x/female-user-profile-avatar-is-a-woman-a-character-for-a-screen-saver-with-emotions-for-website-and-mobile-app-design-illustration-on-a-white-isolated-background-vector.jpg',
   'https://img.freepik.com/premium-vector/symbol-male-user-icon-circle-profile-icon-vector-illustration_276184-154.jpg',
   'https://static.vecteezy.com/system/resources/previews/013/317/294/non_2x/incognito-icon-man-woman-face-with-glasses-black-and-white-graphic-spy-agent-line-and-glyph-icon-security-and-detective-hacker-sign-graphics-editable-stroke-linear-icon-free-vector.jpg'
@@ -23,16 +24,27 @@ const levels = [
     "11-13 hours"] ,correctAnswer: 2 , position: { x: 700, y: 240 } },
   { id: 8, question: "What should you do if you miss an exam?",type :'multiple-choice',options:["You cannot reschedule it","Apply for a deferred exam with solid justification and documentation","Wait for the next exam session","Contact your professor for a makeup test"],correctAnswer: 1 , position: { x: 800, y: 220 } },
 ];
+/* Create an instance of the game using the gameModel with the defined levels */
+
 const game = new gameModel(levels)
 
 function Game() {
-  const [currentLevel, setCurrentLevel] = useState(0);
+  const [currentLevel, setCurrentLevel] = useState(0);// Tracks the current level the player 
  // const [userAnswer, setUserAnswer] = useState("");
-  const[selectedOption,setSelectedOption] = useState(null);
+  const[selectedOption,setSelectedOption] = useState(null);// Stores the selected answer for multiple-choice questions
+
   const [error, setError] = useState("");
-  const[selectAvatar,setSelectedAvatar] =useState(null);
+  const[selectAvatar,setSelectedAvatar] =useState(null);// Tracks the avatar selected by the player
+
   const[showConf,setShowConf] = useState(false);
   const navigate = useNavigate();
+
+   /*
+    Function to handle answer submission for each level.
+    - If the question is multiple-choice, it checks if the selected option matches the correct answer.
+    - For tips, it progresses to the next level 
+  */
+
   const handleAnswerSubmit = () => {
     const currentQuestion = levels[currentLevel];
     
@@ -55,6 +67,11 @@ function Game() {
   const handleAvatar = (avatar)=>{
     setSelectedAvatar(avatar)
   }
+   /*
+    This function calculates the path connecting each level's circle.
+    It draws a line between the center of the current circle and the next one.
+  */
+
   const pathCreater = () => {
     const radius = 50/2;//default circle diameter divided by 2 to get radius so draw line from center of previous to enxt level center
     let pathcalc = `M ${levels[0].position.x} ${levels[0].position.y+radius}`; // Moves from startimg point to next point
@@ -66,13 +83,18 @@ function Game() {
     }
     return pathcalc;
   };
+  /* 
+    Check if the game is completed and trigger the confetti animation upon completion.
+  */
+
   useEffect(() => {
     if (currentLevel === levels.length) {//display confetti if the current level the user is on is the final level
       setShowConf(true);
     }
   }, [currentLevel]);
-
-  if(!selectAvatar){//only display this if user has not yet selected an avatar to play as
+ 
+  /* If no avatar is selected, prompt the player to choose one */
+  if(!selectAvatar){
     return (
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100px',marginTop:'100px'}}>
         <h1>Select Your Avatar:</h1>
@@ -102,7 +124,8 @@ function Game() {
   return (
     <div>
       <h1 style={{textAlign:'center'}}>Tough Game</h1>
-    
+    {/* Game board showing the levels and the paths between them */}
+
       <div style={{ position: 'relative', height: '400px', width: '1000px', marginBottom: '50px' }}>
         <svg height="400" width="1000" style={{ position: 'absolute', top: '0', left: '0' }}>
           {/*Creating a path between circles*/}
@@ -113,6 +136,8 @@ function Game() {
             fill="none"
           />
         </svg>
+       {/* Display the levels as circles with question IDs */}
+
         {/*zIndex had to be used in order to ensure the level circle is above the question and its options.*/}
         <div style={{ position: 'relative', zIndex: 1 }}>
           {levels.map((level, index) => (
@@ -133,6 +158,8 @@ function Game() {
               }}
             >
               {level.id}
+              {/* Display the selected avatar above the current level circle */}
+
               
               {index === currentLevel && (
                 <img className='avatarimg'
@@ -152,6 +179,7 @@ function Game() {
             </div>
           ))}
         </div>
+        {/* Display the question or tip for the current level */}
 
         {currentLevel < levels.length ? (
           <div style={{ position: 'absolute',
@@ -184,6 +212,8 @@ function Game() {
                 <p className="tip"style={{ fontStyle: 'italic', color: '#555' }}><b>Helpful Tip: </b> {levels[currentLevel].question}</p>
               </div>
             )}
+        {/* Submit button for multiple-choice answers or to continue to the next level */}
+
             <button style={{marginTop:'5px',borderRadius:'25px',justifyContent:'center',borderColor:'white'}} onClick={handleAnswerSubmit}>
             {levels[currentLevel].type === 'multiple-choice' ? 'Submit' : 'Continue'}</button>
             {error && <p style={{ color: '#c80036' }}>{error}</p>}

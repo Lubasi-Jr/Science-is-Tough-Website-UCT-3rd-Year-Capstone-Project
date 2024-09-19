@@ -9,7 +9,7 @@ import { Quiz as QuizModel } from "../src/models/quiz";
 
 // TestQuiz component that accepts quiz data as props
 
-function TestQuiz({ id, user }) {
+function TestQuiz({ id }) {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [score, setScore] = useState(0);
   const [isDone, setIsDone] = useState(false);
@@ -18,10 +18,6 @@ function TestQuiz({ id, user }) {
   const [error, setError] = useState(null);
   const [quiz, setQuiz] = useState(QuizModel.empty());
   // const { user } = useAuth();
-  const [prevScore, setPrevScore] = useState(0); // Track previous score
-  const [showScore, setShowScore] = useState(false);
-
-  const MAX_SCORE = 3;
   // fetching quiz data
   useEffect(() => {
     async function fetchQuiz(id) {
@@ -49,69 +45,7 @@ function TestQuiz({ id, user }) {
     }
   }, [id]);
 
-  useEffect(() => {
-    // if (showScore && score === MAX_SCORE && prevScore !== MAX_SCORE) {
-    if (showScore && score === MAX_SCORE) {
-      async function updateScore() {
-        const { error } = await supabase.rpc("update_student_points", {
-          student_id: user.id,
-          amount: quiz.points,
-        });
 
-        if (error) {
-          console.log("Error updating score:", error);
-        }
-      }
-
-      updateScore();
-
-      if (quiz.challengeId) {
-        async function completeActivity() {
-          const insert = {
-            status: "complete",
-            student_id: user.id,
-            challenge_id: quiz.challengeId,
-            quiz_id: quiz.id,
-          };
-          const { error } = await supabase
-            .from("students_challenges")
-            .upsert(insert, {
-              onConflict: ["student_id", "challenge_id", "quiz_id"],
-            });
-
-          if (error) {
-            console.error("Error updating progress: ", error);
-          } else {
-            console.log("Activity completed successfully");
-          }
-        }
-        completeActivity();
-      }
-    }
-
-    // update the student challenge progress
-
-    // Update previous score after the effect has run
-    setPrevScore(score);
-  }, [showScore, score, user.id, quiz, prevScore]);
-
-  async function handleQuizFinished() {
-    const item = {
-      student_id: user.id,
-      complete: true,
-      quiz_id: quiz.id,
-      content_id: quiz.contentId,
-    };
-
-    const { error } = await supabase.from("student_quiz").insert(item);
-
-    if (error) {
-      console.log("Error fetching quizzes: ", error);
-    } else {
-      console.log("Successfully inserted item");
-      setShowScore(true);
-    }
-  }
 
   function formatData(obj) {
     let q = QuizModel.fromJson(obj.quiz);
@@ -159,13 +93,6 @@ function TestQuiz({ id, user }) {
               </h5>
               <button className="quiz-next-btn" onClick={handleRetry}>
                 Retry
-              </button>
-              <button
-                style={{ margin: "1em" }}
-                className="quiz-next-btn"
-                onClick={handleQuizFinished}
-              >
-                Submit quiz
               </button>
             </>
           ) : (

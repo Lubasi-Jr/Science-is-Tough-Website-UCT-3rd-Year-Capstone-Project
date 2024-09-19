@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { MdAudiotrack } from "react-icons/md";
 import { GrDocumentPdf } from "react-icons/gr";
 import QuizIcon from "./QuizIcon";
-// import { FaHeart } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient";
 import { RecentContext } from "../context/contextRecentActivity";
@@ -11,31 +10,22 @@ import { useAuth } from "../hooks/useAuth";
 export default function DashRecentlyUploaded() {
   const navigate = useNavigate();
   const { user } = useAuth();
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+
   const { setRecentContent, setContentType } = RecentContext();
+  // Naviagte to the quiz related to the content
   const handleQuizClick = async (content) => {
-    // const { data, error } = await supabase
-    //   .from("quiz")
-    //   .select("id")
-    //   .eq("content_id", content.id)
-    //   .single();
-
-    // if (error) {
-    //   console.error("Error fetching quiz ID:", error.message);
-    //   return;
-    // }
-
-    // const quizId = data.id;
-    // console.log("Clicked on quizz thing: ...")
     navigate(`/quiz/${content.id}`, {
       state: { content: content },
     });
-    // await quizComplete(content.id, quizId);
   };
+  {
+    /*opens a new tab and displays either a pdf or audio depending on content type*/
+  }
 
   const handleContentClick = async (content, contentType) => {
-    // navigate(`/content/${content.id}`, {
-    //   state: { content: content, contentType: contentType },
-    // });
     setContentType(contentType);
     setRecentContent(content);
 
@@ -46,73 +36,46 @@ export default function DashRecentlyUploaded() {
       await audioComplete(content.id);
     }
   };
-
+{/*sets audio_complete boolean to true once a user has listened to an audio this is used for out student progress metric*/}
   const audioComplete = async (contentId) => {
-    if (!user) {
-      console.error("User not authenticated");
-      return;
+    try {
+      if (!user) {
+        throw "User not authenticated";
+      }
+    } catch (error) {
+      setError(error);
     }
-    //console.log("User ID:", user.id);
-    const { id: student_id } = user;
-    console.log(
-      "Updating audio completion for user:",
-      student_id,
-      "Content ID:",
-      contentId
-    );
-    const i = {
-      student_id: student_id,
-      content_id: contentId,
-      audio_complete: true,
-    };
-    const { error } = await supabase
-      .from("student_content")
-      .insert(i)
-      .eq("student_id", student_id)
-      .eq("content_id", contentId);
+    try {
+      const { id: student_id } = user;
+      console.log(
+        "Updating audio completion for user:",
+        student_id,
+        "Content ID:",
+        contentId
+      );
+      const i = {
+        student_id: student_id,
+        content_id: contentId,
+        audio_complete: true,
+      };
+      const { error } = await supabase
+        .from("student_content")
+        .insert(i)
+        .eq("student_id", student_id)
+        .eq("content_id", contentId);
 
-    if (error) {
-      console.error("Error updating audio completion:", error);
+      if (error) {
+        console.error("Error updating audio completion:", error);
+        throw error;
+      }
+      console.log("updated");
+    } catch (error) {
+      setError(error.message);
     }
-    console.log("updated");
   };
 
-  // const quizComplete = async (contentI, quizId) => {
-  //   console.log("Quiz is Complete execution....");
-
-  //   if (!user) {
-  //     console.error("User not authenticated");
-  //     return;
-  //   }
-  //   const { id: student_id } = user;
-  //   console.log(
-  //     "Updating quiz completion for user:",
-  //     student_id,
-  //     "content ID:",
-  //     contentI
-  //   );
-  //   const details = {
-  //     student_id: student_id,
-  //     content_id: contentI,
-  //     quiz_id: quizId,
-  //     complete: true,
-  //   };
-  //   const { error } = await supabase
-  //     .from("student_quiz")
-  //     .insert(details)
-  //     .eq("student_id", student_id)
-  //     .eq("content_id", contentI)
-  //     .eq("quiz_id", quizId);
-  //   // , { onConflict: ["student_id", "content_id", "quiz_id"] })
-
-  //   if (error) {
-  //     console.error("Error updating audio completion:", error);
-  //   }
-  //   console.log("updated");
-  // };
-
   const [allContent, setAllContent] = useState([]);
-
+{/*ensures whenever an item is updated on the backend it is reflected on frontend too*/}
   useEffect(() => {
     const handleUpdate = (payload) => {
       const updatedItem = payload.new;
@@ -130,7 +93,7 @@ export default function DashRecentlyUploaded() {
       });
     };
 
-    // Subscribe to realtime updates on any field
+    {/*Subscribe to realtime updates on any field*/}
     const subscription = supabase
       .channel("public:content")
       .on(
@@ -140,34 +103,47 @@ export default function DashRecentlyUploaded() {
       )
       .subscribe();
 
-    // Fetch all data on initial load
+    {/*fetches content data from database*/}
     const fetchData = async () => {
-      const { data, error } = await supabase.from("content").select();
+      console.log("This is the content...");
+      try {
+        setIsLoading(true);
+        console.log("is loading...");
 
-      if (error) {
-        console.error("Error fetching data:", error);
-      } else {
-        setAllContent(data);
+        const { data, error } = await supabase.from("content").select();
+        console.log("This is the data...");
+        if (error) {
+          throw error;
+        } else {
+          console.log(data);
+          setAllContent(data);
+          setIsLoading(false);
+        }
+      } catch (error) {
+        setError(error.message);
+        setIsLoading(false);
       }
     };
 
     fetchData();
-
-    //! TODO: Check for network errors
-    // { message: "TypeError: NetworkError when attempting to fetch resource.",
-    // details: "", hint: "", code: ""
-
     // Clean up subscription on unmount
     return () => {
       supabase.removeChannel(subscription);
     };
   }, []);
+{/*displays content and three icons allocated to audio,pdfs and quizzes*/}
 
   return (
     <section className="recent-container">
       <h4>Content</h4>
       <div className="recent-items">
-        {allContent.length > 0 ? (
+        {isLoading ? (
+          <div className="loading-message">Loading content...</div>
+        ) : error ? (
+          <div className="error-message">
+            Error fetching content. Contact admin. {error}
+          </div>
+        ) : allContent.length > 0 ? (
           allContent.map((content) => (
             <div key={content.id} className="recent-item">
               <div
