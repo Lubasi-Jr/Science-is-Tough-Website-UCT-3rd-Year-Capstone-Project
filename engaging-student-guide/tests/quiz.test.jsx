@@ -1,19 +1,127 @@
+/* eslint-disable react/prop-types */
 // tests/quiz.test.jsx
 
-import { useState } from "react";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { useState, useEffect } from "react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { vi, describe, it, expect } from "vitest";
+import { supabase } from "../src/lib/supabaseClient";
+import { Quiz as QuizModel } from "../src/models/quiz";
 
 // TestQuiz component that accepts quiz data as props
 
-function TestQuiz({ quizData }) {
+function TestQuiz({ id, user }) {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [score, setScore] = useState(0);
   const [isDone, setIsDone] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [quiz, setQuiz] = useState(QuizModel.empty());
+  // const { user } = useAuth();
+  const [prevScore, setPrevScore] = useState(0); // Track previous score
+  const [showScore, setShowScore] = useState(false);
+
+  const MAX_SCORE = 3;
+  // fetching quiz data
+  useEffect(() => {
+    async function fetchQuiz(id) {
+      try {
+        setIsLoading(true);
+        const { data, error } = await supabase.rpc("get_quiz", {
+          content_id: id,
+        });
+
+        if (error) {
+          throw error;
+        } else {
+          const q = formatData(data);
+          setQuiz(q);
+          setIsLoading(false);
+        }
+      } catch (error) {
+        setError(error.message);
+        setIsLoading(false);
+      }
+    }
+
+    if (id) {
+      fetchQuiz(id);
+    }
+  }, [id]);
+
+  useEffect(() => {
+    // if (showScore && score === MAX_SCORE && prevScore !== MAX_SCORE) {
+    if (showScore && score === MAX_SCORE) {
+      async function updateScore() {
+        const { error } = await supabase.rpc("update_student_points", {
+          student_id: user.id,
+          amount: quiz.points,
+        });
+
+        if (error) {
+          console.log("Error updating score:", error);
+        }
+      }
+
+      updateScore();
+
+      if (quiz.challengeId) {
+        async function completeActivity() {
+          const insert = {
+            status: "complete",
+            student_id: user.id,
+            challenge_id: quiz.challengeId,
+            quiz_id: quiz.id,
+          };
+          const { error } = await supabase
+            .from("students_challenges")
+            .upsert(insert, {
+              onConflict: ["student_id", "challenge_id", "quiz_id"],
+            });
+
+          if (error) {
+            console.error("Error updating progress: ", error);
+          } else {
+            console.log("Activity completed successfully");
+          }
+        }
+        completeActivity();
+      }
+    }
+
+    // update the student challenge progress
+
+    // Update previous score after the effect has run
+    setPrevScore(score);
+  }, [showScore, score, user.id, quiz, prevScore]);
+
+  async function handleQuizFinished() {
+    const item = {
+      student_id: user.id,
+      complete: true,
+      quiz_id: quiz.id,
+      content_id: quiz.contentId,
+    };
+
+    const { error } = await supabase.from("student_quiz").insert(item);
+
+    if (error) {
+      console.log("Error fetching quizzes: ", error);
+    } else {
+      console.log("Successfully inserted item");
+      setShowScore(true);
+    }
+  }
+
+  function formatData(obj) {
+    let q = QuizModel.fromJson(obj.quiz);
+    q.setQuestions(obj.questions);
+    console.log(q.questions);
+    return q;
+  }
 
   const handleAnswerClick = () => {
-    const isCorrect = quizData.questions[currentQuestion].question.options.find(
+    const isCorrect = quiz.questions[currentQuestion].options.find(
       (option) => option.option === selectedOption
     ).isCorrect;
 
@@ -22,7 +130,7 @@ function TestQuiz({ quizData }) {
     }
 
     const nextQuestion = currentQuestion + 1;
-    if (nextQuestion < quizData.questions.length) {
+    if (nextQuestion < quiz.questions.length) {
       setCurrentQuestion(nextQuestion);
       setSelectedOption(null);
     } else {
@@ -30,39 +138,68 @@ function TestQuiz({ quizData }) {
     }
   };
 
+  const handleRetry = () => {
+    setIsDone(false);
+    setCurrentQuestion(0);
+    setScore(0);
+  };
+
   return (
     <div>
-      {isDone ? (
-        <h5>
-          You scored {score} out of {quizData.questions.length}
-        </h5>
+      {isLoading ? (
+        <div className="loading-message">Loading quiz...</div>
+      ) : error ? (
+        <div className="error-message">Error fetching quiz: {error}</div>
       ) : (
         <div>
-          {quizData ? (
+          {isDone ? (
             <>
-              {" "}
-              <div className="question-text">
-                {quizData.questions[currentQuestion].question.question}
-              </div>
-              {quizData.questions[currentQuestion].question.options.map(
-                (option, index) => (
-                  <div
-                    key={index}
-                    onClick={() => setSelectedOption(option.option)}
-                    className={
-                      selectedOption === option.option ? "selected" : ""
-                    }
-                  >
-                    {option.option}
-                  </div>
-                )
-              )}
-              <button onClick={handleAnswerClick} disabled={!selectedOption}>
-                Next
+              <h5>
+                You scored {score} out of {quiz.questions.length}
+              </h5>
+              <button className="quiz-next-btn" onClick={handleRetry}>
+                Retry
+              </button>
+              <button
+                style={{ margin: "1em" }}
+                className="quiz-next-btn"
+                onClick={handleQuizFinished}
+              >
+                Submit quiz
               </button>
             </>
           ) : (
-            <>No questions available...</>
+            <div>
+              {quiz && quiz.questions.length > 0 ? (
+                <>
+                  <div className="question-title">{quiz.contentTitle}</div>
+                  <div className="question-text">
+                    {quiz.questions[currentQuestion].question}
+                  </div>
+                  {quiz.questions[currentQuestion].options.map(
+                    (option, index) => (
+                      <div
+                        key={index}
+                        onClick={() => setSelectedOption(option.option)}
+                        className={
+                          selectedOption === option.option ? "selected" : ""
+                        }
+                      >
+                        {option.option}
+                      </div>
+                    )
+                  )}
+                  <button
+                    onClick={handleAnswerClick}
+                    disabled={!selectedOption}
+                  >
+                    Next
+                  </button>
+                </>
+              ) : (
+                <>No questions available...</>
+              )}
+            </div>
           )}
         </div>
       )}
@@ -174,16 +311,29 @@ const mockQuizData = {
   ],
 };
 
+// mocking supabase
+vi.mock("../src/lib/supabaseClient", () => ({
+  supabase: {
+    rpc: vi.fn(),
+    from: vi.fn(),
+  },
+}));
+
 // Vitest test for the TestQuiz component
 describe("TestQuiz Component", () => {
-  it("renders questions and handles answers correctly", () => {
-    render(<TestQuiz quizData={mockQuizData} />);
+  it("renders questions and handles answers correctly", async () => {
+    supabase.rpc.mockResolvedValueOnce({
+      data: mockQuizData,
+      error: null,
+    });
 
-    // Check the first question
-    expect(
-      screen.getByText(/Which of the following is a sign of depression?/)
-    ).toBeInTheDocument();
-
+    render(<TestQuiz id={"123"} />);
+    await waitFor(() => {
+      // Check the first question
+      expect(
+        screen.getByText(/Which of the following is a sign of depression?/)
+      ).toBeInTheDocument();
+    });
     // Select the correct answer and click next
     fireEvent.click(
       screen.getByText("Persistent sadness and loss of interest in activities.")
@@ -218,16 +368,24 @@ describe("TestQuiz Component", () => {
 
     // Check the score
     expect(screen.getByText(/You scored 3 out of 3/)).toBeInTheDocument();
+    // });
+
+    screen.debug();
   });
 
-  it("User gets one incorrect", () => {
-    render(<TestQuiz quizData={mockQuizData} />);
+  it("User gets one incorrect", async () => {
+    supabase.rpc.mockResolvedValueOnce({
+      data: mockQuizData,
+      error: null,
+    });
 
-    // Check the first question
-    expect(
-      screen.getByText(/Which of the following is a sign of depression?/)
-    ).toBeInTheDocument();
-
+    render(<TestQuiz id={"123"} quizData={null} />);
+    await waitFor(() => {
+      // Check the first question
+      expect(
+        screen.getByText(/Which of the following is a sign of depression?/)
+      ).toBeInTheDocument();
+    });
     // Select the wrong answer and click next
     fireEvent.click(
       screen.getByText("Enhanced social interactions and engagement.")
@@ -264,24 +422,133 @@ describe("TestQuiz Component", () => {
     expect(screen.getByText(/You scored 2 out of 3/)).toBeInTheDocument();
   });
 
-  it("should handle empty quiz data", () => {
-    render(<TestQuiz quizData={null} />);
-    expect(screen.getByText(/No questions available.../i)).toBeInTheDocument(); // Example error message
+  it("should handle empty quiz data and no error", async () => {
+    supabase.rpc.mockResolvedValueOnce({
+      data: { quiz: {}, questions: [] },
+      error: null,
+    });
+
+    render(<TestQuiz id={"123"} />);
+    await waitFor(() => {
+      expect(
+        screen.getByText(/No questions available.../i)
+      ).toBeInTheDocument(); // Example error message
+    });
   });
 
-  it("Next button should be disabled when no answer is selected", () => {
-    render(<TestQuiz quizData={mockQuizData} />);
-    expect(screen.getByText("Next")).toBeDisabled();
+  it("Next button should be disabled when no answer is selected", async () => {
+    supabase.rpc.mockResolvedValueOnce({
+      data: mockQuizData,
+      error: null,
+    });
+
+    render(<TestQuiz id={"123"} />);
+    await waitFor(() => {
+      expect(screen.getByText("Next")).toBeDisabled();
+    });
   });
 
-  it("Clicking Next should navigate to the next question", () => {
-    render(<TestQuiz quizData={mockQuizData} />);
-    fireEvent.click(
-      screen.getByText("Persistent sadness and loss of interest in activities.")
-    );
+  it("Clicking Next should navigate to the next question", async () => {
+    supabase.rpc.mockResolvedValueOnce({
+      data: mockQuizData,
+      error: null,
+    });
+
+    render(<TestQuiz id={"123"} />);
+    await waitFor(() => {
+      fireEvent.click(
+        screen.getByText(
+          "Persistent sadness and loss of interest in activities."
+        )
+      );
+    });
     fireEvent.click(screen.getByText("Next"));
     expect(
       screen.queryByText(/Which of the following is a sign of depression?/i)
     ).not.toBeInTheDocument();
   });
+
+  it("Retry button should reset quiz state and allow restarting", async () => {
+    supabase.rpc.mockResolvedValueOnce({
+      data: mockQuizData,
+      error: null,
+    });
+
+    render(<TestQuiz id={"123"} />);
+    await waitFor(() => {
+      // Simulate completing part of the quiz
+
+      // Check the first question
+      expect(
+        screen.getByText(/Which of the following is a sign of depression?/)
+      ).toBeInTheDocument();
+    });
+    // Select the correct answer and click next
+    fireEvent.click(
+      screen.getByText("Persistent sadness and loss of interest in activities.")
+    );
+    fireEvent.click(screen.getByText("Next"));
+
+    // Check the second question
+    expect(
+      screen.getByText(
+        /Which of the following statements about breathing exercises for stress management is NOT true?/
+      )
+    ).toBeInTheDocument();
+
+    // Select the correct answer and click next
+    fireEvent.click(
+      screen.getByText(
+        "Breathing exercises are most effective when done only once a week."
+      )
+    );
+    fireEvent.click(screen.getByText("Next"));
+
+    // Check the third question
+    expect(
+      screen.getByText(/How should one handle substance use?/)
+    ).toBeInTheDocument();
+
+    // Select the correct answer and click next
+    fireEvent.click(
+      screen.getByText("Understand the impact on brain development and health.")
+    );
+    fireEvent.click(screen.getByText("Next"));
+
+    fireEvent.click(screen.getByText("Retry"));
+    // First question should be on screen now
+    expect(
+      screen.getByText(/Which of the following is a sign of depression?/)
+    ).toBeInTheDocument();
+    expect(screen.getByText("Next")).toBeEnabled();
+  });
+
+  it("should fetch quiz data successfully", async () => {
+    supabase.rpc.mockResolvedValueOnce({
+      data: mockQuizData,
+      error: null,
+    });
+
+    render(<TestQuiz id={"123"} quizData={null} />);
+    await waitFor(() =>
+      expect(
+        screen.getByText(mockQuizData.quiz.content_title)
+      ).toBeInTheDocument()
+    );
+
+    screen.debug();
+  });
+
+  it("should display error message when fetching quiz data fails", async () => {
+    supabase.rpc.mockResolvedValueOnce({
+      data: null,
+      error: { message: "Mocked error" },
+    });
+
+    render(<TestQuiz id={"123"} quizData={null} />);
+    await waitFor(() =>
+      expect(screen.getByText(/Error fetching quiz/i)).toBeInTheDocument()
+    );
+  });
+
 });
