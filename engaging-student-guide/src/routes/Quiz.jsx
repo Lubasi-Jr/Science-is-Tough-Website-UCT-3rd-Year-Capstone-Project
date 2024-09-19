@@ -7,7 +7,7 @@ import { supabase } from "../lib/supabaseClient";
 import { useAuth } from "../hooks/useAuth";
 // import { Challenge } from "../models/challenge";
 import { Link } from "react-router-dom";
-import { Challenge } from "../models/challenge";
+// import { Challenge } from "../models/challenge";
 
 function Quiz() {
   const navigate = useNavigate();
@@ -89,7 +89,7 @@ function Quiz() {
 
     // Update previous score after the effect has run
     setPrevScore(score);
-  }, [showScore, score, user.id, quiz.points, prevScore, quiz.challengeId]);
+  }, [showScore, score, user.id, quiz, prevScore]);
 
   async function handleQuizFinished() {
     const item = {
@@ -123,16 +123,16 @@ function Quiz() {
     setScore(0);
   };
 
-  function formatDataC(data) {
-    let res = [];
-    for (let i = 0; i < data.length; i++) {
-      const obj = data[i];
-      // console.log("Challenge datatata: ", obj)
-      const c = Challenge.fromJson(obj);
-      res.push(c);
-    }
-    return res;
-  }
+  // function formatDataC(data) {
+  //   let res = [];
+  //   for (let i = 0; i < data.length; i++) {
+  //     const obj = data[i];
+  //     // console.log("Challenge datatata: ", obj)
+  //     const c = Challenge.fromJson(obj);
+  //     res.push(c);
+  //   }
+  //   return res;
+  // }
 
   const handleAnswerClick = () => {
     const isCorrect = quiz.questions[currentQuestion].options.find(
