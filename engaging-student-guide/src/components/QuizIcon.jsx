@@ -1,4 +1,4 @@
-// import quizIcon from "../assets/quiz_icon_1.svg"
+{/*create an icon from the quiz to be displayed under related content*/}
 export default function QuizIcon({ onClick }) {
   return (
     <svg

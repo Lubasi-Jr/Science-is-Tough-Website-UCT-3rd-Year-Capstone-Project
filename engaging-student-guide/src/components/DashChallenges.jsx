@@ -10,6 +10,7 @@ export default function DashChallenges() {
   const { user } = useAuth();
 
   useEffect(() => {
+    /*Checks if a students challenge is complete by fetching the challenge status from supabase and updates the setChallenges state with formatted data*/
     async function checkChallengeCompletion() {
       try {
         setIsLoading(true);
@@ -33,8 +34,10 @@ export default function DashChallenges() {
     checkChallengeCompletion();
   }, [user.id]);
 
+  /*Data converted to a array of Challenge objects each object also has a property that checks how mamy quizzes were complete*/
+
   function formatData(data) {
-    console.log(data)
+    console.log(data);
     let res = [];
     for (let i = 0; i < data.length; i++) {
       const obj = data[i];
@@ -49,11 +52,14 @@ export default function DashChallenges() {
     <>
       <section className="challenges-container">
         <h5>Weekly Challenges</h5>
-        {isLoading ? (
+        {isLoading /* Display loading while we're fetchiing the data*/ ? (
           <div className="loading-message">Loading challenges...</div>
-        ) : error ? (
-          <div className="error-message">Error fetching challenges. Contact admin.</div>
-        ) : challenges.length > 0 ? (
+        ) : error /* Display error */ ? (
+          <div className="error-message">
+            Error fetching challenges. Contact admin.
+          </div>
+        ) : /*If there is one or more challenges it is displayed with a description and progress in the challenge,checks if challenge is completed and will then say challenge is complete*/
+        challenges.length > 0 ? (
           challenges.map((challenge) => (
             <div key={challenge.id} className="challenge-item">
               <div className="challenge-item-container">

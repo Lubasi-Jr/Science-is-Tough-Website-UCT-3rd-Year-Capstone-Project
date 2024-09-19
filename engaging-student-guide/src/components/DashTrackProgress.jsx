@@ -4,6 +4,8 @@ import { useAuth } from "../hooks/useAuth";
 
 export default function DashTrackProgress() {
   const { user } = useAuth();
+    {/*initialise metric values*/}
+
   const [stats, setStats] = useState({
     finishedContent: 0,
     engagementScore: 0,
@@ -11,6 +13,8 @@ export default function DashTrackProgress() {
   });
 
   useEffect(() => {
+        /*checks if a user has completed a quiz*/
+
     const fetchCompleted = async () => {
       if (!user) {
         return;
@@ -25,8 +29,10 @@ export default function DashTrackProgress() {
         console.error("Error fetching quizzes completed:", quizerror);
         return;
       }
+/*calculates how many quizzes were complete*/
 
       const quizCompleted = quizdata.filter((quiz) => quiz.complete).length;
+      /*checks if audio has been listened to by user*/
 
       const { data: audiodata, error: audioerror } = await supabase
         .from("student_content")
@@ -36,6 +42,7 @@ export default function DashTrackProgress() {
         console.error("Error fetching audio's completed:", audioerror);
         return;
       }
+/*calculates how many audios were complete*/
 
       const finishedContent = audiodata.filter(
         (audio) => audio.audio_complete
@@ -50,6 +57,8 @@ export default function DashTrackProgress() {
     };
 
     fetchCompleted();
+        {/*listening for updates on these tables*/}
+
     const contentsubscription = supabase
       .channel("public:student_content")
       .on(
@@ -81,6 +90,7 @@ export default function DashTrackProgress() {
       supabase.removeChannel(quizSubscription);
     };
   }, [user]);
+  {/*displays all progress metrics*/}
 
   return (
     <section className="progress-container">

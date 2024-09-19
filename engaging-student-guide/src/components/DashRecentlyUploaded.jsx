@@ -15,11 +15,15 @@ export default function DashRecentlyUploaded() {
   const [error, setError] = useState(null);
 
   const { setRecentContent, setContentType } = RecentContext();
+  // Naviagte to the quiz related to the content
   const handleQuizClick = async (content) => {
     navigate(`/quiz/${content.id}`, {
       state: { content: content },
     });
   };
+  {
+    /*opens a new tab and displays either a pdf or audio depending on content type*/
+  }
 
   const handleContentClick = async (content, contentType) => {
     setContentType(contentType);
@@ -32,7 +36,7 @@ export default function DashRecentlyUploaded() {
       await audioComplete(content.id);
     }
   };
-
+{/*sets audio_complete boolean to true once a user has listened to an audio this is used for out student progress metric*/}
   const audioComplete = async (contentId) => {
     try {
       if (!user) {
@@ -71,7 +75,7 @@ export default function DashRecentlyUploaded() {
   };
 
   const [allContent, setAllContent] = useState([]);
-
+{/*ensures whenever an item is updated on the backend it is reflected on frontend too*/}
   useEffect(() => {
     const handleUpdate = (payload) => {
       const updatedItem = payload.new;
@@ -89,7 +93,7 @@ export default function DashRecentlyUploaded() {
       });
     };
 
-    // Subscribe to realtime updates on any field
+    {/*Subscribe to realtime updates on any field*/}
     const subscription = supabase
       .channel("public:content")
       .on(
@@ -99,16 +103,19 @@ export default function DashRecentlyUploaded() {
       )
       .subscribe();
 
-    // Fetch all data on initial load
+    {/*fetches content data from database*/}
     const fetchData = async () => {
+      console.log("This is the content...");
       try {
         setIsLoading(true);
+        console.log("is loading...");
 
         const { data, error } = await supabase.from("content").select();
-
+        console.log("This is the data...");
         if (error) {
           throw error;
         } else {
+          console.log(data);
           setAllContent(data);
           setIsLoading(false);
         }
@@ -124,6 +131,7 @@ export default function DashRecentlyUploaded() {
       supabase.removeChannel(subscription);
     };
   }, []);
+{/*displays content and three icons allocated to audio,pdfs and quizzes*/}
 
   return (
     <section className="recent-container">
@@ -133,7 +141,7 @@ export default function DashRecentlyUploaded() {
           <div className="loading-message">Loading content...</div>
         ) : error ? (
           <div className="error-message">
-            Error fetching content. Contact admin.
+            Error fetching content. Contact admin. {error}
           </div>
         ) : allContent.length > 0 ? (
           allContent.map((content) => (

@@ -39,8 +39,8 @@ export default function SignUp() {
         setErrorMsg(error.message);
         return;
       }
-
-      const userResponse = await supabase.auth.getUser();
+  /*Retrieve the user details after successful sign-up .This is needed to get the user ID, which will be used when inserting the student data.*/
+   const userResponse = await supabase.auth.getUser();
 
       if (userResponse.data.user) {
         const student = {
@@ -52,7 +52,7 @@ export default function SignUp() {
           points: 20,
           level: "Beginner",
         };
-
+ /*Insert the student object into the "student" table.If the insertion is successful, navigate to the home page.If there's an error during insertion, display an error message.*/
         const { error } = await supabase.from("student").insert(student);
         if (error) {
           setErrorMsg("Error inserting student data.");
