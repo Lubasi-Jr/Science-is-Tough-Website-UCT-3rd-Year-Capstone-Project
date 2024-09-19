@@ -44,7 +44,7 @@ npm install
 Run:
 
 ```bash
-npm start
+npm run dev
 ```
 or 
 
