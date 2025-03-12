@@ -1,108 +1,122 @@
 .signup-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    height: 100vh;
-    padding-left:2em;
-    background-color: #f0f4f8; /* New background color for the container */
-    font-weight: normal;
-  }
-  
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100vh;
+  padding-left: 2em;
+  background-color: #f0f4f8; /* New background color for the container */
+  font-weight: normal;
+}
+
+.form-container {
+  width: 40%;
+  padding: 30px;
+  background-color: #ffffff; /* Form background color */
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.form-header h3 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 26px; /* Adjusted font size */
+  color: #333;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  color: #333;
+  display: block;
+  margin-bottom: 5px;
+  text-align: left;
+  font-size: 16px; /* Adjusted label font size */
+}
+
+.input-field,
+.select-field {
+  width: 100%;
+  padding: 12px; /* Slightly increased padding */
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px; /* Adjusted input font size */
+  color: #333;
+  background-color: #f9f9f9; /* Background color for input fields */
+}
+
+.input-field:focus,
+.select-field:focus {
+  border-color: var(--secondary-accent-color);
+  outline: none;
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 12px;
+  background-color: var(--secondary-accent-color);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.submit-btn:hover {
+  background-color: var(--hover-color);
+}
+
+.signup {
+  color: var(--primary-text-color);
+  /* text-decoration: none; */
+  font-size: smaller;
+}
+
+.image-container {
+  width: 50%;
+  height: 100%;
+  display: flex;
+  /* justify-content: center; */
+  /* align-items: center; */
+}
+
+.students-image {
+  max-width: 100%;
+  object-fit: fill;
+  filter: blur(2px);
+  opacity: 0.7;
+}
+
+.students-image::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--); /* Blue tint with transparency */
+  pointer-events: none;
+}
+
+@media screen and (max-width: 1024px) {
   .form-container {
-    width: 40%;
-    padding: 30px;
+    width: 80%;
+    padding: 15px;
     background-color: #ffffff; /* Form background color */
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   }
-  
-  .form-header h3 {
-    text-align: center;
-    margin-bottom: 20px;
-    font-size: 26px; /* Adjusted font size */
-    color: #333;
-  }
-  
-  .form {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .form-group {
-    margin-bottom: 15px;
-  }
-  
-  .form-group label {
-    color: #333;
-    display: block;
-    margin-bottom: 5px;
-    text-align: left;
-    font-size: 16px; /* Adjusted label font size */
-  }
-  
-  .input-field,
-  .select-field {
-    width: 100%;
-    padding: 12px; /* Slightly increased padding */
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 16px; /* Adjusted input font size */
-    color: #333;
-    background-color: #f9f9f9; /* Background color for input fields */
-  }
-  
-  .input-field:focus,
-  .select-field:focus {
-    border-color: var(--secondary-accent-color);
-    outline: none;
-  }
-  
-  .submit-btn {
-    width: 100%;
-    padding: 12px;
-    background-color: var(--secondary-accent-color);
-    color: white;
-    border: none;
-    border-radius: 4px;
-    font-size: 18px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  
-  .submit-btn:hover {
-    background-color: var(--hover-color );
-  }
 
-
-  .signup {
-    color: var(--primary-text-color);
-    /* text-decoration: none; */
-    font-size: smaller;
-  }
-  
   .image-container {
-    width: 50%;
-    height: 100%;
-    display: flex;
+    display: none;
     /* justify-content: center; */
     /* align-items: center; */
   }
-  
-  .students-image {
-    max-width: 100%;
-    object-fit: fill;
-    filter: blur(2px);
-    opacity: 0.7;
-  }
-  
-
-  .students-image::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: var(--); /* Blue tint with transparency */
-    pointer-events: none;
-  }
+}
